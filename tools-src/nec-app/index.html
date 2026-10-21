@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Antenna Studio | RayRF</title>
+    <meta name="description" content="NEC-2 antenna modeling in the browser: templates, live solve, 3D currents and gain, sweeps, matching networks and an optimizer." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" />
+  </head>
+  <body data-page="antenna" data-root="../../" class="tool-page">
+    <div id="site-header"></div>
+    <p class="narrow-note">Antenna Studio is laid out for a screen at least 1100 px wide. On this screen, scroll sideways to reach every panel.</p>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+    <script>
+      // The site's header, loaded at run time so Vite leaves the shared files alone.
+      (function () {
+        var root = document.body.dataset.root;
+        var css = document.createElement("link");
+        css.rel = "stylesheet";
+        css.href = root + "assets/chrome.css";
+        document.head.appendChild(css);
+        var js = document.createElement("script");
+        js.src = root + "assets/site.js";
+        document.body.appendChild(js);
+      })();
+    </script>
+  </body>
+</html>

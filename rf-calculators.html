@@ -15,12 +15,30 @@
     <div class="container">
       <div class="eyebrow">Free RF calculators</div>
       <h1 class="h1" style="margin-top:14px">Closed-form RF calculators <span class="sub">for the geometries you use every day.</span></h1>
-      <p class="lead">Twelve calculators covering microstrip, stripline, patch antennas, inverted-F antennas, CPW, GCPW, differential pairs, wavelength, quarter-wave matching, and Smith chart conversions. All calculators include a breakdown of the math steps, along with references for the equations.</p>
+      <p class="lead">Calculators for microstrip, stripline, patch antennas, inverted-F antennas, GCPW, differential pairs, wavelength, quarter-wave matching, and Smith chart conversions, plus all 50 calculators of the <a href="tools/pcb/">PCB Toolkit</a>. Every one shows its result live as you type, with references for the equations.</p>
     </div>
   </section>
   <section style="padding-top:20px">
     <div class="container"><div class="calc-grid" id="calc-grid"></div></div>
   </section>
+  <section id="pcb-toolkit">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="h2">The PCB Toolkit, <span class="sub">all 50 calculators.</span></h2>
+        <p>Impedance, differential pairs, current and thermal limits, vias and padstacks, signal integrity, PDN, crosstalk and the everyday Ohm's-law family. Formulas from the published literature, validated against reference tables and worked examples, running in your browser. <a href="tools/pcb/">Open the PCB Toolkit &rarr;</a></p>
+      </div>
+      <div class="topic-grid" id="pcb-calcs"></div>
+    </div>
+  </section>
+
+  <section id="about-tools">
+    <div class="container narrow prose">
+      <h2 class="h3" style="margin-top:0">About these tools</h2>
+      <p>The <a href="tools/pcb/">PCB Toolkit</a> is the pcb_toolkit calculator library compiled to WebAssembly, so the website runs the same Rust code as its command line and desktop app. <a href="tools/antenna/index.html">Antenna Studio</a> is NEC Studio, a NEC-2 antenna modeling engine written in Rust, running in the same way. Both run entirely in your browser: nothing you type is sent anywhere.</p>
+      <p class="dim small">pcb_toolkit by Alexander Kiselev and contributors, and nec-rs, are each licensed under either of the MIT License or the Apache License 2.0. The patch, inverted-F, quarter-wave, Smith chart and wavelength calculators on this page are closed forms with their references shown.</p>
+    </div>
+  </section>
+
   <section class="final-cta">
     <div class="container">
       <h2 class="h2">Closed-form is just the start.</h2>
@@ -47,24 +65,37 @@
     smith: `<g transform="translate(120 70)" fill="none" stroke="rgba(255,255,255,.25)"><circle r="55"/><circle cx="18" r="37"/><circle cx="36" r="19"/><line x1="-55" x2="55"/><path d="M55 0A55 55 0 0 0 0-55"/><path d="M55 0A55 55 0 0 1 0 55"/><circle cx="22" cy="-18" r="4" fill="#a78bfa" stroke="none"/></g><text x="150" y="20">inductive (+jX)</text><text x="150" y="134">capacitive (-jX)</text><text x="22" y="74">short</text><text x="180" y="74">open</text><text x="110" y="86">Z₀</text><text x="130" y="48">Γ</text>`,
   };
   const CALCS = [
-    ["microstrip", "Microstrip", "Trace impedance and width on a top-layer microstrip.", "rf-calc-microstrip.html"],
-    ["stripline", "Stripline", "Symmetric inner-layer trace between two ground planes."],
-    ["patch", "Patch antenna", "Rectangular microstrip patch dimensions and edge resistance."],
-    ["ifa", "Inverted-F antenna", "PCB IFA: arm length, feed offset, cutout and ground starting points."],
-    ["cpw", "CPW", "Coplanar waveguide on a dielectric, no bottom ground."],
-    ["gcpw", "GCPW", "Grounded coplanar waveguide. CPW with a backside ground."],
-    ["diff", "Differential pair", "Edge-coupled microstrip differential pair Zdiff."],
-    ["embedded", "Embedded microstrip", "Microstrip with a cover dielectric (soldermask, prepreg)."],
-    ["wavelength", "Free-space wavelength", "Convert frequency to wavelength in vacuum or air."],
-    ["guided", "Wavelength in dielectric", "Guided wavelength in bulk dielectric or microstrip."],
-    ["qwt", "Quarter-wave transformer", "lambda_g/4 matching section between two impedances."],
-    ["smith", "Smith chart", "Z to S11, VSWR, return loss, mismatch loss."],
+    ["microstrip", "Microstrip", "Trace impedance and width on a top-layer microstrip.", "tools/pcb/#impedance.microstrip"],
+    ["stripline", "Stripline", "Symmetric inner-layer trace between two ground planes.", "tools/pcb/#impedance.stripline"],
+    ["patch", "Patch antenna", "Rectangular microstrip patch dimensions and edge resistance.", "rf-calc-patch.html"],
+    ["ifa", "Inverted-F antenna", "PCB IFA: arm length, feed offset, cutout and ground starting points.", "rf-calc-ifa.html"],
+    ["gcpw", "GCPW", "Conductor-backed coplanar waveguide. Plain CPW with no backing plane is not covered yet.", "tools/pcb/#impedance.coplanar"],
+    ["diff", "Differential pair", "Edge-coupled microstrip differential pair Zdiff.", "tools/pcb/#differential.edge_coupled_external"],
+    ["embedded", "Embedded microstrip", "Microstrip with a cover dielectric (soldermask, prepreg).", "tools/pcb/#impedance.embedded"],
+    ["wavelength", "Free-space wavelength", "Convert frequency to wavelength in vacuum or air.", "rf-calc-wavelength.html"],
+    ["guided", "Wavelength in dielectric", "Guided wavelength for an effective dielectric constant.", "tools/pcb/#wavelength"],
+    ["qwt", "Quarter-wave transformer", "lambda_g/4 matching section between two impedances.", "rf-calc-qwt.html"],
+    ["smith", "Smith chart", "Z to S11, VSWR, return loss, mismatch loss.", "rf-calc-smith.html"],
   ];
   document.getElementById("calc-grid").innerHTML = CALCS.map(([key, name, desc, href]) => `
-    <a class="calc-card" href="${href || "rf-calc-microstrip.html"}"${href ? "" : ` title="Only the microstrip calculator is recreated so far"`}>
+    <a class="calc-card" href="${href}">
       <div class="diagram"><svg viewBox="0 0 240 140" aria-hidden="true">${D[key]}</svg></div>
       <div class="body"><h3>${name}</h3><p>${desc}</p></div>
     </a>`).join("");
+</script>
+<script src="assets/pcb-calcs.js"></script>
+<script>
+  // Every PCB Toolkit calculator, grouped as the app groups them, each a deep link.
+  (function () {
+    const host = document.getElementById("pcb-calcs");
+    const calcs = window.PCB_CALCS || [];
+    const groups = [...new Set(calcs.map((c) => c.group))];
+    const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    host.innerHTML = groups.map((g) => `<div class="card"><h4>${esc(g)}</h4><ul>${calcs
+      .filter((c) => c.group === g)
+      .map((c) => `<li><a href="tools/pcb/#${encodeURIComponent(c.id)}" title="${esc(c.blurb)}">${esc(c.name)}</a></li>`)
+      .join("")}</ul></div>`).join("");
+  })();
 </script>
 <script src="assets/site.js"></script>
 </body>

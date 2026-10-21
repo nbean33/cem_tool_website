@@ -22,7 +22,12 @@
     ["pricing", "Pricing", "pricing.html"],
     ["docs", "Docs", "docs.html"],
     ["calculators", "RF Calculators", "rf-calculators.html"],
+    ["antenna", "Antenna Studio", "tools/antenna/index.html"],
   ];
+
+  // Pages below the site root (the tools in tools/*/) set data-root="../../" so the shared
+  // header and footer links still point at the site's own pages.
+  const ROOT = document.body.dataset.root || "";
 
   // Optional cookie tiers, as described in the Cookie Policy. The choice is only
   // remembered locally; no analytics scripts are wired up in this recreation.
@@ -43,13 +48,13 @@
       <a class="skip" href="#main">Skip to content</a>
       <header class="site-header">
         <div class="container">
-          <a class="brand" href="index.html">${LOGO}<span>RayRF</span></a>
+          <a class="brand" href="${ROOT}index.html">${LOGO}<span>RayRF</span></a>
           <nav class="nav" id="nav" aria-label="Primary">
-            ${NAV.map(([k, label, href]) => `<a href="${href}"${k === section ? ' class="active" aria-current="page"' : ""}>${label}</a>`).join("")}
+            ${NAV.map(([k, label, href]) => `<a href="${ROOT}${href}"${k === section ? ' class="active" aria-current="page"' : ""}>${label}</a>`).join("")}
           </nav>
           <div class="header-actions">
-            <a class="link" href="pricing.html">Sign in</a>
-            <a class="btn" href="pricing.html">Start 30-day free trial</a>
+            <a class="link" href="${ROOT}pricing.html">Sign in</a>
+            <a class="btn" href="${ROOT}pricing.html">Start 30-day free trial</a>
             <button class="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav">&#9776;</button>
           </div>
         </div>
@@ -70,25 +75,25 @@
         <div class="container">
           <div class="footer-grid">
             <div>
-              <a class="brand" href="index.html">${LOGO}<span>RayRF</span></a>
+              <a class="brand" href="${ROOT}index.html">${LOGO}<span>RayRF</span></a>
               <p>GPU-accelerated FDTD. Made by RF engineers who were tired of waiting.</p>
             </div>
             <div><h4>Product</h4><ul>
-              <li><a href="index.html">Features</a></li>
-              <li><a href="benchmarks.html">Benchmarks</a></li>
-              <li><a href="pricing.html">Download</a></li></ul></div>
+              <li><a href="${ROOT}index.html">Features</a></li>
+              <li><a href="${ROOT}benchmarks.html">Benchmarks</a></li>
+              <li><a href="${ROOT}pricing.html">Download</a></li></ul></div>
             <div><h4>Docs</h4><ul>
-              <li><a href="docs-install.html">Getting started</a></li>
-              <li><a href="docs-keyboard-shortcuts.html">Reference</a></li>
-              <li><a href="validation.html">Validation suite</a></li>
-              <li><a href="blog.html">Blog</a></li></ul></div>
+              <li><a href="${ROOT}docs-install.html">Getting started</a></li>
+              <li><a href="${ROOT}docs-keyboard-shortcuts.html">Reference</a></li>
+              <li><a href="${ROOT}validation.html">Validation suite</a></li>
+              <li><a href="${ROOT}blog.html">Blog</a></li></ul></div>
             <div><h4>Contact</h4><ul>
               <li><a href="mailto:support@rayrf.com">Support<small>support@rayrf.com</small></a></li>
               <li><a href="mailto:aspen@rayrf.com">Business inquiries<small>aspen@rayrf.com</small></a></li></ul></div>
             <div><h4>Legal</h4><ul>
-              <li><a href="legal-terms.html">Terms</a></li>
-              <li><a href="legal-privacy.html">Privacy</a></li>
-              <li><a href="legal-cookies.html">Cookies</a></li></ul></div>
+              <li><a href="${ROOT}legal-terms.html">Terms</a></li>
+              <li><a href="${ROOT}legal-privacy.html">Privacy</a></li>
+              <li><a href="${ROOT}legal-cookies.html">Cookies</a></li></ul></div>
           </div>
           <div class="footer-bottom">
             <span>&copy; 2026 RayRF Inc.</span>
@@ -98,7 +103,7 @@
       </footer>
       <div class="cookie" id="cookie" hidden role="dialog" aria-label="Cookie consent">
         <div class="cookie-row">
-          <span>By using this site you agree to our use of cookies for analytics and advertising. <a href="legal-cookies.html">Cookie Policy</a></span>
+          <span>By using this site you agree to our use of cookies for analytics and advertising. <a href="${ROOT}legal-cookies.html">Cookie Policy</a></span>
           <button class="btn" data-consent="accept">Accept</button>
           <button class="btn ghost" data-consent="essential">Essentials only</button>
           <button class="btn ghost" data-consent="customize" aria-expanded="false">Customize</button>

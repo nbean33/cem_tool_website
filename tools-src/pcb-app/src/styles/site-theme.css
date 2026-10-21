@@ -1,0 +1,46 @@
+/* cem_tool_website: the PCB Toolkit in the site's palette, below the site header.
+   Loaded after the vendored app.css and overrides only its dark-theme variables and the
+   outer layout. The site is dark-only, so the light/dark toggle is hidden. */
+
+[data-theme="dark"] {
+  --bg: #0b0b0d;
+  --bg-panel: #14141a;
+  --bg-sidebar: #101015;
+  --bg-input: #0d0d12;
+  --bg-hover: rgba(255, 255, 255, 0.04);
+  --bg-active: rgba(167, 139, 250, 0.14);
+
+  --fg: #e8ecf2;
+  --fg-muted: #b3bbc9;
+  --fg-faint: #7a8597;
+
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+
+  --accent: #a78bfa;
+  --accent-fg: #0e0b1a;
+  --accent-soft: rgba(167, 139, 250, 0.14);
+  --danger: #f87171;
+  --danger-soft: rgba(248, 113, 113, 0.12);
+
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+
+/* The site header is 60px plus its 1px border. */
+html, body { height: auto; }
+body { overflow: hidden; }
+#root { height: calc(100dvh - 61px); }
+.app { height: 100%; }
+
+.theme-toggle { display: none; }
+.brand-mark { background: linear-gradient(135deg, #c4b5fd 0%, #7c5cf0 100%); }
+
+/* Phones: one column, the calculator list above the form. */
+@media (max-width: 640px) {
+  body { overflow: auto; }
+  #root { height: auto; }
+  .app { grid-template-columns: 1fr; grid-template-rows: auto auto; height: auto; overflow: visible; }
+  .sidebar { max-height: 42vh; border-right: 0; border-bottom: 1px solid var(--border); }
+  .main { overflow: visible; }
+}

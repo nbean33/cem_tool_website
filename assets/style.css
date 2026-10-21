@@ -500,3 +500,19 @@ figcaption { color: var(--dim); font-size: 13px; margin-top: 10px; line-height: 
   .docs-side:not(.nav-open) .grp, .docs-side:not(.nav-open) .video-link { display: none; }
   .docs-side { border-bottom: 1px solid var(--border); padding-bottom: 6px; }
 }
+
+/* The header has seven nav items: collapse it to the menu button below 1100px. */
+.nav a { white-space: nowrap; }
+@media (max-width: 1100px) {
+  .nav { display: none; position: absolute; top: 60px; left: 0; right: 0; flex-direction: column; gap: 0; background: var(--bg); border-bottom: 1px solid var(--border); padding: 8px 16px 16px; }
+  .nav.open { display: flex; }
+  .nav a { padding: 10px 0; font-size: 15px; }
+  .menu-btn { display: block; }
+  .site-header .container { justify-content: space-between; }
+  .header-actions .link { display: none; }
+}
+
+/* Smith chart on rf-calc-smith.html */
+.smith-card { display: grid; place-items: center; margin-bottom: 16px; }
+.smith-card svg { width: min(100%, 320px); height: auto; }
+.smith-card svg text { font-family: var(--mono); }

@@ -1,0 +1,622 @@
+//! Ohm's law and basic electrical calculators.
+//!
+//! Sub-calculators:
+//! 1. E-I-R (V = IR, P = VI)
+//! 2. LED Bias resistor
+//! 3. Resistor series/parallel
+//! 4. Pi-pad attenuator
+//! 5. T-pad attenuator
+//! 6. Capacitor series/parallel
+//! 7. Inductor series/parallel
+
+use serde::{Deserialize, Serialize};
+
+use crate::CalcError;
+use crate::all_finite;
+
+// ---------------------------------------------------------------------------
+// E-I-R
+// ---------------------------------------------------------------------------
+
+/// Result of an E-I-R (voltage-current-resistance) calculation.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct EirResult {
+    /// Voltage in Volts.
+    pub voltage_v: f64,
+    /// Current in Amperes.
+    pub current_a: f64,
+    /// Resistance in Ohms.
+    pub resistance_ohm: f64,
+    /// Power in Watts (P = V × I).
+    pub power_w: f64,
+}
+
+/// Calculate voltage, current, resistance, and power given any two of V, I, R.
+///
+/// Exactly two of the three options must be `Some`.
+///
+/// # Errors
+/// Returns [`CalcError::InsufficientInputs`] if fewer or more than two values are provided,
+/// or [`CalcError::OutOfRange`] if a zero denominator would result.
+pub fn eir(
+    voltage_v: Option<f64>,
+    current_a: Option<f64>,
+    resistance_ohm: Option<f64>,
+) -> Result<EirResult, CalcError> {
+    all_finite(&[
+        ("voltage_v", voltage_v.unwrap_or(0.0)),
+        ("current_a", current_a.unwrap_or(0.0)),
+        ("resistance_ohm", resistance_ohm.unwrap_or(0.0)),
+    ])?;
+    let provided = [voltage_v, current_a, resistance_ohm]
+        .iter()
+        .filter(|v| v.is_some())
+        .count();
+    if provided != 2 {
+        return Err(CalcError::InsufficientInputs(
+            "exactly 2 of voltage_v, current_a, resistance_ohm must be provided",
+        ));
+    }
+
+    let (v, i, r) = match (voltage_v, current_a, resistance_ohm) {
+        (Some(v), Some(i), None) => {
+            if i == 0.0 {
+                return Err(CalcError::OutOfRange {
+                    name: "current_a",
+                    value: i,
+                    expected: "!= 0 when computing resistance",
+                });
+            }
+            (v, i, v / i)
+        }
+        (Some(v), None, Some(r)) => {
+            if r == 0.0 {
+                return Err(CalcError::OutOfRange {
+                    name: "resistance_ohm",
+                    value: r,
+                    expected: "!= 0 when computing current",
+                });
+            }
+            (v, v / r, r)
+        }
+        (None, Some(i), Some(r)) => (i * r, i, r),
+        // Unreachable while the "exactly 2 of 3" count above holds, but a library should not
+        // contain a panic that depends on a check somewhere else staying correct.
+        _ => {
+            return Err(CalcError::InsufficientInputs(
+                "exactly 2 of voltage_v, current_a, resistance_ohm must be provided",
+            ));
+        }
+    };
+
+    Ok(EirResult {
+        voltage_v: v,
+        current_a: i,
+        resistance_ohm: r,
+        power_w: v * i,
+    })
+}
+
+// ---------------------------------------------------------------------------
+// LED bias resistor
+// ---------------------------------------------------------------------------
+
+/// Result of an LED bias resistor calculation.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct LedBiasResult {
+    /// Required series resistor value in Ohms.
+    pub resistance_ohm: f64,
+    /// Power dissipated by the resistor in Watts.
+    pub power_w: f64,
+}
+
+/// Calculate LED bias resistor.
+///
+/// R = (Vs − Vled) / Iled
+///
+/// # Arguments
+/// - `supply_v` — supply voltage in Volts (must be > led_v)
+/// - `led_v` — LED forward voltage in Volts (must be > 0)
+/// - `led_current_a` — desired LED current in Amperes (must be > 0)
+///
+/// # Errors
+/// Returns [`CalcError::OutOfRange`] if inputs are invalid.
+pub fn led_bias(supply_v: f64, led_v: f64, led_current_a: f64) -> Result<LedBiasResult, CalcError> {
+    all_finite(&[
+        ("supply_v", supply_v),
+        ("led_v", led_v),
+        ("led_current_a", led_current_a),
+    ])?;
+    if led_v <= 0.0 {
+        return Err(CalcError::OutOfRange {
+            name: "led_v",
+            value: led_v,
+            expected: "> 0",
+        });
+    }
+    if supply_v <= led_v {
+        return Err(CalcError::OutOfRange {
+            name: "supply_v",
+            value: supply_v,
+            expected: "> led_v",
+        });
+    }
+    if led_current_a <= 0.0 {
+        return Err(CalcError::OutOfRange {
+            name: "led_current_a",
+            value: led_current_a,
+            expected: "> 0",
+        });
+    }
+
+    let v_drop = supply_v - led_v;
+    let resistance_ohm = v_drop / led_current_a;
+    let power_w = v_drop * led_current_a;
+
+    Ok(LedBiasResult {
+        resistance_ohm,
+        power_w,
+    })
+}
+
+// ---------------------------------------------------------------------------
+// Resistor combinations
+// ---------------------------------------------------------------------------
+
+/// Result of a resistor series/parallel combination.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ResistorCombinationResult {
+    /// Combined resistance in Ohms.
+    pub resistance_ohm: f64,
+}
+
+/// Sum resistors in series.
+///
+/// Reject a non-finite element of a component list.
+///
+/// The slice forms cannot use [`crate::all_finite`], which wants a static name per value —
+/// here the useful name is the *position*, since a list of ten capacitors with one bad entry
+/// is otherwise a guessing game. `NotFinite` carries a `&'static str`, so the position is
+/// folded into the reason via a small fixed set of labels rather than a formatted string.
+fn all_values_finite(values: &[f64]) -> Result<(), CalcError> {
+    if let Some(i) = values.iter().position(|v| !v.is_finite()) {
+        return Err(CalcError::OutOfRange {
+            name: "values",
+            value: values[i],
+            expected: "every element finite",
+        });
+    }
+    Ok(())
+}
+
+/// R_total = R1 + R2 + … + Rn
+pub fn resistors_series(values: &[f64]) -> Result<ResistorCombinationResult, CalcError> {
+    all_values_finite(values)?;
+    if values.is_empty() {
+        return Err(CalcError::InsufficientInputs(
+            "at least one resistor required",
+        ));
+    }
+    Ok(ResistorCombinationResult {
+        resistance_ohm: values.iter().sum(),
+    })
+}
+
+/// Combine resistors in parallel.
+///
+/// 1/R_total = 1/R1 + 1/R2 + … + 1/Rn
+pub fn resistors_parallel(values: &[f64]) -> Result<ResistorCombinationResult, CalcError> {
+    all_values_finite(values)?;
+    if values.is_empty() {
+        return Err(CalcError::InsufficientInputs(
+            "at least one resistor required",
+        ));
+    }
+    for (idx, &r) in values.iter().enumerate() {
+        if r == 0.0 {
+            return Err(CalcError::OutOfRange {
+                name: "resistor value",
+                value: r,
+                expected: "!= 0 for parallel combination",
+            });
+        }
+        let _ = idx;
+    }
+    let reciprocal_sum: f64 = values.iter().map(|r| 1.0 / r).sum();
+    Ok(ResistorCombinationResult {
+        resistance_ohm: 1.0 / reciprocal_sum,
+    })
+}
+
+// ---------------------------------------------------------------------------
+// Capacitor combinations
+// ---------------------------------------------------------------------------
+
+/// Result of a capacitor series/parallel combination.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct CapacitorCombinationResult {
+    /// Combined capacitance in Farads.
+    pub capacitance_f: f64,
+}
+
+/// Sum capacitors in parallel (C_total = C1 + C2 + … + Cn).
+pub fn capacitors_parallel(values: &[f64]) -> Result<CapacitorCombinationResult, CalcError> {
+    all_values_finite(values)?;
+    if values.is_empty() {
+        return Err(CalcError::InsufficientInputs(
+            "at least one capacitor required",
+        ));
+    }
+    Ok(CapacitorCombinationResult {
+        capacitance_f: values.iter().sum(),
+    })
+}
+
+/// Combine capacitors in series (1/C_total = 1/C1 + 1/C2 + … + 1/Cn).
+pub fn capacitors_series(values: &[f64]) -> Result<CapacitorCombinationResult, CalcError> {
+    all_values_finite(values)?;
+    if values.is_empty() {
+        return Err(CalcError::InsufficientInputs(
+            "at least one capacitor required",
+        ));
+    }
+    for &c in values.iter() {
+        if c == 0.0 {
+            return Err(CalcError::OutOfRange {
+                name: "capacitor value",
+                value: c,
+                expected: "!= 0 for series combination",
+            });
+        }
+    }
+    let reciprocal_sum: f64 = values.iter().map(|c| 1.0 / c).sum();
+    Ok(CapacitorCombinationResult {
+        capacitance_f: 1.0 / reciprocal_sum,
+    })
+}
+
+// ---------------------------------------------------------------------------
+// Inductor combinations
+// ---------------------------------------------------------------------------
+
+/// Result of an inductor series/parallel combination.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct InductorCombinationResult {
+    /// Combined inductance in Henries.
+    pub inductance_h: f64,
+}
+
+/// Sum inductors in series (L_total = L1 + L2 + … + Ln, no mutual coupling).
+pub fn inductors_series(values: &[f64]) -> Result<InductorCombinationResult, CalcError> {
+    all_values_finite(values)?;
+    if values.is_empty() {
+        return Err(CalcError::InsufficientInputs(
+            "at least one inductor required",
+        ));
+    }
+    Ok(InductorCombinationResult {
+        inductance_h: values.iter().sum(),
+    })
+}
+
+/// Combine inductors in parallel (1/L_total = 1/L1 + … + 1/Ln, no mutual coupling).
+pub fn inductors_parallel(values: &[f64]) -> Result<InductorCombinationResult, CalcError> {
+    all_values_finite(values)?;
+    if values.is_empty() {
+        return Err(CalcError::InsufficientInputs(
+            "at least one inductor required",
+        ));
+    }
+    for &l in values.iter() {
+        if l == 0.0 {
+            return Err(CalcError::OutOfRange {
+                name: "inductor value",
+                value: l,
+                expected: "!= 0 for parallel combination",
+            });
+        }
+    }
+    let reciprocal_sum: f64 = values.iter().map(|l| 1.0 / l).sum();
+    Ok(InductorCombinationResult {
+        inductance_h: 1.0 / reciprocal_sum,
+    })
+}
+
+// ---------------------------------------------------------------------------
+// Attenuators
+// ---------------------------------------------------------------------------
+
+/// Result of a symmetric Pi-pad or T-pad attenuator calculation.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct AttenuatorResult {
+    /// Attenuation in dB.
+    pub attenuation_db: f64,
+    /// Voltage ratio K = 10^(dB/20).
+    pub k: f64,
+    /// Series resistor (Ω): two outer elements for Pi-pad, two outer elements for T-pad.
+    pub r_series_ohm: f64,
+    /// Shunt resistor (Ω): centre element for Pi-pad, centre element for T-pad.
+    pub r_shunt_ohm: f64,
+}
+
+/// Calculate a symmetric Pi-pad attenuator.
+///
+/// Topology: Rshunt — Rseries — Rshunt (shunt to ground at input and output).
+///
+/// ```text
+/// in ─┬── R_series ──┬─ out
+///     R_shunt        R_shunt
+///     GND            GND
+/// ```
+///
+/// Formulas (symmetric, Z_in = Z_out = z_ohm):
+/// - K = 10^(dB/20)
+/// - R_shunt = Z × (K + 1) / (K − 1)
+/// - R_series = Z × (K − 1) / (K + 1)
+///
+/// # Errors
+/// Returns [`CalcError::OutOfRange`] if `attenuation_db` ≤ 0 or `z_ohm` ≤ 0.
+pub fn pi_pad(attenuation_db: f64, z_ohm: f64) -> Result<AttenuatorResult, CalcError> {
+    all_finite(&[("attenuation_db", attenuation_db), ("z_ohm", z_ohm)])?;
+    if attenuation_db <= 0.0 {
+        return Err(CalcError::OutOfRange {
+            name: "attenuation_db",
+            value: attenuation_db,
+            expected: "> 0",
+        });
+    }
+    if z_ohm <= 0.0 {
+        return Err(CalcError::OutOfRange {
+            name: "z_ohm",
+            value: z_ohm,
+            expected: "> 0",
+        });
+    }
+
+    let k = 10.0_f64.powf(attenuation_db / 20.0);
+    let r_shunt_ohm = z_ohm * (k + 1.0) / (k - 1.0);
+    // Pi-pad series arm: Z·(K²−1)/(2K). NOT Z·(K−1)/(K+1) — that is the T-pad
+    // series formula, which this function previously used.
+    let r_series_ohm = z_ohm * (k * k - 1.0) / (2.0 * k);
+
+    Ok(AttenuatorResult {
+        attenuation_db,
+        k,
+        r_series_ohm,
+        r_shunt_ohm,
+    })
+}
+
+/// Calculate a symmetric T-pad attenuator.
+///
+/// Topology: Rseries — Rshunt — Rseries (shunt to ground in the centre).
+///
+/// ```text
+/// in ── R_series ──┬── R_series ── out
+///                  R_shunt
+///                  GND
+/// ```
+///
+/// Formulas (symmetric, Z_in = Z_out = z_ohm):
+/// - K = 10^(dB/20)
+/// - R_series = Z × (K − 1) / (K + 1)
+/// - R_shunt  = Z × 2K / (K² − 1)
+///
+/// # Errors
+/// Returns [`CalcError::OutOfRange`] if `attenuation_db` ≤ 0 or `z_ohm` ≤ 0.
+pub fn t_pad(attenuation_db: f64, z_ohm: f64) -> Result<AttenuatorResult, CalcError> {
+    all_finite(&[("attenuation_db", attenuation_db), ("z_ohm", z_ohm)])?;
+    if attenuation_db <= 0.0 {
+        return Err(CalcError::OutOfRange {
+            name: "attenuation_db",
+            value: attenuation_db,
+            expected: "> 0",
+        });
+    }
+    if z_ohm <= 0.0 {
+        return Err(CalcError::OutOfRange {
+            name: "z_ohm",
+            value: z_ohm,
+            expected: "> 0",
+        });
+    }
+
+    let k = 10.0_f64.powf(attenuation_db / 20.0);
+    let r_series_ohm = z_ohm * (k - 1.0) / (k + 1.0);
+    let r_shunt_ohm = z_ohm * 2.0 * k / (k * k - 1.0);
+
+    Ok(AttenuatorResult {
+        attenuation_db,
+        k,
+        r_series_ohm,
+        r_shunt_ohm,
+    })
+}
+
+#[cfg(test)]
+mod tests {
+    use approx::assert_relative_eq;
+
+    use super::*;
+    /// Re-verifies the attenuator formulas **from circuit theory**, independent of any
+    /// published resistor table.
+    ///
+    /// This matters because VALIDATION.md finding C2 was a case of the pi-pad formula and its
+    /// test both being transcribed from the same wrong source, so they agreed with each other
+    /// and with nothing else. These two tests cannot be fooled that way: they take the
+    /// resistor values the function returns, analyse the resulting network by hand, and check
+    /// that it is (a) impedance-matched and (b) attenuating by the requested amount.
+    #[test]
+    fn t_pad_is_matched_and_attenuates_correctly() {
+        for db in [1.0, 3.0, 6.0, 10.0, 20.0, 40.0] {
+            let z = 50.0;
+            let r = t_pad(db, z).unwrap();
+            let (r1, r2) = (r.r_series_ohm, r.r_shunt_ohm);
+
+            // Input impedance of series r1, then r2 shunt, then r1 + load z.
+            let z_in = r1 + (r2 * (r1 + z)) / (r2 + r1 + z);
+            assert_relative_eq!(z_in, z, max_relative = 1e-9, epsilon = 1e-9);
+
+            // Voltage ratio: divider onto the shunt node, then onto the load.
+            let z_shunt = (r2 * (r1 + z)) / (r2 + r1 + z);
+            let v_node = z_shunt / (r1 + z_shunt);
+            let v_out = v_node * z / (r1 + z);
+            assert_relative_eq!(1.0 / v_out, r.k, max_relative = 1e-9);
+            assert_relative_eq!(-20.0 * v_out.log10(), db, max_relative = 1e-9);
+        }
+    }
+
+    #[test]
+    fn pi_pad_is_matched_and_attenuates_correctly() {
+        for db in [1.0, 3.0, 6.0, 10.0, 20.0, 40.0] {
+            let z = 50.0;
+            let r = pi_pad(db, z).unwrap();
+            let (r_series, r_shunt) = (r.r_series_ohm, r.r_shunt_ohm);
+
+            // Output shunt in parallel with the load, then the series arm, then the input shunt.
+            let out_par = (r_shunt * z) / (r_shunt + z);
+            let z_in = (r_shunt * (r_series + out_par)) / (r_shunt + r_series + out_par);
+            assert_relative_eq!(z_in, z, max_relative = 1e-9, epsilon = 1e-9);
+
+            // The input shunt draws current but does not divide the voltage reaching the
+            // series arm, so the ratio is set by the series arm and the output network.
+            let v_out = out_par / (r_series + out_par);
+            assert_relative_eq!(1.0 / v_out, r.k, max_relative = 1e-9);
+            assert_relative_eq!(-20.0 * v_out.log10(), db, max_relative = 1e-9);
+        }
+    }
+
+    /// Pi and T pads are duals: each arm of one multiplied by the corresponding arm of the
+    /// other is Z². If either formula were wrong this identity would break, and it does not
+    /// depend on knowing the right answer for either.
+    #[test]
+    fn pi_and_t_pads_are_duals() {
+        for db in [1.0, 6.0, 20.0] {
+            let z = 75.0;
+            let t = t_pad(db, z).unwrap();
+            let p = pi_pad(db, z).unwrap();
+            assert_relative_eq!(t.r_series_ohm * p.r_shunt_ohm, z * z, max_relative = 1e-9);
+            assert_relative_eq!(t.r_shunt_ohm * p.r_series_ohm, z * z, max_relative = 1e-9);
+        }
+    }
+
+    // Saturn PDF page 21: V=12V, I=1A, R=12Ω → P=12W
+    #[test]
+    fn saturn_eir_vi() {
+        let result = eir(Some(12.0), Some(1.0), None).unwrap();
+        assert_relative_eq!(result.resistance_ohm, 12.0, epsilon = 1e-10);
+        assert_relative_eq!(result.power_w, 12.0, epsilon = 1e-10);
+    }
+
+    #[test]
+    fn eir_solve_voltage() {
+        let result = eir(None, Some(1.0), Some(12.0)).unwrap();
+        assert_relative_eq!(result.voltage_v, 12.0, epsilon = 1e-10);
+        assert_relative_eq!(result.power_w, 12.0, epsilon = 1e-10);
+    }
+
+    // Saturn PDF page 21: LED: Vs=12V, Vled=2V, Iled=10mA → R=1000Ω, P=0.1W
+    #[test]
+    fn saturn_led_bias() {
+        let result = led_bias(12.0, 2.0, 0.01).unwrap();
+        assert_relative_eq!(result.resistance_ohm, 1000.0, epsilon = 1e-6);
+        assert_relative_eq!(result.power_w, 0.1, epsilon = 1e-8);
+    }
+
+    // Pi-pad, 50Ω. Series arm = Z·(K²−1)/(2K), shunt arm = Z·(K+1)/(K−1).
+    // K = 10^(dB/20). Computed from the standard matched-attenuator formulas.
+    //   1 dB: K=1.122018 -> series 5.7692, shunt 869.5482
+    #[test]
+    fn pi_pad_1db_50ohm() {
+        let result = pi_pad(1.0, 50.0).unwrap();
+        assert_relative_eq!(result.r_series_ohm, 5.7692, epsilon = 0.001);
+        assert_relative_eq!(result.r_shunt_ohm, 869.5482, epsilon = 0.001);
+    }
+
+    //  10 dB: K=3.162278 -> series 71.1512, shunt 96.2475
+    #[test]
+    fn pi_pad_10db_50ohm() {
+        let result = pi_pad(10.0, 50.0).unwrap();
+        assert_relative_eq!(result.r_series_ohm, 71.1512, epsilon = 0.001);
+        assert_relative_eq!(result.r_shunt_ohm, 96.2475, epsilon = 0.001);
+    }
+
+    // T-pad, 50Ω. Series arm = Z·(K−1)/(K+1), shunt arm = 2ZK/(K²−1).
+    //  10 dB: K=3.162278 -> series 25.9747, shunt 35.1364
+    #[test]
+    fn t_pad_10db_50ohm() {
+        let result = t_pad(10.0, 50.0).unwrap();
+        assert_relative_eq!(result.r_series_ohm, 25.9747, epsilon = 0.001);
+        assert_relative_eq!(result.r_shunt_ohm, 35.1364, epsilon = 0.001);
+    }
+
+    /// Regression guard for the defect this replaced: `pi_pad` previously used the
+    /// T-pad series formula, so both topologies returned an identical series arm.
+    #[test]
+    fn pi_and_t_pad_series_arms_differ() {
+        for db in [1.0, 3.0, 6.0, 10.0, 20.0] {
+            let pi = pi_pad(db, 50.0).unwrap();
+            let t = t_pad(db, 50.0).unwrap();
+            assert!(
+                (pi.r_series_ohm - t.r_series_ohm).abs() > 1e-6,
+                "Pi and T series arms must differ at {db} dB: {} vs {}",
+                pi.r_series_ohm,
+                t.r_series_ohm
+            );
+        }
+        // At 20 dB the two differ by ~6x — the largest divergence in the audited range.
+        assert_relative_eq!(
+            pi_pad(20.0, 50.0).unwrap().r_series_ohm,
+            247.5,
+            epsilon = 0.001
+        );
+    }
+
+    #[test]
+    fn resistors_series_two() {
+        let result = resistors_series(&[100.0, 200.0]).unwrap();
+        assert_relative_eq!(result.resistance_ohm, 300.0, epsilon = 1e-10);
+    }
+
+    #[test]
+    fn resistors_parallel_two_equal() {
+        let result = resistors_parallel(&[100.0, 100.0]).unwrap();
+        assert_relative_eq!(result.resistance_ohm, 50.0, epsilon = 1e-10);
+    }
+
+    #[test]
+    fn capacitors_parallel_two() {
+        let result = capacitors_parallel(&[10e-12, 10e-12]).unwrap();
+        assert_relative_eq!(result.capacitance_f, 20e-12, epsilon = 1e-22);
+    }
+
+    #[test]
+    fn capacitors_series_two_equal() {
+        let result = capacitors_series(&[10e-12, 10e-12]).unwrap();
+        assert_relative_eq!(result.capacitance_f, 5e-12, epsilon = 1e-22);
+    }
+
+    #[test]
+    fn inductors_series_two() {
+        let result = inductors_series(&[1e-6, 2e-6]).unwrap();
+        assert_relative_eq!(result.inductance_h, 3e-6, epsilon = 1e-16);
+    }
+
+    #[test]
+    fn inductors_parallel_two_equal() {
+        let result = inductors_parallel(&[10e-6, 10e-6]).unwrap();
+        assert_relative_eq!(result.inductance_h, 5e-6, epsilon = 1e-16);
+    }
+
+    #[test]
+    fn error_on_zero_attenuation() {
+        assert!(pi_pad(0.0, 50.0).is_err());
+        assert!(t_pad(0.0, 50.0).is_err());
+    }
+
+    #[test]
+    fn error_on_insufficient_eir_inputs() {
+        assert!(eir(Some(12.0), None, None).is_err());
+        assert!(eir(Some(12.0), Some(1.0), Some(12.0)).is_err());
+    }
+}

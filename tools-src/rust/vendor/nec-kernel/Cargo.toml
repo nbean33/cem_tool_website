@@ -1,0 +1,20 @@
+[package]
+name = "nec-kernel"
+version = "0.1.0"
+description = "NEC-2 wire electromagnetics: basis functions, thin-wire kernel and field evaluation."
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+nec-core = { workspace = true }
+nec-geom = { workspace = true }
+num-complex = { workspace = true }
+rayon = { workspace = true }
+
+[dev-dependencies]
+nec-cards = { workspace = true }
+
+[lints]
+workspace = true

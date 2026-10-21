@@ -1,0 +1,14 @@
+# Build intermediates for the WebAssembly tools. The built site lives in tools/ and IS committed.
+tools-src/rust/target/
+tools-src/*/node_modules/
+tools-src/pcb-app/src/wasm/
+tools-src/nec-app/src/lib/wasm/
+
+# Scratch output from experiments.
+.spike/
+
+# Local editor and OS files.
+.vscode/
+.DS_Store
+Thumbs.db
+__pycache__/

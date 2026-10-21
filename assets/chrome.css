@@ -1,0 +1,89 @@
+/* The site header on full-page tools (tools/pcb/, tools/antenna/).
+   Those pages load this instead of style.css, whose page-level rules (section padding,
+   .card, heading sizes) would reshape the apps. Every rule here is scoped to .site-header,
+   and the header carries its own copies of the site tokens, so nothing reaches the app below
+   and the app's own same-named classes (.brand, .nav) and variables cannot reach the header. */
+
+.site-header {
+  --text: #e8ecf2;
+  --muted: #b3bbc9;
+  --accent: #a78bfa;
+  --accent-2: #c4b5fd;
+  --accent-ink: #0e0b1a;
+  --surface-2: #1a1a22;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --bg: #0b0b0d;
+
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(11, 11, 13, 0.92);
+  backdrop-filter: saturate(140%) blur(12px);
+  -webkit-backdrop-filter: saturate(140%) blur(12px);
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  font: 400 15px/1.5 "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.site-header *, .site-header *::before, .site-header *::after { box-sizing: border-box; }
+.site-header a { color: var(--accent); text-decoration: none; }
+
+.site-header .container {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  height: 60px;
+}
+.site-header .brand {
+  display: flex; align-items: center; gap: 9px; padding: 0;
+  color: var(--text); font-weight: 600; font-size: 19px; letter-spacing: -0.4px;
+}
+.site-header .brand:hover { color: var(--text); }
+.site-header .brand svg { width: 28px; height: 28px; }
+
+.site-header .nav {
+  display: flex; flex-direction: row; gap: 22px; flex: 1;
+  margin: 0; padding: 0; overflow: visible;
+}
+.site-header .nav a { color: var(--muted); font-size: 13.5px; font-weight: 500; }
+.site-header .nav a:hover, .site-header .nav a.active { color: var(--text); }
+
+.site-header .header-actions { display: flex; align-items: center; gap: 14px; }
+.site-header .header-actions .link { color: var(--text); font-size: 13.5px; font-weight: 500; }
+.site-header .menu-btn {
+  display: none; background: none; border: 1px solid var(--border-strong); color: var(--text);
+  border-radius: 6px; width: 36px; height: 34px; cursor: pointer; font: inherit;
+}
+.site-header .btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--accent); color: var(--accent-ink);
+  font: 600 13px/1.2 "Inter", system-ui, sans-serif; letter-spacing: -0.065px;
+  padding: 7px 14px; border-radius: 6px; border: 1px solid transparent; white-space: nowrap;
+}
+.site-header .btn:hover { background: var(--accent-2); color: var(--accent-ink); }
+
+.skip { position: absolute; left: -9999px; top: 8px; }
+.skip:focus {
+  left: 16px; z-index: 100; background: #a78bfa; color: #0e0b1a;
+  padding: 6px 12px; border-radius: 6px; font: 600 13px "Inter", system-ui, sans-serif;
+}
+
+@media (max-width: 1100px) {
+  .site-header .nav {
+    display: none; position: absolute; top: 60px; left: 0; right: 0; flex-direction: column; gap: 0;
+    background: var(--bg); border-bottom: 1px solid var(--border); padding: 8px 16px 16px;
+  }
+  .site-header .nav.open { display: flex; }
+  .site-header .nav a { padding: 10px 0; font-size: 15px; }
+  .site-header .menu-btn { display: block; }
+  .site-header .container { justify-content: space-between; }
+  .site-header .header-actions .link { display: none; }
+}
+@media (max-width: 680px) {
+  .site-header .container { padding: 0 16px; }
+  .site-header .header-actions .btn { display: none; }
+}

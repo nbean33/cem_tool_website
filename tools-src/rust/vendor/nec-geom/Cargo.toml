@@ -1,0 +1,16 @@
+[package]
+name = "nec-geom"
+version = "0.1.0"
+description = "Builds NEC wire geometry and segmentation from a resolved card deck."
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+nec-core = { workspace = true }
+nec-cards = { workspace = true }
+thiserror = { workspace = true }
+
+[lints]
+workspace = true
