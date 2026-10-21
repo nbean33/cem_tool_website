@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Validation | RayRF</title>
+<meta name="description" content="9 real structures measured on a calibrated VNA and compared against RayRF simulation. Every resonance within 1%.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="validation">
+<div id="site-header"></div>
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <h1 class="h1">Measured on a real VNA.<br><span class="sub">Compared against the RayRF prediction.</span></h1>
+      <p class="lead">We measured 9 real structures on a calibrated LiteVNA64 and compared them to the RayRF simulation results. RayRF shows excellent frequency accuracy with a converged mesh, and generally predicts a less lossy depth than reality, which is consistent with solver idealization of real-world material properties.</p>
+      <div class="grid-2" style="margin-top:40px">
+        <div class="stat"><div class="k">Frequency accuracy</div><div class="v">&lt; 1%</div><p>Worst-case frequency error across all resonances on the structures below (Very High auto quality setting).</p></div>
+        <div class="stat"><div class="k">Measured</div><div class="v">9 <span class="dim" style="font-size:18px;font-weight:500">structures</span></div><p>Eight patch antennas and an interdigital bandpass filter on the ZYF 300CA-C substrate (0.76 mm PTFE, Dk 2.94, Df 0.0016).</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:40px">
+    <div class="container">
+      <h2 class="h3" style="margin-bottom:8px">Per-DUT comparison</h2>
+      <div id="duts"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container narrow">
+      <h2 class="h2" style="margin-bottom:24px">How the measurements were taken.</h2>
+      <div class="prose">
+        <p>Measurements were taken using a LiteVNA64 warmed up for 24 hours to limit thermal drift during measurement. Short Open Load Through (SOLT) calibration was performed against high quality references, and redone five times at even intervals through the 10-hour session to characterize drift. Each device-under-test (DUT) was measured from 1 MHz to 8 GHz at 12,276 points with 5-trace averaging. The calibrations were applied by taking the median of all SOLT recordings.</p>
+        <p>S11 on 2-port systems was always measured with a precision 50 ohm load on the second port, which limits cable mismatch on the S21 side from corrupting S11. S21 is the VNA's direct through-measurement with no de-embedding, so the curve published here is what the same board gives you on your own bench.</p>
+        <p class="note"><b>Note:</b> the LiteVNA64 is officially specified to 6.3 GHz, and although we believe our methodology of heavy averaging, multiple calibrations, and median processing greatly improves the reliability of the high-frequency results, treat anything above 6.3 GHz as reference only.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <div class="container">
+      <h2 class="h2">Stop waiting for your simulator.<br><span class="gradient-text">Start designing at the speed of thought.</span></h2>
+      <p>Add a card during the trial and it extends to 60 days. Cancel before the first charge and you are not billed.</p>
+      <div class="cta-row"><a class="btn lg" href="pricing.html">Add card and extend trial</a><a class="btn lg ghost" href="docs.html">Read the docs</a></div>
+    </div>
+  </section>
+</main>
+<div id="site-footer"></div>
+<script>
+  // id, title, description, board kind, dip summary (only IDF01 has published per-dip numbers)
+  const DUT_LIST = [
+    ["IDF01", "Interdigital Bandpass Filter (~2.4 GHz)", "Four-pole interdigital bandpass filter. Individual pole frequencies match within 1% across the band.", "filter",
+      [["2.238", "+0.66%", "-6.9%"], ["2.305", "+0.38%", "-9.7%"], ["2.387", "-0.28%", "-19.6%"], ["2.453", "-0.05%", "-14.8%"]]],
+    ["PA05-4G", "Dual-Band Patch Antenna #5 (~4 / 6.4 GHz)", "Dual-band patch with modes near 4 GHz and 6.4 GHz. Both resonances within 1% of the RayRF prediction.", "dual"],
+    ["PA01-6G", "Patch Antenna #1, 6 GHz band", "Single-resonance rectangular patch resonating near 6 GHz. Measured frequency matches RayRF within 1%.", "patch"],
+    ["PA02-6G", "Patch Antenna #2, 6 GHz band", "Inset variant in the same 6 GHz band, different feed geometry. Resonant frequency within 1%.", "patch"],
+    ["PA03-6G", "Patch Antenna #3, 6 GHz band", "Different inset feed, resonant frequency within 1%.", "patch"],
+    ["PA04-6G", "Patch Antenna #4, 6 GHz band", "Final inset feed variant in the same 6 GHz band. Resonant frequency within 1%.", "patch"],
+    ["PA06-4G", "Dual-Band Patch Antenna #6 (~4 / 6.5 GHz)", "Inset dual-band patch with modes near 4 GHz and 6.5 GHz. Both resonances within 1% in frequency; the second resonance shows deeper \"matching\" due to lossless material idealization.", "dual"],
+    ["PA07-4G", "Dual-Band Patch Antenna #7 (~4 / 6.5 GHz)", "Same 4G class patch with a different inset feed. Both resonances within 1%.", "dual"],
+    ["PA08-4G", "Dual-Band Patch Antenna #8 (~4 / 6.6 GHz)", "Further inset feed variant of the 4G patch. Both resonances within 1%.", "dual"],
+  ];
+  document.getElementById("duts").innerHTML = DUT_LIST.map(([id, title, desc, kind, dips], i) => `
+    <article class="dut" id="${id}">
+      <div class="dut-head"><span class="dut-id">${id}</span><h3>${title}</h3></div>
+      <p>${desc}</p>
+      <div class="dut-body">
+        <div class="chart-card">
+          <div class="chart-toolbar">
+            <div class="seg" data-scale><button class="on" data-v="db">dB</button><button data-v="lin">Linear</button></div>
+            <div class="legend"><span class="meas"><i></i>Measured (VNA)</span><span class="sim"><i></i>RayRF (sim)</span></div>
+          </div>
+          <div data-dut="${id}" style="height:340px">${i ? '<span class="lazy-note">scroll to load</span>' : ""}</div>
+          <div class="chart-hint">ctrl/shift+scroll: zoom &nbsp;|&nbsp; left or right drag: pan &nbsp;|&nbsp; double-click: reset</div>
+          ${dips ? `<div class="dips">${dips.map(([f, df, dd], k) => `<div class="dip">Dip ${k + 1}<b>${f} GHz</b><span>df ${df}<br>d|S| ${dd}</span></div>`).join("")}</div>` : ""}
+        </div>
+        <div class="chart-card" data-tabs>
+          <div class="tabs" role="tablist">
+            <button class="on" role="tab" aria-selected="true">RayRF Studio</button>
+            <button role="tab" aria-selected="false">Mesh preview</button>
+            <button role="tab" aria-selected="false">Hardware</button>
+          </div>
+          <div class="tab-panel on"><div class="media" data-board="studio" data-kind="${kind}"></div></div>
+          <div class="tab-panel"><div class="media" data-board="mesh" data-kind="${kind}"></div></div>
+          <div class="tab-panel"><div class="media" data-board="hardware" data-kind="${kind}"></div></div>
+        </div>
+      </div>
+    </article>`).join("");
+  // The list is injected after load, so honor a #DUT anchor manually.
+  if (location.hash) {
+    const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (target) requestAnimationFrame(() => target.scrollIntoView());
+  }
+</script>
+<script src="assets/site.js"></script>
+</body>
+</html>

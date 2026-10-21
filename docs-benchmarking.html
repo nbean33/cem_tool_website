@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Benchmarking | RayRF Docs</title>
+<meta name="description" content="The performance benchmark measures CPU and GPU solver throughput with bundled, scalable geometry. It does not read or change the open project. The same plan, memory gates, result format, and sharing controls apply to this computer and to configured runners.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="docs-benchmarking">
+<div id="site-header"></div>
+<main id="main" class="container docs">
+  <aside class="docs-side" id="docs-side" aria-label="Documentation"></aside>
+  <article class="docs-main">
+    <div class="post-meta">Simulation</div>
+    <h1 style="margin-top:8px">Benchmarking</h1>
+    <p class="lede">The performance benchmark measures CPU and GPU solver throughput with bundled, scalable geometry. It does not read or change the open project. The same plan, memory gates, result format, and sharing controls apply to this computer and to configured runners.</p>
+    <div class="prose">
+<h2 id="open-a-benchmark">Open a benchmark</h2>
+<p>Settings then Benchmark lists this computer and every configured runner. Choose Benchmark this computer for a local run, or a named runner for a remote run. In Configure remotes, right-click a runner and choose Benchmark this runner to open the same dialog for that machine.</p>
+<p>Benchmarking this computer opens the dialog immediately. The dialog shows its own busy state while it reads local hardware, prepares a plan, or runs a case, and the window behind it stays visible. Opening a remote benchmark refreshes that runner's hardware first, behind a busy overlay, and then opens the same dialog. A target with more than one GPU requires an explicit device choice.</p>
+<p>A local benchmark cannot overlap Live mode, a local simulation, a parameter sweep, a convergence study, or mesh preview. A remote benchmark is a durable runner job. Closing its dialog offers to detach and leave it running. The job then remains available to inspect or cancel in Configure remotes.</p>
+<h2 id="preview-the-plan">Preview the plan</h2>
+<p>The dialog selects CPU, GPU, or both, then maps quality to a fixed solver step count.</p>
+<div class="table-wrap"><table><thead><tr><th>Quality</th><th>Solver steps per case</th></tr></thead><tbody><tr><td>Approximate</td><td>100</td></tr><tr><td>Standard</td><td>1,000</td></tr><tr><td>Precise</td><td>10,000</td></tr></tbody></table></div>
+<p>Quality changes the number of solver steps. It does not select a different memory rung. The normal plan builds an ascending ladder from these target peak memory sizes: 100MB, 1GB, 3GB, 10GB, 20GB, 40GB, 80GB, 100GB, 150GB, and 200GB. The bundled geometry is scaled until its structural peak estimate is within 5 percent of the rung target. CPU admission applies a 1.20x bound to that estimate before the device-headroom gate.</p>
+<p>The planner applies a live headroom gate before admitting each rung. A CPU case may use 85 percent of the currently available system RAM minus 0.5 GiB. A GPU case may use 85 percent of the currently available VRAM minus 0.6 GiB for the driver and GPU context.</p>
+<p>The planner refuses a target whose required memory cannot be measured. An ascending ladder stops before the first rung that does not fit that backend.</p>
+<p>Run one size replaces the ladder with the selected rung. It still passes the same fit gate and is refused when that rung does not fit. The runner reads live memory again before preparing each case and after exporting the realized mesh. A rung is never resized after preview.</p>
+<p>The plan table lists the backend, realized grid estimate, update cells, peak memory, steps, and estimated time for every case, and follows the options as they change. The first plan uses a preliminary rate scaled from the target hardware. A completed result stores a measured rate for that target, which calibrates later plans. Run benchmark stays disabled until the plan matches the current options.</p>
+<h2 id="run-and-cancel">Run and cancel</h2>
+<p>Each rung runs the bundled geometry through the normal export and solver path. The timed loop includes the full per-step S-parameter and NF2FF capture workload. Surface-current capture is not enabled, because it is an opt-in extra rather than part of a normal run. The final far-field post-pass is skipped because it is outside steady-state throughput. Every result records the workload it was measured under, and a stored result from a different workload does not calibrate a later plan.</p>
+<p>The busy overlay names the active case and step count. Cancel requests a graceful stop from an active solver and prevents later cases from starting. Cancelled, failed, and skipped points remain in the result with their reason, but they do not publish a settled throughput value. A live memory refusal stops later rungs for that backend and is recorded in the warnings.</p>
+<h2 id="results-and-settled-throughput">Results and settled throughput</h2>
+<p>The result page names the hardware, plots update cells against settled throughput for each backend, and tables the case, backend, realized grid, completed steps, elapsed time, settled GCell/s, peak process RAM, and peak GPU memory. Drag to pan, scroll to zoom, and Home refits the plot. A case that did not complete states its reason under the table. Its actions are Copy result JSON, Share benchmark with RayRF developers, and Close. Reopen the benchmark to plan a different configuration.</p>
+<figure><div class="media ph"><span class="tag">screenshot</span></div><figcaption>Benchmark results with CPU and GPU curves, hardware summary, measured points, and result actions</figcaption></figure>
+<p>Settled throughput uses the solver's native settled window when present. The fallback computes a rate from step telemetry after the warmup interval and before the final hold interval. A point with no valid settled window fails instead of substituting the full-run average.</p>
+<p>Copy result JSON copies the complete <code>rayrf-benchmark-result/v1</code> document. Its top level contains <code>schema</code>, <code>app_version</code>, <code>timestamp</code>, <code>hardware</code>, <code>backend</code>, <code>device_index</code>, <code>quality</code>, <code>single_size</code>, <code>completed</code>, <code>cancelled</code>, <code>error</code>, <code>points</code>, <code>aggregate</code>, <code>annotations</code>, and <code>warnings</code>. Each point keeps its realized grid and cell count, requested and completed steps, elapsed time, settled and full-run rates, throughput source, estimated and observed memory, status, error, and annotations. Copying this JSON does not share it.</p>
+<h2 id="headless-benchmark">Headless benchmark</h2>
+<p><code>rayrf benchmark</code> runs the same bundled workload without the GUI.</p>
+<pre><code>rayrf benchmark --backend both --quality standard
+rayrf benchmark --backend cuda --device-index 1 --single-size 10GB</code></pre>
+<p><code>--backend</code> accepts <code>cpu</code>, <code>cuda</code>, or <code>both</code>. <code>--quality</code> accepts <code>approximate</code>, <code>standard</code>, or <code>precise</code>. <code>--single-size</code>, also accepted as <code>--size</code>, selects one ladder label. Progress and plan warnings go to stderr. Stdout contains one compact <code>rayrf-benchmark-result/v1</code> JSON document and no progress text. Exit status 0 means complete, 130 means cancelled, 2 means the plan was refused, and 1 means another failure. See the <a href="docs-cli-reference.html">CLI reference</a> for the complete generated syntax.</p>
+<h2 id="opt-in-sharing-and-privacy">Opt-in sharing and privacy</h2>
+<p>No benchmark data is sent automatically. Share benchmark with RayRF developers sends the request below, and nothing else, when it is pressed. Copy result JSON puts the full result on the clipboard without sending it, so the request can be read first.</p>
+<p>The share request contains exactly these fields:</p>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Contents</th></tr></thead><tbody><tr><td><code>hardware</code></td><td>CPU model, physical core count, total RAM, operating system, GPU model, and total VRAM or null</td></tr><tr><td><code>points</code></td><td>Up to 64 completed points with update cells, settled GCell/s, observed peak RAM, observed peak VRAM, and backend</td></tr><tr><td><code>curve_image</code></td><td>The displayed curve as a base64 PNG with media type, width, and height</td></tr><tr><td><code>app_version</code></td><td>The RayRF version that produced the result</td></tr><tr><td><code>timestamp</code></td><td>The benchmark result time with its UTC offset</td></tr></tbody></table></div>
+<p>The decoded PNG is limited to 1 MiB. The complete request is limited to 1.5 MiB. Incomplete points, full result annotations, warnings, timing estimates, and raw step telemetry are not included.</p>
+<p>The JSON body contains no project data, geometry, simulation settings, ports, file names, file paths, host name, account identifier, email address, IP address, or user-agent value. The receiver stores the listed hardware and point fields in a benchmark record and stores a sanitized copy of the curve PNG. It adds a record ID and submission time, but does not store the request IP or user agent. The full result JSON copied by Copy result JSON is separate from this smaller sharing request.</p>
+    </div>
+    <nav class="docs-pager" aria-label="Pager"><a class="prev" href="docs-running.html"><span>Previous</span>Running simulations</a><a class="next" href="docs-s-parameters.html"><span>Next</span>S-parameters and Smith chart</a></nav>
+  </article>
+</main>
+<div id="site-footer"></div>
+<script src="assets/docs-nav.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

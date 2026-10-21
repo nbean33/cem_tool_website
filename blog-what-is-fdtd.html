@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What is FDTD, and why it suits PCB RF simulation | RayRF</title>
+<meta name="description" content="FDTD, the finite-difference time-domain method, steps the electric and magnetic fields forward in time on a grid. A plain explanation of how it works, its trade-offs, and why GPUs suit it.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="blog">
+<div id="site-header"></div>
+<main id="main">
+  <article class="article">
+    <div class="container narrow">
+      <a class="back" href="blog.html">&larr; All posts</a>
+      <div class="post-meta" style="margin-top:22px">April 15, 2026 / 6 min read</div>
+      <h1>What is FDTD, and why it suits PCB RF simulation</h1>
+      <div class="prose">
+<div class="short-answer"><h2>Short answer</h2><p>FDTD, the finite-difference time-domain method, solves electromagnetics by stepping the electric and magnetic fields forward in time on a regular grid. You launch a broadband pulse and watch it propagate, so a single run gives results across a whole frequency band. Each cell update depends only on its neighbors, which is why FDTD parallelizes so well on a GPU.</p></div>
+<p>FDTD is one of the workhorse methods in electromagnetic simulation. The idea is older than most commercial tools and the math is approachable. This is a plain explanation aimed at RF engineers who want to know what the method actually does and when to use it.</p>
+
+<h2>The core idea</h2>
+<p>Maxwell's equations relate how electric and magnetic fields change in space and in time. FDTD turns those continuous relationships into a grid of small cells and a clock. At each tick, it updates the electric field from the surrounding magnetic field, then updates the magnetic field from the surrounding electric field. This leapfrog in time, on the staggered grid known as the Yee cell, is the whole engine.</p>
+<p>You excite the structure with a short pulse. Because a short pulse contains a wide band of frequencies, you do not run one frequency at a time. You let the pulse propagate, record the response over time, and take a Fourier transform to get the behavior across the entire band from a single run.</p>
+
+<h2>Strengths and trade-offs</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Strength</th><th>Trade-off</th></tr></thead>
+<tbody>
+<tr><td>One run covers a broad band</td><td>High-Q resonators need many timesteps to settle</td></tr>
+<tr><td>Transient and time-domain behavior is natural</td><td>Cell size is tied to the smallest feature and shortest wavelength</td></tr>
+<tr><td>Each cell update is local, so it parallelizes</td><td>Curved or angled geometry needs fine cells to resolve</td></tr>
+<tr><td>Maps cleanly onto GPU hardware</td><td>Open boundaries need an absorbing layer (PML)</td></tr>
+</tbody>
+</table></div>
+
+<h2>Why GPUs and FDTD fit together</h2>
+<p>An FDTD cell only needs its immediate neighbors from the previous timestep. There is no global system to solve at each step, just a huge number of small, identical, independent updates. That is the exact shape of work a GPU is built for. Updating millions of cells in parallel is why a GPU FDTD solver can run tens of times faster than a single-threaded CPU version. We measured about 173.7x against openEMS on an 82.8M-cell patch run in the <a href="blog-rayrf-vs-openems-benchmark.html">benchmark post</a>.</p>
+
+<h2>FDTD vs FEM for PCB RF</h2>
+<ul>
+<li><b>FDTD</b> is time domain. One run gives the whole band, and it scales on a GPU. It suits broadband PCB RF such as antennas, filters, and transmission lines.</li>
+<li><b>FEM</b> is frequency domain. It is strong for arbitrary 3D geometry and resonant structures, but it solves one frequency at a time.</li>
+</ul>
+<p>Neither is universally better. For the planar PCB RF that most engineers do day to day, FDTD on a GPU is a strong fit, which is the bet RayRF is built on. If you want to see it on a real design, the <a href="blog-patch-antenna-simulation-guide.html">patch antenna walkthrough</a> runs the method end to end.</p>
+<div class="post-cta"><h3>See FDTD run on your own board</h3><p>RayRF is a GPU FDTD simulator with a GUI. Draw a structure, run it, and watch the fields. 30-day free trial, no card required.</p><a class="btn lg" href="pricing.html">Start the free trial</a></div>
+      </div>
+      <div class="tags"><span>FDTD</span><span>explainer</span><span>electromagnetics</span></div>
+    </div>
+  </article>
+</main>
+<div id="site-footer"></div>
+<script src="assets/site.js"></script>
+</body>
+</html>

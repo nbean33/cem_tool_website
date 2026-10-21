@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RayRF Studio - GPU FDTD simulator for RF engineers</title>
+<meta name="description" content="RayRF is a full-GUI electromagnetics simulator for RF PCB design. GPU and CPU FDTD, live S-parameters, Smith chart, radiation pattern, and 3D fields.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="index">
+<div id="site-header"></div>
+<main id="main">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="h1">Simulate at the<br><span class="gradient-text">speed of thought.</span></h1>
+      <p class="lead">RayRF is a full-GUI electromagnetics simulator for RF PCB design. Edit the geometry and S-parameters, Smith chart, radiation pattern, and 3D fields update in seconds. Runs locally on your GPU or CPU.</p>
+      <div class="cta-row">
+        <a class="btn lg" href="pricing.html">Start 30-day free trial</a>
+        <a class="btn lg ghost" href="validation.html">See validation</a>
+        <span class="cta-note">Windows and Linux, no card required.</span>
+      </div>
+
+      <div class="video" data-demo>
+        <canvas aria-label="RayRF 1 minute demo"></canvas>
+        <span class="label">RayRF 1 minute demo</span>
+        <button class="play" aria-label="Play demo"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z" fill="#0b0b0d"/></svg></button>
+        <div class="bar"><span data-clock>0:00</span><div class="track"><div data-progress style="height:100%;width:0;background:var(--accent);border-radius:2px"></div></div><span>1:00</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benchmark -->
+  <section>
+    <div class="container">
+      <div class="bench-head">
+        <div>
+          <h2 class="h2">openEMS in 4 days.<br><span class="accent">RayRF in 35 minutes.</span></h2>
+          <p class="lead" style="font-size:17px">Measured throughput on an 82.8M-cell patch antenna mesh for 1,000,000 timesteps.</p>
+        </div>
+        <div class="bench-meta">Cell updates per second, wider bar is faster<br>82.8M-cell mesh, 1,000,000 timesteps</div>
+      </div>
+      <div class="bench">
+        <div class="bench-row" data-rate="39600">
+          <div class="who"><b>RayRF GPU</b><span>RTX 5090</span></div>
+          <div class="bench-track"><div class="bench-fill"></div><span class="bench-label">39,600 MCell/s<em>173.7x FASTER</em></span></div>
+          <div class="bench-time">34 m 51 s</div>
+        </div>
+        <div class="bench-row cpu" data-rate="4620">
+          <div class="who"><b>RayRF CPU</b><span>Ryzen 9 9950X, DDR5 6000, 32 threads</span></div>
+          <div class="bench-track"><div class="bench-fill"></div><span class="bench-label">4,620 MCell/s<em>20.3x FASTER</em></span></div>
+          <div class="bench-time">4 h 59 m</div>
+        </div>
+        <div class="bench-row base" data-rate="228">
+          <div class="who"><b>openEMS</b><span>Ryzen 9 9950X, DDR5 6000, 32 threads (baseline)</span></div>
+          <div class="bench-track"><div class="bench-fill"></div><span class="bench-label" style="left:16px">228 MCell/s</span></div>
+          <div class="bench-time">4 d 5 h</div>
+        </div>
+        <div class="bench-row na">
+          <div class="who"><b>CST / HFSS</b><span>Legacy commercial, $10-50K/yr</span></div>
+          <div class="bench-track"><span class="bench-label">not benchmarked</span></div>
+          <div class="bench-time">N/A</div>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat reveal"><div class="k">Live editor</div><div class="v">~1 s</div><p>preview update on edits in live mode with a typical high-end GPU for most typical-Q cases</p></div>
+        <div class="stat reveal"><div class="k">High resolution validation run</div><div class="v">34 m 51 s</div><p>5.8GHz patch antenna, 1,000,000 steps, 82.8M cells, RTX 5090</p></div>
+        <div class="stat reveal"><div class="k">No GPU?</div><div class="v">4 h 59 m</div><p>CPU benchmark runtime, still 20.3x openEMS on the same CPU</p></div>
+        <div class="stat reveal"><div class="k">Auto settings</div><div class="v">zero setup</div><p>mesh resolution, in-board refinement, boundary conditions, air margins, all automatic based on a single quality preset choice from Low to Very High.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Validation -->
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <h2 class="h2">Hardware validated with a VNA.<br><span class="sub">Every resonance within 1%.</span></h2>
+        <p>Custom fabricated patch antennas and a coupled resonance bandpass filter measured on a calibrated VNA vs RayRF simulated on the exact geometry. All resonances within 1%.</p>
+      </div>
+      <div class="chart-card reveal">
+        <div class="chart-toolbar">
+          <div><b>PA-08 First Resonance</b> <span class="dim small">One example from the validation suite.</span></div>
+          <div class="legend"><span class="meas"><i></i>Measured (VNA)</span><span class="sim"><i></i>RayRF (sim)</span></div>
+        </div>
+        <div data-dut="PA08-home"></div>
+      </div>
+      <div class="cta-row"><a class="btn ghost" href="validation.html">See the full validation suite &rarr;</a></div>
+    </div>
+  </section>
+
+  <!-- Field viewers -->
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <h2 class="h2">See the fields, <span class="sub">2D, 3D, and Radiation.</span></h2>
+        <p>Fully integrated viewers for surface currents, volumetric fields, and 3D radiation patterns. Export to CSV, PNG, or Touchstone.</p>
+      </div>
+      <div class="grid-3">
+        <div class="card reveal">
+          <div class="media"><svg viewBox="0 0 300 190" aria-hidden="true">
+            <defs><linearGradient id="cur" x1="0" x2="1"><stop offset="0" stop-color="#1e3a8a"/><stop offset=".45" stop-color="#22d3ee"/><stop offset=".7" stop-color="#facc15"/><stop offset="1" stop-color="#ef4444"/></linearGradient></defs>
+            <rect width="300" height="190" fill="#0d0d12"/>
+            <g fill="url(#cur)"><rect x="60" y="30" width="18" height="120" rx="2"/><rect x="104" y="45" width="18" height="120" rx="2" opacity=".9"/><rect x="148" y="30" width="18" height="120" rx="2" opacity=".75"/><rect x="192" y="45" width="18" height="120" rx="2" opacity=".55"/></g>
+            <rect x="20" y="30" width="40" height="10" fill="#d4a14f"/><rect x="210" y="155" width="70" height="10" fill="#d4a14f"/>
+          </svg></div>
+          <h3>Surface currents on a coupled-resonator filter.</h3>
+          <p>Visualize the passband frequency traverse the structure as each resonator excites.</p>
+        </div>
+        <div class="card reveal">
+          <div class="media"><svg viewBox="0 0 300 190" aria-hidden="true">
+            <defs><radialGradient id="lobe" cx=".5" cy=".75" r=".7"><stop offset="0" stop-color="#ef4444"/><stop offset=".4" stop-color="#facc15"/><stop offset=".75" stop-color="#22d3ee"/><stop offset="1" stop-color="#1e3a8a"/></radialGradient></defs>
+            <rect width="300" height="190" fill="#0d0d12"/>
+            <g stroke="rgba(255,255,255,.1)" fill="none"><circle cx="150" cy="120" r="30"/><circle cx="150" cy="120" r="60"/><circle cx="150" cy="120" r="90"/><line x1="150" y1="20" x2="150" y2="190"/><line x1="40" y1="120" x2="260" y2="120"/></g>
+            <path d="M150 120 C 80 120 70 20 150 22 C 230 20 220 120 150 120Z" fill="url(#lobe)" opacity=".9"/>
+            <path d="M150 120 C 130 135 125 160 150 160 C 175 160 170 135 150 120Z" fill="#1e40af" opacity=".7"/>
+            <rect x="120" y="117" width="60" height="6" fill="#d4a14f"/>
+          </svg></div>
+          <h3>3D radiation pattern.</h3>
+          <p>Slice per-frequency, 2D polar and 3D patterns.</p>
+        </div>
+        <div class="card reveal">
+          <div class="media"><svg viewBox="0 0 300 190" aria-hidden="true">
+            <defs><radialGradient id="fld" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#ef4444"/><stop offset=".25" stop-color="#f97316"/><stop offset=".45" stop-color="#facc15"/><stop offset=".65" stop-color="#22d3ee"/><stop offset="1" stop-color="#0b1d4d"/></radialGradient></defs>
+            <rect width="300" height="190" fill="#0b1d4d"/>
+            <g transform="skewX(-18) translate(40 0)"><rect x="40" y="25" width="200" height="140" fill="url(#fld)" opacity=".95"/>
+            <rect x="110" y="70" width="60" height="50" fill="none" stroke="#fde68a" stroke-width="2"/></g>
+          </svg></div>
+          <h3>Full 3D fields.</h3>
+          <p>Full field evolution in time, for the entire domain. Understand where resonant energy lives, how it transfers between geometric components, and make informed design decisions based on the actual physics.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Editor -->
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <h2 class="h2">A modern editor <span class="sub">that saves you time.</span></h2>
+        <p>Straightforward layer-based 2.5D editor with standard controls from PCB design software like Altium and KiCad. Parametric geometry and scriptable shapes let you define any PCB-like structure with ease. Cloners, constraints, and Mesh Preview further accelerate design.</p>
+      </div>
+
+      <div class="feature-split reveal">
+        <div class="media"><svg viewBox="0 0 320 200" aria-hidden="true">
+          <rect width="320" height="200" fill="#101016"/><rect width="320" height="14" fill="#18181f"/>
+          <rect y="14" width="70" height="186" fill="#15151c"/><rect x="250" y="14" width="70" height="186" fill="#15151c"/>
+          <g fill="#272733"><rect x="8" y="24" width="54" height="10" rx="2"/><rect x="8" y="40" width="54" height="10" rx="2" fill="#3b2f66"/><rect x="8" y="56" width="54" height="10" rx="2"/><rect x="8" y="80" width="54" height="6" rx="2"/><rect x="8" y="92" width="44" height="6" rx="2"/><rect x="8" y="104" width="50" height="6" rx="2"/>
+          <rect x="258" y="24" width="54" height="8" rx="2"/><rect x="258" y="38" width="40" height="8" rx="2"/><rect x="258" y="52" width="54" height="8" rx="2"/><rect x="258" y="66" width="30" height="8" rx="2"/></g>
+          <g stroke="rgba(255,255,255,.05)"><line x1="90" y1="14" x2="90" y2="200"/><line x1="130" y1="14" x2="130" y2="200"/><line x1="170" y1="14" x2="170" y2="200"/><line x1="210" y1="14" x2="210" y2="200"/><line x1="70" y1="60" x2="250" y2="60"/><line x1="70" y1="100" x2="250" y2="100"/><line x1="70" y1="140" x2="250" y2="140"/></g>
+          <path d="M115 55h70v60h-29v-18h-5v19h-2v-19h-5v18h-29z" fill="#d4a14f"/><rect x="149" y="97" width="2" height="0"/><rect x="146" y="97" width="8" height="90" fill="#d4a14f"/>
+          <rect x="114" y="54" width="72" height="62" fill="none" stroke="#a78bfa" stroke-dasharray="3 2"/>
+        </svg></div>
+        <div><h3>Stackup and Geometry together.</h3><p>Stackup, tools, and primitive list on the left, viewport in the middle, properties on the right. A single visual canvas instead of scattered config files.</p></div>
+      </div>
+
+      <div class="feature-split rev reveal">
+        <div class="media"><svg viewBox="0 0 320 200" aria-hidden="true">
+          <rect width="320" height="200" fill="#101016"/>
+          <rect x="40" y="24" width="240" height="152" rx="8" fill="#16161e" stroke="#2a2a35"/>
+          <text x="58" y="48" fill="#e8ecf2" font-size="11" font-family="Inter,sans-serif" font-weight="600">Microstrip</text>
+          <g font-size="9" font-family="JetBrains Mono,monospace" fill="#7a8597"><text x="58" y="72">er</text><text x="58" y="92">h (mm)</text><text x="58" y="112">t (um)</text><text x="58" y="132">Z0 target</text></g>
+          <g fill="#0d0d12" stroke="#2f2f3a"><rect x="120" y="63" width="60" height="13" rx="3"/><rect x="120" y="83" width="60" height="13" rx="3"/><rect x="120" y="103" width="60" height="13" rx="3"/><rect x="120" y="123" width="60" height="13" rx="3"/></g>
+          <g font-size="9" font-family="JetBrains Mono,monospace" fill="#e8ecf2"><text x="126" y="73">4.30</text><text x="126" y="93">1.60</text><text x="126" y="113">35</text><text x="126" y="133">50.0</text></g>
+          <rect x="196" y="63" width="70" height="73" rx="5" fill="rgba(167,139,250,.12)" stroke="rgba(167,139,250,.4)"/>
+          <text x="204" y="80" fill="#7a8597" font-size="8" font-family="Inter,sans-serif">width</text>
+          <text x="204" y="100" fill="#a78bfa" font-size="15" font-family="JetBrains Mono,monospace" font-weight="600">3.06</text>
+          <text x="204" y="118" fill="#7a8597" font-size="8" font-family="Inter,sans-serif">mm</text>
+          <rect x="58" y="150" width="70" height="14" rx="4" fill="#a78bfa"/><text x="70" y="160" fill="#0e0b1a" font-size="8" font-family="Inter,sans-serif" font-weight="600">Apply to trace</text>
+        </svg></div>
+        <div><h3>Built-in RF calculators.</h3><p>Patch antenna, microstrip, and 9 more closed-form calculators included. Size traces and elements without switching windows.</p></div>
+      </div>
+
+      <div class="feature-split reveal">
+        <div class="media"><svg viewBox="0 0 320 200" aria-hidden="true">
+          <rect width="320" height="200" fill="#101016"/>
+          <g font-family="Inter,sans-serif" font-size="9">
+            <text x="30" y="36" fill="#e8ecf2" font-weight="600" font-size="11">Simulation</text>
+            <text x="30" y="60" fill="#7a8597">Frequency range</text><rect x="140" y="50" width="150" height="14" rx="3" fill="#16161e" stroke="#2f2f3a"/><text x="148" y="60" fill="#e8ecf2" font-family="JetBrains Mono,monospace">1.0 - 8.0 GHz</text>
+            <text x="30" y="88" fill="#7a8597">Quality preset</text>
+            <rect x="140" y="80" width="150" height="4" rx="2" fill="#272733"/><rect x="140" y="80" width="112" height="4" rx="2" fill="#a78bfa"/><circle cx="252" cy="82" r="6" fill="#e8ecf2"/>
+            <g fill="#7a8597" font-size="7"><text x="138" y="98">Low</text><text x="178" y="98">Med</text><text x="214" y="98">High</text><text x="252" y="98">Very High</text></g>
+            <text x="30" y="124" fill="#7a8597">Air box / PML</text><text x="140" y="124" fill="#4ade80">auto</text>
+            <text x="30" y="144" fill="#7a8597">In-board refinement</text><text x="140" y="144" fill="#4ade80">auto</text>
+            <text x="30" y="164" fill="#7a8597">End condition</text><text x="140" y="164" fill="#4ade80">energy ringdown -60 dB</text>
+          </g>
+        </svg></div>
+        <div><h3>Sensible defaults for every setting.</h3><p>Set the frequency range and quality preset, RayRF automatically scales the air box and PML, refines the mesh inside the board, and stops when sim energy rings out. Advanced mode gives full control when you need it.</p></div>
+      </div>
+
+      <div class="feature-split rev reveal">
+        <div class="media"><div data-board="mesh" data-kind="patch" style="height:100%"></div></div>
+        <div><h3>Auto-meshing with an interactive preview.</h3><p>Mesh Preview lets you see how the auto-mesher discretized the geometry. Never a black-box, always transparent settings with an option to copy the auto derived settings to advanced mode for granular control.</p></div>
+      </div>
+
+      <div class="feature-split reveal">
+        <div class="media"><svg viewBox="0 0 320 200" aria-hidden="true">
+          <rect width="320" height="200" fill="#101016"/>
+          <g transform="translate(90 100)" fill="none" stroke="rgba(255,255,255,.14)">
+            <circle r="70"/><circle cx="17.5" r="52.5"/><circle cx="35" r="35"/><circle cx="52.5" r="17.5"/>
+            <line x1="-70" x2="70"/>
+            <path d="M70 0 A70 70 0 0 0 0 -70"/><path d="M70 0 A70 70 0 0 1 0 70"/><path d="M70 0 A140 140 0 0 0 -42 -56"/><path d="M70 0 A140 140 0 0 1 -42 56"/>
+            <path d="M-50 -30 C -10 -60 40 -40 10 -5 C -15 20 30 40 55 15" stroke="#a78bfa" stroke-width="2"/>
+            <circle cx="10" cy="-5" r="3.5" fill="#fbbf24" stroke="none"/>
+          </g>
+          <g transform="translate(180 30)">
+            <rect width="120" height="140" rx="4" fill="#15151c"/>
+            <path d="M8 22 L40 24 L60 30 L72 110 L82 34 L100 26 L114 24" fill="none" stroke="#a78bfa" stroke-width="1.6"/>
+            <line x1="72" y1="16" x2="72" y2="130" stroke="#fbbf24" stroke-dasharray="2 2"/>
+            <text x="76" y="122" fill="#fbbf24" font-size="8" font-family="JetBrains Mono,monospace">-24.1 dB</text>
+          </g>
+        </svg></div>
+        <div><h3>S-parameters and Smith Chart.</h3><p>S11/S21/Sxy magnitude, Smith Chart, and markers that track custom criteria. Interpret matching, bandwidth, and impedance behavior in one place.</p></div>
+      </div>
+
+      <div class="feature-split rev reveal">
+        <div class="media"><svg viewBox="0 0 320 200" aria-hidden="true">
+          <rect width="320" height="200" fill="#101016"/>
+          <rect x="20" y="20" width="130" height="160" rx="4" fill="#15151c"/>
+          <path d="M45 60h70v60h-28v-16h-6v17h-4v-17h-6v16h-26z" fill="#d4a14f"/><rect x="77" y="104" width="6" height="76" fill="#d4a14f"/>
+          <path d="M115 60v60" stroke="#a78bfa" stroke-width="3"/><path d="M122 90h14m-4-4 4 4-4 4" stroke="#a78bfa" fill="none" stroke-width="1.5"/>
+          <rect x="165" y="20" width="135" height="160" rx="4" fill="#15151c"/>
+          <path d="M175 40 L205 42 L225 48 L240 140 L252 50 L272 44 L292 42" fill="none" stroke="rgba(167,139,250,.35)" stroke-width="1.4" stroke-dasharray="3 2"/>
+          <path d="M175 40 L200 42 L215 50 L228 150 L240 52 L265 44 L292 42" fill="none" stroke="#a78bfa" stroke-width="1.8"/>
+          <rect x="180" y="160" width="64" height="12" rx="6" fill="rgba(74,222,128,.15)"/><circle cx="188" cy="166" r="3" fill="#4ade80"/><text x="195" y="169" fill="#4ade80" font-size="8" font-family="Inter,sans-serif">LIVE ~1 s</text>
+        </svg></div>
+        <div><h3>Enable Live Mode and edits update the results in seconds.</h3><p>Tune a patch edge and S11, the Smith Chart, and 3D radiation patterns all re-solve and update in realtime.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="h2">Priced for <span class="accent">individuals.</span></h2>
+        <p>Commercial 3D EM tools (CST, HFSS) are priced in the $10,000 to $50,000 per year range, with a required sales call. RayRF starts at $17 per month on the annual plan, $30 monthly. No sales call, just download.</p>
+      </div>
+      <div class="toggle-wrap"><div class="seg lg" data-billing-toggle><button data-mode="monthly">Monthly</button><button data-mode="yearly">Yearly</button></div></div>
+      <div class="plans">
+        <div class="plan">
+          <h3>Hobby</h3><div class="for">For students and hobbyists.</div>
+          <div class="price"><span class="cur">$</span><span class="amt" data-monthly="30" data-yearly="17">17</span><span class="per">/ month</span><span class="save" data-show="yearly">save 44%</span></div>
+          <div class="billing" data-show="yearly">Billed annually at $200/year.</div>
+          <div class="billing" data-show="monthly" hidden>Billed monthly. Cancel anytime.</div>
+          <div class="billing-alt" data-show="yearly">or $30/month billed monthly</div>
+          <div class="billing-alt" data-show="monthly" hidden>or $200/year billed annually</div>
+          <ul>
+            <li>Non-commercial use only</li><li>Full CPU and GPU solvers, same speed as Pro</li><li>Live Mode preview, auto-mesh, convergence study</li><li>All built-in RF structure calculators</li><li>CSV + PNG export</li><li>Touchstone (.s2p / .sNp) export</li><li>Programmatic CLI and headless operation</li><li>Up to 2 ports, 2-layer stackups</li><li>Activate on 1 machine at a time</li>
+          </ul>
+          <a class="btn lg ghost block" href="pricing.html">Add card and extend trial</a>
+        </div>
+        <div class="plan pro">
+          <h3>Pro</h3><div class="for">For consultants and professional engineers.</div>
+          <div class="price"><span class="cur">$</span><span class="amt" data-monthly="200" data-yearly="125">125</span><span class="per">/ month</span><span class="save" data-show="yearly">save 38%</span></div>
+          <div class="billing" data-show="yearly">Billed annually at $1,500/year.</div>
+          <div class="billing" data-show="monthly" hidden>Billed monthly. Cancel anytime.</div>
+          <div class="billing-alt" data-show="yearly">or $200/month billed monthly</div>
+          <div class="billing-alt" data-show="monthly" hidden>or $1,500/year billed annually</div>
+          <ul>
+            <li>Commercial use licensed</li><li>Full CPU and GPU solvers</li><li>Unlimited ports, unlimited layers</li><li>Touchstone (.s2p / .sNp) export</li><li>Programmatic CLI and headless operation</li><li>Activate on 2 machines at a time</li><li>Priority email support</li>
+          </ul>
+          <a class="btn lg block" href="pricing.html">Upgrade to Pro</a>
+        </div>
+      </div>
+      <div class="founding">
+        <div><h3>Founding Member</h3><div class="big">$3,000 one-time. Own Pro forever.</div><p>Every update, every version, paid once. Full Pro features, including activation on 2 machines. Limited to the first 50 subscribers.</p></div>
+        <a class="btn lg" href="pricing.html">Claim founding seat</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <div class="container">
+      <h2 class="h2">Stop waiting for your simulator.<br><span class="gradient-text">Start designing at the speed of thought.</span></h2>
+      <p>Add a card during the trial and it extends to 60 days. Cancel before the first charge and you are not billed.</p>
+      <div class="cta-row"><a class="btn lg" href="pricing.html">Add card and extend trial</a><a class="btn lg ghost" href="docs.html">Read the docs</a></div>
+    </div>
+  </section>
+</main>
+<div id="site-footer"></div>
+<script src="assets/site.js"></script>
+</body>
+</html>

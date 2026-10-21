@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free RF Calculators (Microstrip, Stripline, Patch, IFA, CPW, Smith) | RayRF</title>
+<meta name="description" content="Twelve closed-form RF calculators: microstrip, stripline, patch antenna, IFA, CPW, GCPW, differential pair, wavelength, quarter-wave transformer, and Smith chart.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="calculators">
+<div id="site-header"></div>
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <div class="eyebrow">Free RF calculators</div>
+      <h1 class="h1" style="margin-top:14px">Closed-form RF calculators <span class="sub">for the geometries you use every day.</span></h1>
+      <p class="lead">Twelve calculators covering microstrip, stripline, patch antennas, inverted-F antennas, CPW, GCPW, differential pairs, wavelength, quarter-wave matching, and Smith chart conversions. All calculators include a breakdown of the math steps, along with references for the equations.</p>
+    </div>
+  </section>
+  <section style="padding-top:20px">
+    <div class="container"><div class="calc-grid" id="calc-grid"></div></div>
+  </section>
+  <section class="final-cta">
+    <div class="container">
+      <h2 class="h2">Closed-form is just the start.</h2>
+      <p>Calculators give idealized starting points. A full-wave simulator lets you model the whole system and predict reality much more accurately. RayRF is exceptionally fast at PCB RF simulations with an intuitive UI so you don't waste time on the setup either. Give it a try for free with no commitment.</p>
+      <div class="cta-row"><a class="btn lg" href="index.html">Try RayRF free</a><span class="cta-note">Windows and Linux. No credit card required.</span></div>
+    </div>
+  </section>
+</main>
+<div id="site-footer"></div>
+<script>
+  const CU = "#d4a14f", SUB = "#2b2540", GND = "#8b6a33", AIR = "#16161e";
+  const D = {
+    microstrip: `<rect x="20" y="70" width="200" height="40" fill="${SUB}"/><rect x="20" y="110" width="200" height="8" fill="${GND}"/><rect x="95" y="62" width="50" height="8" fill="${CU}"/><text x="28" y="94">εr</text><text x="150" y="132">ground plane</text>`,
+    stripline: `<rect x="20" y="40" width="200" height="70" fill="${SUB}"/><rect x="20" y="32" width="200" height="8" fill="${GND}"/><rect x="20" y="110" width="200" height="8" fill="${GND}"/><rect x="95" y="71" width="50" height="8" fill="${CU}"/><text x="28" y="80">εr</text><text x="28" y="28">top ground</text><text x="140" y="132">bottom ground</text>`,
+    patch: `<rect x="20" y="20" width="90" height="90" fill="${SUB}"/><path d="M38 36h54v46H70v-14h-4v15h-2V68h-4v14H38z" fill="${CU}"/><rect x="62" y="68" width="6" height="42" fill="${CU}"/><text x="40" y="128">top view</text><rect x="130" y="70" width="90" height="26" fill="${SUB}"/><rect x="130" y="96" width="90" height="6" fill="${GND}"/><rect x="150" y="64" width="50" height="6" fill="${CU}"/><text x="140" y="128">side view</text><text x="135" y="88">εr</text>`,
+    ifa: `<rect x="20" y="20" width="200" height="100" fill="${SUB}"/><rect x="20" y="60" width="200" height="60" fill="${GND}" opacity=".9"/><text x="150" y="100">ground plane</text><path d="M60 60V34h130" stroke="${CU}" stroke-width="5" fill="none"/><path d="M90 60V34" stroke="${CU}" stroke-width="5"/><circle cx="60" cy="60" r="3" fill="#f87171"/><circle cx="90" cy="60" r="3" fill="#4ade80"/><text x="150" y="28">open end</text><text x="26" y="52">short</text><text x="96" y="52">feed</text><g fill="#555">${[40, 70, 100, 130, 160, 190].map((x) => `<circle cx="${x}" cy="66" r="2"/>`).join("")}</g><text x="26" y="14">cutout (no copper under antenna)</text>`,
+    cpw: `<rect x="20" y="70" width="200" height="45" fill="${SUB}"/><rect x="20" y="62" width="62" height="8" fill="${CU}"/><rect x="98" y="62" width="44" height="8" fill="${CU}"/><rect x="158" y="62" width="62" height="8" fill="${CU}"/><text x="28" y="96">εr</text>`,
+    gcpw: `<rect x="20" y="70" width="200" height="40" fill="${SUB}"/><rect x="20" y="110" width="200" height="8" fill="${GND}"/><rect x="20" y="62" width="62" height="8" fill="${CU}"/><rect x="98" y="62" width="44" height="8" fill="${CU}"/><rect x="158" y="62" width="62" height="8" fill="${CU}"/><rect x="46" y="70" width="6" height="40" fill="#777"/><rect x="188" y="70" width="6" height="40" fill="#777"/><text x="60" y="96">εr</text>`,
+    diff: `<rect x="20" y="70" width="200" height="40" fill="${SUB}"/><rect x="20" y="110" width="200" height="8" fill="${GND}"/><rect x="70" y="62" width="40" height="8" fill="${CU}"/><rect x="130" y="62" width="40" height="8" fill="${CU}"/><text x="28" y="94">εr</text><text x="150" y="132">ground plane</text><text x="84" y="54">+</text><text x="146" y="54">−</text>`,
+    embedded: `<rect x="20" y="50" width="200" height="20" fill="#3a3355"/><rect x="20" y="70" width="200" height="40" fill="${SUB}"/><rect x="20" y="110" width="200" height="8" fill="${GND}"/><rect x="95" y="62" width="50" height="8" fill="${CU}"/><text x="28" y="64">cover | εr</text><text x="28" y="94">εr</text>`,
+    wavelength: `<path d="M20 70 ${Array.from({ length: 41 }, (_, i) => `L${20 + i * 5} ${70 - 30 * Math.sin(i * Math.PI / 10)}`).join(" ")}" stroke="#a78bfa" stroke-width="2" fill="none"/><line x1="20" y1="110" x2="120" y2="110" stroke="#7a8597"/><text x="50" y="126">λ0</text><text x="130" y="126">v = c (vacuum)</text>`,
+    guided: `<rect x="20" y="40" width="200" height="60" fill="${SUB}"/><path d="M20 70 ${Array.from({ length: 41 }, (_, i) => `L${20 + i * 5} ${70 - 20 * Math.sin(i * Math.PI / 6)}`).join(" ")}" stroke="#a78bfa" stroke-width="2" fill="none"/><text x="26" y="124">eeff | v = c/sqrt(eeff)</text>`,
+    qwt: `<rect x="20" y="62" width="60" height="16" fill="${CU}"/><rect x="80" y="66" width="80" height="8" fill="${CU}"/><rect x="160" y="58" width="60" height="24" fill="${CU}"/><text x="34" y="100">Z0</text><text x="100" y="100">Z1 = √(Z0·ZL)</text><text x="180" y="100">ZL</text><line x1="80" y1="50" x2="160" y2="50" stroke="#7a8597"/><text x="104" y="44">λg/4</text>`,
+    smith: `<g transform="translate(120 70)" fill="none" stroke="rgba(255,255,255,.25)"><circle r="55"/><circle cx="18" r="37"/><circle cx="36" r="19"/><line x1="-55" x2="55"/><path d="M55 0A55 55 0 0 0 0-55"/><path d="M55 0A55 55 0 0 1 0 55"/><circle cx="22" cy="-18" r="4" fill="#a78bfa" stroke="none"/></g><text x="150" y="20">inductive (+jX)</text><text x="150" y="134">capacitive (-jX)</text><text x="22" y="74">short</text><text x="180" y="74">open</text><text x="110" y="86">Z₀</text><text x="130" y="48">Γ</text>`,
+  };
+  const CALCS = [
+    ["microstrip", "Microstrip", "Trace impedance and width on a top-layer microstrip.", "rf-calc-microstrip.html"],
+    ["stripline", "Stripline", "Symmetric inner-layer trace between two ground planes."],
+    ["patch", "Patch antenna", "Rectangular microstrip patch dimensions and edge resistance."],
+    ["ifa", "Inverted-F antenna", "PCB IFA: arm length, feed offset, cutout and ground starting points."],
+    ["cpw", "CPW", "Coplanar waveguide on a dielectric, no bottom ground."],
+    ["gcpw", "GCPW", "Grounded coplanar waveguide. CPW with a backside ground."],
+    ["diff", "Differential pair", "Edge-coupled microstrip differential pair Zdiff."],
+    ["embedded", "Embedded microstrip", "Microstrip with a cover dielectric (soldermask, prepreg)."],
+    ["wavelength", "Free-space wavelength", "Convert frequency to wavelength in vacuum or air."],
+    ["guided", "Wavelength in dielectric", "Guided wavelength in bulk dielectric or microstrip."],
+    ["qwt", "Quarter-wave transformer", "lambda_g/4 matching section between two impedances."],
+    ["smith", "Smith chart", "Z to S11, VSWR, return loss, mismatch loss."],
+  ];
+  document.getElementById("calc-grid").innerHTML = CALCS.map(([key, name, desc, href]) => `
+    <a class="calc-card" href="${href || "rf-calc-microstrip.html"}"${href ? "" : ` title="Only the microstrip calculator is recreated so far"`}>
+      <div class="diagram"><svg viewBox="0 0 240 140" aria-hidden="true">${D[key]}</svg></div>
+      <div class="body"><h3>${name}</h3><p>${desc}</p></div>
+    </a>`).join("");
+</script>
+<script src="assets/site.js"></script>
+</body>
+</html>

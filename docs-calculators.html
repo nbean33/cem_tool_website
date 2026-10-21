@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RF calculators | RayRF Docs</title>
+<meta name="description" content="Closed-form transmission-line and antenna calculators for sizing a starting geometry before a full FDTD run. They open in a floating overlay in the Edit tab, and the same math is available headless through rayrf calc.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="docs-calculators">
+<div id="site-header"></div>
+<main id="main" class="container docs">
+  <aside class="docs-side" id="docs-side" aria-label="Documentation"></aside>
+  <article class="docs-main">
+    <div class="post-meta">Reference</div>
+    <h1 style="margin-top:8px">RF calculators</h1>
+    <p class="lede">Closed-form transmission-line and antenna calculators for sizing a starting geometry before a full FDTD run. They open in a floating overlay in the Edit tab, and the same math is available headless through <code>rayrf calc</code>.</p>
+    <div class="prose">
+<h2 id="the-overlay">The overlay</h2>
+<p>Open the overlay with Ctrl+R on the Edit tab, or with the Calculators button under the layer list in the Stackup section. Both toggle the same floating panel.</p>
+<figure><div class="media ph"><span class="tag">screenshot</span></div><figcaption>RF calculators overlay open on the editor</figcaption></figure>
+<p>The panel floats over the canvas. Drag it by its title bar, and resize it from any edge or corner. A dropdown at the top selects the calculator. Resize the panel larger and the dropdown becomes a grid of buttons, one per calculator. The body shows that calculator's inputs, its results, and a live cross-section preview that redraws as you type. Results are read-only text, so a value is shown exactly as the formula returned it at any scale. When a value leaves a formula's validity window, an amber notice under the form states the bound. When an input is outside the range the formula is defined on, the field turns red, the results and the preview clear, and the notice names the value and the limit. The calculators are read-only analytic tools, so they stay available when a project is open read-only.</p>
+<p>Where a calculator has both an impedance and a width, a Solve for choice at the top of the page picks which one is the answer. The quantity being solved leaves the form and its value appears in the results.</p>
+<h2 id="pull-from-stackup">Pull from stackup</h2>
+<p>Each calculator that takes a substrate has a Pull from stackup checkbox. Check it, pick a Top and a Ref conductor layer, and the calculator fills the substrate height and epsilon_r from the active project between those layers, then locks those two fields. When more than one dielectric slab sits in the gap, the epsilon_r is a thickness-weighted average and the detail line lists the blend. Uncheck it to type the substrate values in directly. See <a href="docs-stackup-and-layers.html">Stackup and layers</a> for how layers are defined.</p>
+<h2 id="calculators">Calculators</h2>
+<p>Eleven calculators ship, in this order. Each solves the closed form named in its walkthrough. Wavelengths are reported as free-space lambda0 and guided lambda_g, and every guided-line calculator also reports the quarter wave lambda_g/4. The loss tangent is optional on every calculator that takes one: with it, the result adds the dielectric loss in dB/m and the dielectric Q, and without it those two rows are absent rather than zero.</p>
+<div class="table-wrap"><table><thead><tr><th>Calculator</th><th>Inputs</th><th>Returns</th></tr></thead><tbody><tr><td>Microstrip</td><td>h, epsilon_r, frequency, tan delta, and Z0 or W</td><td>the other of Z0/W, epsilon_eff, lambda_g, lambda_g/4, dielectric loss and Q</td></tr><tr><td>GCPW</td><td>gap S, h, epsilon_r, frequency, tan delta, and Z0 or W</td><td>the other of Z0/W, epsilon_eff, lambda_g, lambda_g/4, dielectric loss and Q</td></tr><tr><td>Stripline</td><td>plate spacing b, epsilon_r, copper t, frequency, tan delta, and Z0 or W</td><td>the other of Z0/W (IPC-2141A), epsilon_eff, lambda_g, lambda_g/4, dielectric loss and Q, and the copper thickness used</td></tr><tr><td>Patch</td><td>frequency, h, epsilon_r</td><td>patch W and L, epsilon_eff, the length extension delta L, lambda0, the radiating-edge resistance, and the fractional bandwidth</td></tr><tr><td>lambda Calc (guided wavelength)</td><td>frequency, and in PCB mode h, epsilon_r, trace W</td><td>lambda0, epsilon_eff, lambda/2, lambda/4</td></tr><tr><td>CPW</td><td>gap S, h, epsilon_r, frequency, tan delta, and Z0 or W</td><td>the other of Z0/W, epsilon_eff (no bottom ground), lambda_g, lambda_g/4, dielectric loss and Q</td></tr><tr><td>Diff Pair (differential pair)</td><td>h, epsilon_r, spacing S, frequency, and Zdiff or W</td><td>the other, plus Z0 even/odd (Kirschning-Jansen coupled lines), Zcommon, and the odd-mode epsilon_eff and lambda_g</td></tr><tr><td>Embedded MS</td><td>W, h, epsilon_r, cover height h2, cover epsilon_r, frequency, tan delta</td><td>Z0, epsilon_eff, lambda_g, lambda_g/4, dielectric loss and Q</td></tr><tr><td>lambda0 free (free-space wavelength)</td><td>frequency</td><td>lambda0, half, quarter</td></tr><tr><td>lambda/4 xfmr (quarter-wave transformer)</td><td>Z1, Z2, frequency, h, epsilon_r</td><td>Zt = sqrt(Z1 Z2), length lambda_g/4, epsilon_eff, the residual Gamma and return loss, and microstrip widths W1, Wt, W2</td></tr><tr><td>Smith chart</td><td>R, X, system Z0</td><td>Gamma magnitude, phase, and real and imaginary parts, VSWR, return loss, mismatch loss</td></tr></tbody></table></div>
+<p>The patch calculator sizes a rectangular patch from the transmission-line model and reports the resistance at the radiating edge so a feed can be designed against it. Feed matching is left to the geometry: the inset or the feed line width is drawn in the editor and checked by the run.</p>
+<h2 id="the-expression-strip">The expression strip</h2>
+<p>A single expression line is at the bottom of the panel. Type arithmetic (<code>+ - * / **</code> and parentheses, numbers only) and press Enter to evaluate. The two buttons take the square root and cube root of the current result, so sqrt(Z1*Z2) is entered as 50*75 then the root button. The square-root button is offered only while the result has a real root. A negative result disables it and the button says why. A rejected expression shows err.</p>
+<h2 id="step-by-step-breakdown">Step-by-step breakdown</h2>
+<p>Each calculator footer links to Step-by-step breakdown on RayRF, which opens the matching walkthrough at <a href="rf-calculators.html">rayrf.com/calculators</a> for that structure with the formula, its derivation, and the validity range of the model.</p>
+<h2 id="cli-equivalent">CLI equivalent</h2>
+<p><code>rayrf calc &lt;kind&gt;</code> runs the same formulas headless and prints a table, or <code>--json</code> for a machine-readable report. The kinds are <code>microstrip</code>, <code>stripline</code>, <code>cpw</code>, <code>gcpw</code>, <code>diff</code>, <code>embedded</code>, <code>patch</code>, <code>lambda</code>, <code>lambda-diel</code>, <code>qwt</code>, and <code>smith</code>. Inputs are given in GHz, mm, and ohms. Omit <code>--w</code> and pass <code>--z0</code> to solve a width from a target impedance. <code>--tand</code> is optional wherever a calculator reports dielectric loss, and the loss rows appear only when it is given. Stripline's <code>--t</code> is the copper thickness and defaults to 0.035 mm, and 0 is a strip of no thickness. <code>smith</code> uses 50 ohm when <code>--z0</code> is omitted. The CLI reports the same quantities as the overlay.</p>
+<pre><code>rayrf calc patch --er 4.4 --h 1.6 --freq 2.45
+rayrf calc microstrip --freq 2.45 --er 4.4 --h 1.6 --tand 0.02 --z0 50
+rayrf calc qwt --z1 50 --z2 75 --freq 2.4 --er 3.66 --h 0.5</code></pre>
+<p>The full flag list for <code>calc</code> is on the <a href="docs-cli-reference.html">CLI reference</a>.</p>
+    </div>
+    <nav class="docs-pager" aria-label="Pager"><a class="prev" href="docs-settings.html"><span>Previous</span>Settings reference</a><a class="next" href="docs-keyboard-shortcuts.html"><span>Next</span>Keyboard shortcuts</a></nav>
+  </article>
+</main>
+<div id="site-footer"></div>
+<script src="assets/docs-nav.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

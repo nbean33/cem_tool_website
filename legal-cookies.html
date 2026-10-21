@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cookie Policy | RayRF</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="legal">
+<div id="site-header"></div>
+<main id="main">
+  <article class="article legal">
+    <div class="container narrow">
+      <div class="eyebrow">Legal</div>
+      <nav class="legal-tabs" aria-label="Legal documents">
+        <a href="legal-terms.html">Terms of Service</a>
+        <a href="legal-privacy.html">Privacy Policy</a>
+        <a class="on" href="legal-cookies.html" aria-current="page">Cookie Policy</a>
+      </nav>
+      <div class="legal-updated">Last updated 2026-09-16</div>
+      <h1>Cookie Policy</h1>
+      <div class="prose">
+        <p>This Cookie Policy explains the cookies and similar technologies used by the RayRF website at rayrf.com. It is part of our broader <a href="legal-privacy.html">Privacy Policy</a>; please read both together.</p>
+
+        <h2>1. What cookies are</h2>
+        <p>Cookies are small text files that a website saves on your device when you visit. They let the site remember things between page loads (for example, that you are signed in) and let us measure anonymous traffic patterns. Some cookies are set by us (first-party); some are set by the services we use, such as Vercel (third-party).</p>
+
+        <h2>2. Categories of cookies we use</h2>
+        <h3>2.1 Strictly necessary</h3>
+        <p>These cookies are required for the site to function. Without them, you cannot sign in or complete checkout. They cannot be disabled through the cookie banner.</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Name</th><th>Purpose</th><th>Expiry</th><th>Source</th></tr></thead>
+          <tbody>
+            <tr><td>sb-*</td><td>Supabase authentication session and refresh tokens. Keeps you signed in across page loads.</td><td>Session and up to 1 year</td><td>First-party (Supabase)</td></tr>
+            <tr><td>pending_checkout_session</td><td>Lets us resume a Stripe Checkout return flow if you are bounced to the sign-in page mid-checkout.</td><td>Up to 30 minutes</td><td>First-party</td></tr>
+            <tr><td>CSRF tokens</td><td>Protect form submissions from cross-site request forgery (when applicable).</td><td>Session</td><td>First-party</td></tr>
+            <tr><td>rayrf_consent</td><td>Records your cookie-banner choice so we do not re-prompt you every page load. Versioned, so a policy update re-prompts.</td><td>6 months</td><td>First-party</td></tr>
+            <tr><td>rayrf_ab</td><td>Which of two layouts of the home, validation, and benchmarks pages you were shown, so the pages stay the same between visits. Holds a single letter and no identifier.</td><td>1 year</td><td>First-party</td></tr>
+          </tbody>
+        </table></div>
+        <h3>2.2 Functional</h3>
+        <p>Functional cookies remember preferences that improve your experience but are not strictly required to use the site.</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Name</th><th>Purpose</th><th>Expiry</th><th>Source</th></tr></thead>
+          <tbody>
+            <tr><td>preferredSignInView</td><td>Remembers whether you last signed in with email, password, or Google so we can take you back to that view.</td><td>1 year</td><td>First-party</td></tr>
+          </tbody>
+        </table></div>
+        <h3>2.3 Analytics, first-party</h3>
+        <p>First-party analytics cookies identify your browser and the current visit so we can measure traffic, dwell time, scroll depth, and Web Vitals without sharing anything with a third-party tracker. No personally identifying information is stored in these cookies; the values are random uuids generated on first visit.</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Name</th><th>Purpose</th><th>Expiry</th><th>Source</th></tr></thead>
+          <tbody>
+            <tr><td>rayrf_vid</td><td>Visitor uuid v4. Set on first visit, used to identify a browser across visits for traffic measurement and A/B assignment. Not linked to your account unless you sign in.</td><td>1 year</td><td>First-party</td></tr>
+            <tr><td>rayrf_sid</td><td>Session uuid v4. Set on first visit and refreshed on each page load with a sliding 30-minute idle window. Used to group page views into sessions.</td><td>30 minutes (sliding)</td><td>First-party</td></tr>
+          </tbody>
+        </table></div>
+        <p>These cookies are set and read while the Analytics, first-party tier is on: from your first page view in the United States and Canada outside Quebec, and only after you accept the tier everywhere else. Turning the tier off deletes nothing on its own (existing cookies expire on their own schedule) and keeps what was already collected, but no further analytics requests are sent from your browser.</p>
+        <h3>2.4 Analytics, behavioral</h3>
+        <p>Behavioral analytics records per-section engagement on each page you visit. For each named section of the page, we record how long it was visible, how long the pointer hovered over it, and how many times it was clicked. This tier also loads Microsoft Clarity, a session-replay and heatmap tool that records clicks, scrolls, and a DOM-level reconstruction of the page so we can see where the UI is confusing. Clarity masks form inputs by default. We do not record raw pointer coordinates, the text you click, the contents of input fields, or screenshots from our own first-party telemetry. This tier is on by default in the United States and Canada outside Quebec, where Cookie preferences turns it off, and off by default everywhere else until you opt in via the banner.</p>
+        <h3>2.5 Analytics and advertising, third-party</h3>
+        <p>This tier covers two services. Vercel Analytics and Vercel Speed Insights collect anonymous, aggregated traffic and performance data without personal identifiers. Google Ads measures conversions on advertising we run on Google, so we can tell which ads led to a sign-up or paid subscription. Google Ads runs under Consent Mode v2: when you reject this tier, the script still loads but is configured to set no cookies and send no identified events; Google receives only aggregate modeled signals.</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Name</th><th>Purpose</th><th>Expiry</th><th>Source</th></tr></thead>
+          <tbody>
+            <tr><td>Vercel Analytics</td><td>Anonymous page-view and basic-traffic measurement. No personally identifiable information is collected.</td><td>Session and up to 24 hours</td><td>Third-party (Vercel)</td></tr>
+            <tr><td>Vercel Speed Insights</td><td>Anonymous page-performance measurement (load times, layout shift, etc.).</td><td>Session</td><td>Third-party (Vercel)</td></tr>
+            <tr><td>Google Ads<br>(_gcl_au, _gcl_aw, NID, IDE)</td><td>Measures the effectiveness of ads we run on Google. Records that a click on a Google ad led to a sign-up or paid subscription. Hashed email address is sent for Enhanced Conversions so Google can match without a tracking identifier.</td><td>Up to 90 days</td><td>Third-party (Google)</td></tr>
+            <tr><td>rayrf_gclid</td><td>Google click id captured from the ad URL on landing. Used to attribute a later sign-up or paid subscription back to the original ad click, including when the conversion happens days or weeks after the click.</td><td>90 days</td><td>First-party</td></tr>
+          </tbody>
+        </table></div>
+        <p>Vercel Analytics and Speed Insights load while this tier is on: by default in the United States and Canada outside Quebec, and only after you accept the tier everywhere else. Google Ads starts in the no-cookie, no-identifier mode described above if you are in the EEA, the UK, Switzerland, or Quebec, and starts with measurement enabled elsewhere. Either way, your choice in the banner applies: rejecting this tier stops Vercel Analytics and Speed Insights requests entirely and puts Google Ads into the no-cookie, no-identifier mode.</p>
+
+        <h2>3. Managing your choices</h2>
+        <p>What you see on your first visit depends on where you are. In the United States and Canada outside Quebec, the optional tiers are on from your first page view and a small bar at the bottom of the page offers Accept and Customize; Customize is where you turn tiers off, and a browser Global Privacy Control signal turns off the behavioral and third-party tiers on its own. Everywhere else, including the EEA, the UK, Switzerland, and Quebec, every optional tier is off until you choose, and the banner offers Accept, Essentials only, and Customize (which lets you toggle Functional, Analytics first-party, Analytics behavioral, and Analytics and advertising third-party individually). Strictly necessary cookies are always on, as the site cannot operate without them.</p>
+        <p>You can change your choice at any time by clicking <a href="#" id="open-cookie-prefs">Cookie preferences</a> in the site footer; this opens the same toggles. You can also clear cookies and site data in your browser settings, which will cause the banner to appear again on your next visit.</p>
+        <p>Most browsers also let you control cookies directly through browser settings. For instructions, see your browser's help documentation, for example:</p>
+        <ul>
+          <li><a href="https://support.google.com/chrome/answer/95647">Google Chrome</a></li>
+          <li><a href="https://support.mozilla.org/kb/cookies-information-websites-store-on-your-computer">Mozilla Firefox</a></li>
+          <li><a href="https://support.apple.com/guide/safari/manage-cookies-sfri11471/mac">Apple Safari</a></li>
+          <li><a href="https://support.microsoft.com/microsoft-edge">Microsoft Edge</a></li>
+        </ul>
+
+        <h2>4. Changes to this Policy</h2>
+        <p>If we change this Cookie Policy materially, we will update the "Last updated" date at the top of this page and, where appropriate, re-prompt for your consent through the cookie banner.</p>
+
+        <h2>5. Contact</h2>
+        <p>For questions about cookies or this Policy, contact <a href="mailto:support@rayrf.com">support@rayrf.com</a>.</p>
+      </div>
+    </div>
+  </article>
+</main>
+<div id="site-footer"></div>
+<script src="assets/site.js"></script>
+<script>
+  document.getElementById("open-cookie-prefs").addEventListener("click", (e) => {
+    e.preventDefault();
+    document.getElementById("cookie-prefs").click();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keyboard shortcuts | RayRF Docs</title>
+<meta name="description" content="Every keyboard shortcut in RayRF, grouped by area. Drawing, constraint, and canvas keys act on the Edit tab only, and every single-letter key is ignored while a text field or spin box has focus so typing a value never arms a tool.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="docs-keyboard-shortcuts">
+<div id="site-header"></div>
+<main id="main" class="container docs">
+  <aside class="docs-side" id="docs-side" aria-label="Documentation"></aside>
+  <article class="docs-main">
+    <div class="post-meta">Reference</div>
+    <h1 style="margin-top:8px">Keyboard shortcuts</h1>
+    <p class="lede">Every keyboard shortcut in RayRF, grouped by area. Drawing, constraint, and canvas keys act on the Edit tab only, and every single-letter key is ignored while a text field or spin box has focus so typing a value never arms a tool.</p>
+    <div class="prose">
+<h2 id="application">Application</h2>
+<p>These work from any tab.</p>
+<div class="table-wrap"><table><thead><tr><th>Key</th><th>Action</th></tr></thead><tbody><tr><td><code>Ctrl+N</code></td><td>New project</td></tr><tr><td><code>Ctrl+O</code></td><td>Open project</td></tr><tr><td><code>Ctrl+S</code></td><td>Save</td></tr><tr><td><code>Ctrl+Shift+S</code></td><td>Save As</td></tr><tr><td><code>Ctrl+Z</code></td><td>Undo</td></tr><tr><td><code>Ctrl+Y</code></td><td>Redo</td></tr><tr><td><code>Ctrl+Shift+Z</code></td><td>Redo</td></tr></tbody></table></div>
+<h2 id="drawing-tools">Drawing tools</h2>
+<p>Each key selects the matching tool in the Edit tab toolbar. The Arc, Cutout, More Ports, Import PNG, and Script Shape tools have no key and are reached from the toolbar.</p>
+<div class="table-wrap"><table><thead><tr><th>Key</th><th>Tool</th></tr></thead><tbody><tr><td><code>Esc</code></td><td>Select (also cancels the active tool)</td></tr><tr><td><code>R</code></td><td>Rectangle</td></tr><tr><td><code>C</code></td><td>Circle</td></tr><tr><td><code>P</code></td><td>Polygon</td></tr><tr><td><code>F</code></td><td>Via</td></tr><tr><td><code>O</code></td><td>Hole</td></tr><tr><td><code>Q</code></td><td>Point port</td></tr><tr><td><code>A</code></td><td>Area port</td></tr><tr><td><code>M</code></td><td>Ruler</td></tr></tbody></table></div>
+<h2 id="constraint-and-dimension-tools">Constraint and dimension tools</h2>
+<p>Each key arms a pick tool that then waits for you to click the anchors, edges, or rims it needs.</p>
+<div class="table-wrap"><table><thead><tr><th>Key</th><th>Tool</th></tr></thead><tbody><tr><td><code>D</code></td><td>Dimension</td></tr><tr><td><code>I</code></td><td>Coincident</td></tr><tr><td><code>H</code></td><td>Horizontal</td></tr><tr><td><code>V</code></td><td>Vertical</td></tr><tr><td><code>T</code></td><td>Tangent</td></tr><tr><td><code>N</code></td><td>Angle</td></tr><tr><td><code>K</code></td><td>Fix</td></tr><tr><td><code>E</code></td><td>Equal</td></tr></tbody></table></div>
+<h2 id="editing-the-selection">Editing the selection</h2>
+<p>These act on the current selection in the Edit tab canvas. Cut and paste are blocked in viewer mode, copy stays available.</p>
+<div class="table-wrap"><table><thead><tr><th>Key</th><th>Action</th></tr></thead><tbody><tr><td><code>Ctrl+A</code></td><td>Select all shapes</td></tr><tr><td><code>Delete</code></td><td>Delete the selection</td></tr><tr><td><code>Backspace</code></td><td>Delete the selection</td></tr><tr><td><code>Space</code></td><td>Rotate the selection 90 deg clockwise</td></tr><tr><td><code>X</code></td><td>Mirror the selection horizontally</td></tr><tr><td><code>Y</code></td><td>Mirror the selection vertically</td></tr><tr><td><code>Ctrl+C</code></td><td>Copy</td></tr><tr><td><code>Ctrl+X</code></td><td>Cut</td></tr><tr><td><code>Ctrl+V</code></td><td>Paste</td></tr></tbody></table></div>
+<p>While placing a port, Space or R rotates the port ghost 90 deg instead of rotating a selection.</p>
+<h2 id="canvas-grid-and-layers">Canvas, grid, and layers</h2>
+<div class="table-wrap"><table><thead><tr><th>Key</th><th>Action</th></tr></thead><tbody><tr><td><code>S</code></td><td>Toggle snap to grid</td></tr><tr><td><code>Shift+S</code></td><td>Cycle the view mode</td></tr><tr><td><code>-</code></td><td>Shrink the grid spacing one step</td></tr><tr><td><code>=</code></td><td>Grow the grid spacing one step</td></tr><tr><td><code>+</code></td><td>Grow the grid spacing one step</td></tr><tr><td><code>1</code></td><td>Select layer 1 (through 9 for layer 9)</td></tr></tbody></table></div>
+<h2 id="stackup-layers">Stackup layers</h2>
+<p>These act on the Stackup layer list when it has focus, and on the layer bars in Mesh View.</p>
+<div class="table-wrap"><table><thead><tr><th>Key</th><th>Action</th></tr></thead><tbody><tr><td><code>Delete</code></td><td>Delete the selected layer</td></tr><tr><td><code>Ctrl+Up</code></td><td>Move the selected layer up one place</td></tr><tr><td><code>Ctrl+Down</code></td><td>Move the selected layer down one place</td></tr></tbody></table></div>
+<p>In Mesh View, Up and Down select the layer above or below.</p>
+<h2 id="rf-calculators">RF calculators</h2>
+<div class="table-wrap"><table><thead><tr><th>Key</th><th>Action</th></tr></thead><tbody><tr><td><code>Ctrl+R</code></td><td>Toggle the RF calculators overlay</td></tr></tbody></table></div>
+<h2 id="s-parameter-markers">S-parameter markers</h2>
+<p>These work on the S-parameters plot.</p>
+<div class="table-wrap"><table><thead><tr><th>Key</th><th>Action</th></tr></thead><tbody><tr><td><code>M</code></td><td>Toggle marker placement</td></tr><tr><td><code>Esc</code></td><td>Cancel marker placement</td></tr><tr><td><code>Delete</code></td><td>Delete the selected marker</td></tr><tr><td><code>Backspace</code></td><td>Delete the selected marker</td></tr></tbody></table></div>
+<h2 id="3d-views">3D views</h2>
+<p>The 3D mesh preview, the Radiation Pattern tab, and the Field Viewer share one set of mouse controls.</p>
+<div class="table-wrap"><table><thead><tr><th>Input</th><th>Action</th></tr></thead><tbody><tr><td>Left drag</td><td>Orbit</td></tr><tr><td>Right drag, middle drag, or Shift plus left drag</td><td>Pan</td></tr><tr><td>Wheel</td><td>Zoom toward the point under the pointer</td></tr><tr><td><code>Esc</code></td><td>End the drag</td></tr></tbody></table></div>
+    </div>
+    <nav class="docs-pager" aria-label="Pager"><a class="prev" href="docs-calculators.html"><span>Previous</span>RF calculators</a><a class="next" href="docs-file-formats.html"><span>Next</span>File formats and outputs</a></nav>
+  </article>
+</main>
+<div id="site-footer"></div>
+<script src="assets/docs-nav.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>
