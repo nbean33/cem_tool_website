@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "website",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8766", "--directory", "C:/Users/marin/OneDrive/Documents/GitHub/cem_tool_website"],
+      "port": 8766
+    }
+  ]
+}
