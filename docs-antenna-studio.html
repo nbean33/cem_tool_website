@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Antenna Studio | Machshev Docs</title>
+<meta name="description" content="A NEC-2 wire-antenna modeler in the browser: build a model, solve it, and see currents, impedance and gain.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="docs-antenna-studio">
+<div id="site-header"></div>
+<main id="main" class="container docs">
+  <aside class="docs-side" id="docs-side" aria-label="Documentation"></aside>
+  <article class="docs-main">
+    <div class="post-meta">Online tools</div>
+    <h1 style="margin-top:8px">Antenna Studio</h1>
+    <p class="lede">A NEC-2 wire-antenna modeler in the browser: build a model, solve it, and see currents, impedance and gain.</p>
+    <div class="prose">
+<p><a href="tools/antenna/index.html">Antenna Studio</a> is NEC Studio, a method-of-moments solver for wire antennas written in Rust and compiled to WebAssembly. Models are solved on your machine, in the browser.</p>
+<h2 id="starting-a-model">Starting a model</h2>
+<p>The model browser opens on a set of built-in templates: a half-wave dipole, an inverted V, a ground-plane vertical, a 3-element Yagi, a quad loop, a delta loop and a J-pole. Pick one to load it, then change its dimensions with the variables or in the geometry editor. The ground can be free space, a perfect ground, or one of several real soils from poor dry ground to sea water.</p>
+<p>You can also open a NEC deck (<code>.nec</code>) or a project file (<code>.toml</code>) from your computer. Saving downloads the model as a file.</p>
+<h2 id="results">Results</h2>
+<p>Each change is solved straight away. The 3D view shows the wires coloured by current and the radiation pattern as a surface. The side panels show the feed-point impedance and SWR, polar pattern cuts and a Smith chart.</p>
+<h2 id="sweeps-matching-and-the-optimizer">Sweeps, matching and the optimizer</h2>
+<ul><li>A frequency sweep plots impedance, SWR and gain across a band, adding each point as it is solved.</li><li>A parameter sweep steps one variable through a range and plots the results.</li><li>The matching panel designs a matching network for the feed point and can add it to the model.</li><li>The optimizer adjusts chosen variables toward goals such as SWR, gain or front-to-back ratio, and reports its progress as it runs.</li></ul>
+<p>Long jobs run in the background, so the model stays responsive while a sweep runs. Stop cancels a job at once.</p>
+<h2 id="limits-in-the-browser">Limits in the browser</h2>
+<p>The browser solves on a single thread. Models above about 2,000 unknowns take noticeably longer, and Antenna Studio shows a note when a model is that large. The layout needs a window at least 1,100 pixels wide; on a narrower screen, scroll sideways to reach every panel.</p>
+    </div>
+    <nav class="docs-pager" aria-label="Pager"><a class="prev" href="docs-pcb-toolkit.html"><span>Previous</span>PCB Toolkit</a><a class="next" href="docs-calculators.html"><span>Next</span>RF calculators</a></nav>
+  </article>
+</main>
+<div id="site-footer"></div>
+<script src="assets/docs-nav.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

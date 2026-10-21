@@ -5,25 +5,25 @@
    and the app's own same-named classes (.brand, .nav) and variables cannot reach the header. */
 
 .site-header {
-  --text: #e8ecf2;
-  --muted: #b3bbc9;
-  --accent: #a78bfa;
-  --accent-2: #c4b5fd;
-  --accent-ink: #0e0b1a;
-  --surface-2: #1a1a22;
-  --border: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.14);
-  --bg: #0b0b0d;
+  --text: #eaf2fb;
+  --muted: #b6c6db;
+  --accent: #2dd4bf;
+  --accent-2: #5eead4;
+  --accent-ink: #042f2e;
+  --surface-2: #1d3454;
+  --border: rgba(148, 190, 255, 0.12);
+  --border-strong: rgba(148, 190, 255, 0.2);
+  --bg: #0f1e34;
 
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(11, 11, 13, 0.92);
+  background: rgba(15, 30, 52, 0.92);
   backdrop-filter: saturate(140%) blur(12px);
   -webkit-backdrop-filter: saturate(140%) blur(12px);
   border-bottom: 1px solid var(--border);
   color: var(--text);
-  font: 400 15px/1.5 "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font: 400 15px/1.5 "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 .site-header *, .site-header *::before, .site-header *::after { box-sizing: border-box; }
@@ -61,15 +61,15 @@
 .site-header .btn {
   display: inline-flex; align-items: center; justify-content: center;
   background: var(--accent); color: var(--accent-ink);
-  font: 600 13px/1.2 "Inter", system-ui, sans-serif; letter-spacing: -0.065px;
+  font: 600 13px/1.2 "IBM Plex Sans", system-ui, sans-serif; letter-spacing: -0.065px;
   padding: 7px 14px; border-radius: 6px; border: 1px solid transparent; white-space: nowrap;
 }
 .site-header .btn:hover { background: var(--accent-2); color: var(--accent-ink); }
 
 .skip { position: absolute; left: -9999px; top: 8px; }
 .skip:focus {
-  left: 16px; z-index: 100; background: #a78bfa; color: #0e0b1a;
-  padding: 6px 12px; border-radius: 6px; font: 600 13px "Inter", system-ui, sans-serif;
+  left: 16px; z-index: 100; background: #2dd4bf; color: #042f2e;
+  padding: 6px 12px; border-radius: 6px; font: 600 13px "IBM Plex Sans", system-ui, sans-serif;
 }
 
 @media (max-width: 1100px) {

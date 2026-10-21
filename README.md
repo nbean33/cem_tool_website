@@ -1,7 +1,25 @@
 # cem_tool_website
 
-Static site for RayRF, served by GitHub Pages from the repository root. Plain HTML, CSS and
-JavaScript: no build step for the site itself.
+Static site for Machshev, computational electromagnetics software from Machshev Labs LLC,
+served by GitHub Pages from the repository root. Plain HTML, CSS and JavaScript.
+
+## Placeholders
+
+Copy that is still to be written carries `class="ph"` (in the docs sources, a `!ph` line), which
+draws it with a dashed amber outline and a "Placeholder" label. To list what is left:
+
+```
+grep -rn 'class="[^"]*ph' --include=*.html . ; grep -rn '^!ph' docs-src
+```
+
+The validation charts draw sample curves until `DUTS` in `assets/site.js` holds measured data
+(set `SHOW_PLACEHOLDER_NOTE` to false then). The legal pages are outlines for counsel to complete.
+
+## Generated pages
+
+- `docs-*.html`, `assets/docs-nav.js` and `machshev-docs.md` come from `docs-src/*.md`:
+  `python build_docs.py`.
+- `blog.html` and `blog-*.html` come from `blog-src/*.html`: `python build_blog.py`.
 
 ## Online tools
 

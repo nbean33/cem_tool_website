@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Free RF Calculators (Microstrip, Stripline, Patch, IFA, CPW, Smith) | RayRF</title>
+<title>Free RF Calculators (Microstrip, Stripline, Patch, IFA, CPW, Smith) | Machshev</title>
 <meta name="description" content="Twelve closed-form RF calculators: microstrip, stripline, patch antenna, IFA, CPW, GCPW, differential pair, wavelength, quarter-wave transformer, and Smith chart.">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body data-page="calculators">
@@ -42,14 +42,14 @@
   <section class="final-cta">
     <div class="container">
       <h2 class="h2">Closed-form is just the start.</h2>
-      <p>Calculators give idealized starting points. A full-wave simulator lets you model the whole system and predict reality much more accurately. RayRF is exceptionally fast at PCB RF simulations with an intuitive UI so you don't waste time on the setup either. Give it a try for free with no commitment.</p>
-      <div class="cta-row"><a class="btn lg" href="index.html">Try RayRF free</a><span class="cta-note">Windows and Linux. No credit card required.</span></div>
+      <p>Calculators give idealized starting points. A full-wave simulation models the whole structure, including the coupling, discontinuities and radiation a closed form leaves out. <span class="ph">How Machshev fits in.</span></p>
+      <div class="cta-row"><a class="btn lg" href="index.html">Learn about Machshev</a><a class="btn lg ghost" href="tools/antenna/index.html">Open Antenna Studio</a></div>
     </div>
   </section>
 </main>
 <div id="site-footer"></div>
 <script>
-  const CU = "#d4a14f", SUB = "#2b2540", GND = "#8b6a33", AIR = "#16161e";
+  const CU = "#d4a14f", SUB = "#1f3d5a", GND = "#8b6a33", AIR = "#162a45";
   const D = {
     microstrip: `<rect x="20" y="70" width="200" height="40" fill="${SUB}"/><rect x="20" y="110" width="200" height="8" fill="${GND}"/><rect x="95" y="62" width="50" height="8" fill="${CU}"/><text x="28" y="94">εr</text><text x="150" y="132">ground plane</text>`,
     stripline: `<rect x="20" y="40" width="200" height="70" fill="${SUB}"/><rect x="20" y="32" width="200" height="8" fill="${GND}"/><rect x="20" y="110" width="200" height="8" fill="${GND}"/><rect x="95" y="71" width="50" height="8" fill="${CU}"/><text x="28" y="80">εr</text><text x="28" y="28">top ground</text><text x="140" y="132">bottom ground</text>`,
@@ -58,11 +58,11 @@
     cpw: `<rect x="20" y="70" width="200" height="45" fill="${SUB}"/><rect x="20" y="62" width="62" height="8" fill="${CU}"/><rect x="98" y="62" width="44" height="8" fill="${CU}"/><rect x="158" y="62" width="62" height="8" fill="${CU}"/><text x="28" y="96">εr</text>`,
     gcpw: `<rect x="20" y="70" width="200" height="40" fill="${SUB}"/><rect x="20" y="110" width="200" height="8" fill="${GND}"/><rect x="20" y="62" width="62" height="8" fill="${CU}"/><rect x="98" y="62" width="44" height="8" fill="${CU}"/><rect x="158" y="62" width="62" height="8" fill="${CU}"/><rect x="46" y="70" width="6" height="40" fill="#777"/><rect x="188" y="70" width="6" height="40" fill="#777"/><text x="60" y="96">εr</text>`,
     diff: `<rect x="20" y="70" width="200" height="40" fill="${SUB}"/><rect x="20" y="110" width="200" height="8" fill="${GND}"/><rect x="70" y="62" width="40" height="8" fill="${CU}"/><rect x="130" y="62" width="40" height="8" fill="${CU}"/><text x="28" y="94">εr</text><text x="150" y="132">ground plane</text><text x="84" y="54">+</text><text x="146" y="54">−</text>`,
-    embedded: `<rect x="20" y="50" width="200" height="20" fill="#3a3355"/><rect x="20" y="70" width="200" height="40" fill="${SUB}"/><rect x="20" y="110" width="200" height="8" fill="${GND}"/><rect x="95" y="62" width="50" height="8" fill="${CU}"/><text x="28" y="64">cover | εr</text><text x="28" y="94">εr</text>`,
-    wavelength: `<path d="M20 70 ${Array.from({ length: 41 }, (_, i) => `L${20 + i * 5} ${70 - 30 * Math.sin(i * Math.PI / 10)}`).join(" ")}" stroke="#a78bfa" stroke-width="2" fill="none"/><line x1="20" y1="110" x2="120" y2="110" stroke="#7a8597"/><text x="50" y="126">λ0</text><text x="130" y="126">v = c (vacuum)</text>`,
-    guided: `<rect x="20" y="40" width="200" height="60" fill="${SUB}"/><path d="M20 70 ${Array.from({ length: 41 }, (_, i) => `L${20 + i * 5} ${70 - 20 * Math.sin(i * Math.PI / 6)}`).join(" ")}" stroke="#a78bfa" stroke-width="2" fill="none"/><text x="26" y="124">eeff | v = c/sqrt(eeff)</text>`,
-    qwt: `<rect x="20" y="62" width="60" height="16" fill="${CU}"/><rect x="80" y="66" width="80" height="8" fill="${CU}"/><rect x="160" y="58" width="60" height="24" fill="${CU}"/><text x="34" y="100">Z0</text><text x="100" y="100">Z1 = √(Z0·ZL)</text><text x="180" y="100">ZL</text><line x1="80" y1="50" x2="160" y2="50" stroke="#7a8597"/><text x="104" y="44">λg/4</text>`,
-    smith: `<g transform="translate(120 70)" fill="none" stroke="rgba(255,255,255,.25)"><circle r="55"/><circle cx="18" r="37"/><circle cx="36" r="19"/><line x1="-55" x2="55"/><path d="M55 0A55 55 0 0 0 0-55"/><path d="M55 0A55 55 0 0 1 0 55"/><circle cx="22" cy="-18" r="4" fill="#a78bfa" stroke="none"/></g><text x="150" y="20">inductive (+jX)</text><text x="150" y="134">capacitive (-jX)</text><text x="22" y="74">short</text><text x="180" y="74">open</text><text x="110" y="86">Z₀</text><text x="130" y="48">Γ</text>`,
+    embedded: `<rect x="20" y="50" width="200" height="20" fill="#2c4a6b"/><rect x="20" y="70" width="200" height="40" fill="${SUB}"/><rect x="20" y="110" width="200" height="8" fill="${GND}"/><rect x="95" y="62" width="50" height="8" fill="${CU}"/><text x="28" y="64">cover | εr</text><text x="28" y="94">εr</text>`,
+    wavelength: `<path d="M20 70 ${Array.from({ length: 41 }, (_, i) => `L${20 + i * 5} ${70 - 30 * Math.sin(i * Math.PI / 10)}`).join(" ")}" stroke="#2dd4bf" stroke-width="2" fill="none"/><line x1="20" y1="110" x2="120" y2="110" stroke="#8197b3"/><text x="50" y="126">λ0</text><text x="130" y="126">v = c (vacuum)</text>`,
+    guided: `<rect x="20" y="40" width="200" height="60" fill="${SUB}"/><path d="M20 70 ${Array.from({ length: 41 }, (_, i) => `L${20 + i * 5} ${70 - 20 * Math.sin(i * Math.PI / 6)}`).join(" ")}" stroke="#2dd4bf" stroke-width="2" fill="none"/><text x="26" y="124">eeff | v = c/sqrt(eeff)</text>`,
+    qwt: `<rect x="20" y="62" width="60" height="16" fill="${CU}"/><rect x="80" y="66" width="80" height="8" fill="${CU}"/><rect x="160" y="58" width="60" height="24" fill="${CU}"/><text x="34" y="100">Z0</text><text x="100" y="100">Z1 = √(Z0·ZL)</text><text x="180" y="100">ZL</text><line x1="80" y1="50" x2="160" y2="50" stroke="#8197b3"/><text x="104" y="44">λg/4</text>`,
+    smith: `<g transform="translate(120 70)" fill="none" stroke="rgba(255,255,255,.25)"><circle r="55"/><circle cx="18" r="37"/><circle cx="36" r="19"/><line x1="-55" x2="55"/><path d="M55 0A55 55 0 0 0 0-55"/><path d="M55 0A55 55 0 0 1 0 55"/><circle cx="22" cy="-18" r="4" fill="#2dd4bf" stroke="none"/></g><text x="150" y="20">inductive (+jX)</text><text x="150" y="134">capacitive (-jX)</text><text x="22" y="74">short</text><text x="180" y="74">open</text><text x="110" y="86">Z₀</text><text x="130" y="48">Γ</text>`,
   };
   const CALCS = [
     ["microstrip", "Microstrip", "Trace impedance and width on a top-layer microstrip.", "tools/pcb/#impedance.microstrip"],

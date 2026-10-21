@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Benchmarks | RayRF</title>
-<meta name="description" content="RayRF GPU, RayRF CPU, and openEMS on the same 82.8M-cell FDTD mesh.">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<title>Benchmarks | Machshev</title>
+<meta name="description" content="Machshev solver performance on reference problems.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body data-page="benchmarks">
@@ -14,79 +14,57 @@
   <section class="page-hero">
     <div class="container">
       <h1 class="h1">Benchmarks on <span class="accent">real hardware.</span></h1>
-      <p class="lead">One head-to-head test case: an 82.8M-cell FDTD mesh stepped 1,000,000 times. RayRF on GPU, RayRF on CPU, and openEMS all solve the same setup. Bars show FDTD cell updates per second. Longer is faster. Cell updates per second is the measured quantity; the wall-clock times are that rate carried out to 1,000,000 timesteps, not a run of that length.</p>
-      <p class="dim" style="margin-top:16px">Note, measured-vs-simulated S-parameter validation comparisons can be found on the <a href="validation.html">Validation page</a>.</p>
+      <p class="lead ph">The reference problem, what is measured, and how the comparison is kept fair.</p>
+      <p class="dim" style="margin-top:16px">Measured-versus-simulated comparisons are on the <a href="validation.html">Validation page</a>.</p>
     </div>
   </section>
 
   <section style="padding-top:20px">
     <div class="container">
       <div class="bench-head">
-        <h2 class="h3">Cell updates per second, longer is faster</h2>
-        <div class="bench-meta">82.8M cells, 1,000,000 timesteps</div>
+        <h2 class="h3">Throughput, longer is faster</h2>
+        <div class="bench-meta ph">Problem size and run length</div>
       </div>
+      <!-- Placeholder bars: set data-rate on each row to its measured rate; bar widths scale to the largest. -->
       <div class="bench">
-        <div class="bench-row" data-rate="39600">
-          <div class="who"><b>RayRF GPU</b><span>RTX 5090, CUDA</span></div>
-          <div class="bench-track"><div class="bench-fill"></div><span class="bench-label">39,600 MCell/s<em>173.7x FASTER</em></span></div>
-          <div class="bench-time">34 m 51 s</div>
+        <div class="bench-row" data-rate="3">
+          <div class="who"><b>Machshev</b><span class="ph">Hardware</span></div>
+          <div class="bench-track"><div class="bench-fill"></div><span class="bench-label">&mdash;</span></div>
+          <div class="bench-time">&mdash;</div>
         </div>
-        <div class="bench-row cpu" data-rate="4620">
-          <div class="who"><b>RayRF CPU</b><span>Ryzen 9 9950X, DDR5 6000, OpenMP, 32 threads</span></div>
-          <div class="bench-track"><div class="bench-fill"></div><span class="bench-label">4,620 MCell/s<em>20.3x FASTER</em></span></div>
-          <div class="bench-time">4 h 59 m</div>
+        <div class="bench-row cpu" data-rate="2">
+          <div class="who"><b>Machshev</b><span class="ph">Second configuration</span></div>
+          <div class="bench-track"><div class="bench-fill"></div><span class="bench-label">&mdash;</span></div>
+          <div class="bench-time">&mdash;</div>
         </div>
-        <div class="bench-row base" data-rate="228">
-          <div class="who"><b>openEMS</b><span>Ryzen 9 9950X, DDR5 6000, CPU SSE, 32 threads (baseline)</span></div>
-          <div class="bench-track"><div class="bench-fill"></div><span class="bench-label" style="left:16px">228 MCell/s<em style="color:var(--dim)">1.0x BASELINE</em></span></div>
-          <div class="bench-time">4 d 5 h</div>
+        <div class="bench-row base" data-rate="1">
+          <div class="who"><b>Reference solver</b><span class="ph">Name and hardware</span></div>
+          <div class="bench-track"><div class="bench-fill"></div><span class="bench-label" style="left:16px">&mdash;</span></div>
+          <div class="bench-time">&mdash;</div>
         </div>
       </div>
 
       <h2 class="h3" style="margin:64px 0 14px">Setup details</h2>
-      <p class="muted" style="max-width:820px;line-height:1.7">Both engines update the mesh at the same active cell count on a baseline patch antenna case. Note, typical FDTD runs use a dynamic end condition (energy ringdown), but for this benchmark we set a fixed runtime of 5,000 timesteps, measured the throughput, and extrapolated to 1,000,000 timesteps. Throughput does not change measurably for either engine beyond 1,000 timesteps, so extrapolation is accurate.</p>
+      <p class="muted ph" style="max-width:820px;line-height:1.7">The test case, the solver settings for each engine, the end condition, and anything extrapolated.</p>
       <div class="table-wrap" style="margin-top:22px">
         <table>
-          <thead><tr><th></th><th>RayRF (GPU / CPU)</th><th>openEMS</th></tr></thead>
+          <thead><tr><th></th><th>Machshev</th><th>Reference solver</th></tr></thead>
           <tbody>
-            <tr><td>Cells in active mesh</td><td class="num">82,800,000</td><td class="num">82,800,000</td></tr>
-            <tr><td>Timesteps</td><td class="num">1,000,000</td><td class="num">1,000,000</td></tr>
-            <tr><td>Total wall-clock, extrapolated</td><td class="num">34 m 51 s / 4 h 59 m</td><td class="num">4 d 5 h</td></tr>
+            <tr><td>Problem size</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr>
+            <tr><td>Run length</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr>
+            <tr><td>Total wall-clock</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr>
           </tbody>
         </table>
       </div>
-      <p class="dim small" style="max-width:820px;line-height:1.6">Hardware: AMD Ryzen 9 9950X with 64 GB DDR5 6000 RAM, XMP and PBO enabled. NVIDIA RTX 5090. Software: RayRF v1.1.14, openEMS 0.0.36. Test case: 5.8 GHz rectangular patch reference, 1,000,000 timesteps. Run 2026-07-28.</p>
-    </div>
-  </section>
-
-  <section>
-    <div class="container">
-      <div class="section-head">
-        <h2 class="h2">Built for PCB RF simulation.</h2>
-        <p>Faster results at a fraction of the cost. Validated against real measurements.</p>
-      </div>
-      <div class="table-wrap compare">
-        <table>
-          <thead><tr><th></th><th class="hl">RayRF</th><th>openEMS</th><th>CST / HFSS</th></tr></thead>
-          <tbody>
-            <tr><td>Price</td><td class="hl">$30-200/mo</td><td>Free</td><td>$10K-50K/yr</td></tr>
-            <tr><td>Live edit to results</td><td class="hl">~1 s</td><td>batch only</td><td>batch only</td></tr>
-            <tr><td>Reference benchmark</td><td class="hl num">34 m 51 s</td><td class="num">4 d 5 h</td><td>N/A*</td></tr>
-            <tr><td>Full GUI editor</td><td class="hl yes">Yes</td><td>No</td><td class="yes">Yes</td></tr>
-            <tr><td>VNA-validated refs</td><td class="hl yes">Yes</td><td>none</td><td>none</td></tr>
-            <tr><td>Download today</td><td class="hl yes">Yes</td><td class="yes">Yes</td><td>contact sales</td></tr>
-          </tbody>
-          <caption>* CST/HFSS not benchmarked as they do not permit public comparisons of their software by competitors.</caption>
-        </table>
-      </div>
+      <p class="dim small ph" style="max-width:820px;line-height:1.6">Hardware, software versions, test case and run date.</p>
     </div>
   </section>
 
   <section class="final-cta">
     <div class="container">
-      <h2 class="h2">Stop waiting for your simulator.<br><span class="gradient-text">Start designing at the speed of thought.</span></h2>
-      <p>Add a card during the trial and it extends to 60 days. Cancel before the first charge and you are not billed.</p>
-      <div class="cta-row"><a class="btn lg" href="pricing.html">Add card and extend trial</a><a class="btn lg ghost" href="docs.html">Read the docs</a></div>
+      <h2 class="h2">Start with the free tools.<br><span class="gradient-text">Talk to us about the rest.</span></h2>
+      <p>The calculators and the antenna solver are free to use now. For questions about Machshev, write to <a href="mailto:business@machshev.com">business@machshev.com</a>.</p>
+      <div class="cta-row"><a class="btn lg" href="rf-calculators.html">Try the online tools</a><a class="btn lg ghost" href="docs.html">Read the docs</a></div>
     </div>
   </section>
 </main>

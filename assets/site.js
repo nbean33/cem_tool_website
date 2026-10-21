@@ -1,4 +1,4 @@
-/* RayRF site recreation - shared behavior.
+/* Machshev site - shared behavior.
  * Each page sets <body data-page="..."> and includes empty
  * <div id="site-header"></div> / <div id="site-footer"></div> mount points.
  */
@@ -10,10 +10,10 @@
 
   const LOGO = `<svg viewBox="0 0 32 32" aria-hidden="true">
     <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#c4b5fd"/><stop offset="1" stop-color="#7c5cf0"/></linearGradient></defs>
-    <path d="M16 2 28 9v14l-12 7L4 23V9z" fill="none" stroke="url(#lg)" stroke-width="2.2" stroke-linejoin="round"/>
-    <path d="M10 20c2-6 4-9 6-9s4 3 6 9" fill="none" stroke="#e8ecf2" stroke-width="2" stroke-linecap="round"/>
-    <circle cx="16" cy="11" r="2" fill="#a78bfa"/></svg>`;
+      <stop offset="0" stop-color="#5eead4"/><stop offset="1" stop-color="#0ea5e9"/></linearGradient></defs>
+    <rect x="3" y="3" width="26" height="26" rx="7" fill="none" stroke="url(#lg)" stroke-width="2.2"/>
+    <path d="M8 16q2-7 4 0t4 0 4 0 4 0" fill="none" stroke="#eaf2fb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="24" cy="16" r="1.9" fill="#2dd4bf"/></svg>`;
 
   const NAV = [
     ["index", "Product", "index.html"],
@@ -30,12 +30,11 @@
   const ROOT = document.body.dataset.root || "";
 
   // Optional cookie tiers, as described in the Cookie Policy. The choice is only
-  // remembered locally; no analytics scripts are wired up in this recreation.
+  // remembered locally; no analytics or advertising scripts are wired up.
   const CONSENT_TIERS = [
-    ["functional", "Functional", "Remembers preferences such as your last sign-in method."],
-    ["analytics", "Analytics, first-party", "Page views, dwell time, scroll depth, and Web Vitals."],
-    ["behavioral", "Analytics, behavioral", "Per-section engagement and Microsoft Clarity session replay."],
-    ["thirdParty", "Analytics and advertising, third-party", "Vercel Analytics, Speed Insights, and Google Ads conversions."],
+    ["functional", "Functional", "Remembers preferences, such as your last-used settings."],
+    ["analytics", "Analytics", "Anonymous page views and performance measurements."],
+    ["thirdParty", "Third-party", "Analytics and advertising services run by other companies."],
   ];
 
   const page = document.body.dataset.page || "";
@@ -48,13 +47,12 @@
       <a class="skip" href="#main">Skip to content</a>
       <header class="site-header">
         <div class="container">
-          <a class="brand" href="${ROOT}index.html">${LOGO}<span>RayRF</span></a>
+          <a class="brand" href="${ROOT}index.html">${LOGO}<span>Machshev</span></a>
           <nav class="nav" id="nav" aria-label="Primary">
             ${NAV.map(([k, label, href]) => `<a href="${ROOT}${href}"${k === section ? ' class="active" aria-current="page"' : ""}>${label}</a>`).join("")}
           </nav>
           <div class="header-actions">
-            <a class="link" href="${ROOT}pricing.html">Sign in</a>
-            <a class="btn" href="${ROOT}pricing.html">Start 30-day free trial</a>
+            <a class="btn" href="${ROOT}rf-calculators.html">Try the online tools</a>
             <button class="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav">&#9776;</button>
           </div>
         </div>
@@ -75,41 +73,42 @@
         <div class="container">
           <div class="footer-grid">
             <div>
-              <a class="brand" href="${ROOT}index.html">${LOGO}<span>RayRF</span></a>
-              <p>GPU-accelerated FDTD. Made by RF engineers who were tired of waiting.</p>
+              <a class="brand" href="${ROOT}index.html">${LOGO}<span>Machshev</span></a>
+              <p>Computational electromagnetics software from Machshev Labs LLC.</p>
             </div>
             <div><h4>Product</h4><ul>
               <li><a href="${ROOT}index.html">Features</a></li>
               <li><a href="${ROOT}benchmarks.html">Benchmarks</a></li>
-              <li><a href="${ROOT}pricing.html">Download</a></li></ul></div>
+              <li><a href="${ROOT}pricing.html">Pricing</a></li>
+              <li><a href="${ROOT}rf-calculators.html">Online tools</a></li></ul></div>
             <div><h4>Docs</h4><ul>
               <li><a href="${ROOT}docs-install.html">Getting started</a></li>
-              <li><a href="${ROOT}docs-keyboard-shortcuts.html">Reference</a></li>
+              <li><a href="${ROOT}docs-file-formats.html">Reference</a></li>
               <li><a href="${ROOT}validation.html">Validation suite</a></li>
               <li><a href="${ROOT}blog.html">Blog</a></li></ul></div>
             <div><h4>Contact</h4><ul>
-              <li><a href="mailto:support@rayrf.com">Support<small>support@rayrf.com</small></a></li>
-              <li><a href="mailto:aspen@rayrf.com">Business inquiries<small>aspen@rayrf.com</small></a></li></ul></div>
+              <li><a href="mailto:support@machshev.com">Support<small>support@machshev.com</small></a></li>
+              <li><a href="mailto:business@machshev.com">Business inquiries<small>business@machshev.com</small></a></li></ul></div>
             <div><h4>Legal</h4><ul>
               <li><a href="${ROOT}legal-terms.html">Terms</a></li>
               <li><a href="${ROOT}legal-privacy.html">Privacy</a></li>
               <li><a href="${ROOT}legal-cookies.html">Cookies</a></li></ul></div>
           </div>
           <div class="footer-bottom">
-            <span>&copy; 2026 RayRF Inc.</span>
+            <span>&copy; 2026 Machshev Labs LLC</span>
             <button type="button" id="cookie-prefs">Cookie preferences</button>
           </div>
         </div>
       </footer>
       <div class="cookie" id="cookie" hidden role="dialog" aria-label="Cookie consent">
         <div class="cookie-row">
-          <span>By using this site you agree to our use of cookies for analytics and advertising. <a href="${ROOT}legal-cookies.html">Cookie Policy</a></span>
+          <span>Choose which optional cookies this site may use. <a href="${ROOT}legal-cookies.html">Cookie Policy</a></span>
           <button class="btn" data-consent="accept">Accept</button>
           <button class="btn ghost" data-consent="essential">Essentials only</button>
           <button class="btn ghost" data-consent="customize" aria-expanded="false">Customize</button>
         </div>
         <div class="cookie-prefs" hidden>
-          <label class="tog"><input type="checkbox" checked disabled><span><b>Strictly necessary</b>Sign-in, checkout, and your cookie choice. Always on.</span></label>
+          <label class="tog"><input type="checkbox" checked disabled><span><b>Strictly necessary</b>Remembers your cookie choice. Always on.</span></label>
           ${CONSENT_TIERS.map(([k, name, desc]) => `<label class="tog"><input type="checkbox" data-tier="${k}"><span><b>${name}</b>${desc}</span></label>`).join("")}
           <div class="cookie-actions"><button class="btn" data-consent="save">Save choices</button></div>
         </div>
@@ -119,10 +118,10 @@
     const custom = banner.querySelector('[data-consent="customize"]');
     const boxes = [...banner.querySelectorAll("[data-tier]")];
     const store = (choice) => {
-      try { localStorage.setItem("rayrf-consent", JSON.stringify(choice)); } catch (err) { /* storage blocked */ }
+      try { localStorage.setItem("machshev-consent", JSON.stringify(choice)); } catch (err) { /* storage blocked */ }
     };
     let stored = null;
-    try { stored = JSON.parse(localStorage.getItem("rayrf-consent")); } catch (e) { stored = null; }
+    try { stored = JSON.parse(localStorage.getItem("machshev-consent")); } catch (e) { stored = null; }
     if (!stored || typeof stored !== "object") banner.hidden = false;
     const sync = () => boxes.forEach((b) => { b.checked = !!(stored && stored[b.dataset.tier]); });
     const openPrefs = (open) => { prefs.hidden = !open; custom.setAttribute("aria-expanded", String(open)); };
@@ -202,8 +201,8 @@
   }
 
   const DUTS = {
-    "PA08-home": { range: [3, 5], ymin: -25, dips: [{ f: 4.02, depth: 21, w: 0.045, df: 0.4, dd: 12 }] },
-    IDF01: {
+    "EX-HOME": { range: [3, 5], ymin: -25, dips: [{ f: 4.02, depth: 21, w: 0.045, df: 0.4, dd: 12 }] },
+    "EX-01": {
       range: [2.0, 2.7], ymin: -40, base: -0.3, band: [2.345, 0.16, -9],
       dips: [
         { f: 2.238, depth: 16, w: 0.012, df: 0.66, dd: 6.9 },
@@ -212,14 +211,7 @@
         { f: 2.453, depth: 22, w: 0.012, df: -0.05, dd: 14.8 },
       ],
     },
-    "PA05-4G": { range: [2, 8], ymin: -35, dips: [{ f: 4.0, depth: 17, w: 0.06, df: 0.5 }, { f: 6.4, depth: 14, w: 0.09, df: -0.6 }] },
-    "PA01-6G": { range: [4, 8], ymin: -35, dips: [{ f: 6.02, depth: 19, w: 0.08, df: 0.4 }] },
-    "PA02-6G": { range: [4, 8], ymin: -35, dips: [{ f: 6.08, depth: 23, w: 0.08, df: -0.3 }] },
-    "PA03-6G": { range: [4, 8], ymin: -35, dips: [{ f: 6.05, depth: 15, w: 0.08, df: 0.7 }] },
-    "PA04-6G": { range: [4, 8], ymin: -35, dips: [{ f: 6.1, depth: 26, w: 0.08, df: -0.5 }] },
-    "PA06-4G": { range: [2, 8], ymin: -35, dips: [{ f: 4.01, depth: 16, w: 0.06, df: 0.3 }, { f: 6.5, depth: 11, w: 0.09, df: -0.4, dd: 80 }] },
-    "PA07-4G": { range: [2, 8], ymin: -35, dips: [{ f: 3.99, depth: 18, w: 0.06, df: 0.6 }, { f: 6.52, depth: 13, w: 0.09, df: -0.7 }] },
-    "PA08-4G": { range: [2, 8], ymin: -35, dips: [{ f: 4.02, depth: 21, w: 0.06, df: 0.4 }, { f: 6.6, depth: 12, w: 0.09, df: 0.2 }] },
+    "EX-02": { range: [4, 8], ymin: -35, dips: [{ f: 6.02, depth: 19, w: 0.08, df: 0.4 }] },
   };
 
   const NS = "http://www.w3.org/2000/svg";
@@ -240,7 +232,7 @@
     const svg = document.createElementNS(NS, "svg");
     svg.setAttribute("class", "chart");
     svg.setAttribute("role", "img");
-    svg.setAttribute("aria-label", `S11 magnitude, measured versus RayRF simulation, ${spec.range[0]} to ${spec.range[1]} GHz`);
+    svg.setAttribute("aria-label", `S11 magnitude, measured versus Machshev simulation, ${spec.range[0]} to ${spec.range[1]} GHz`);
     host.replaceWith(svg);
 
     function draw() {
@@ -329,7 +321,7 @@
     if (SHOW_PLACEHOLDER_NOTE && !card.querySelector(".ph-note")) {
       const n = document.createElement("div");
       n.className = "chart-hint ph-note";
-      n.textContent = "Sample curves - replace with measured .s1p/.csv data in assets/site.js";
+      n.textContent = "Placeholder: sample curves. Replace with measured .s1p/.csv data in assets/site.js";
       svg.after(n);
     }
   }
@@ -389,18 +381,18 @@
       let g = "";
       for (let i = 0; i <= 300; i += 6) g += `<line x1="${i}" y1="0" x2="${i}" y2="220"/>`;
       for (let j = 0; j <= 220; j += 6) g += `<line x1="0" y1="${j}" x2="300" y2="${j}"/>`;
-      return `<svg viewBox="0 0 300 220"><rect width="300" height="220" fill="#0d0d12"/>
-        ${boardShapes(kind, "rgba(167,139,250,.55)")}
+      return `<svg viewBox="0 0 300 220"><rect width="300" height="220" fill="#0c1a2e"/>
+        ${boardShapes(kind, "rgba(45, 212, 191,.55)")}
         <g stroke="rgba(255,255,255,.09)" stroke-width=".6">${g}</g></svg>`;
     }
-    return `<svg viewBox="0 0 300 220"><rect width="300" height="220" fill="#101016"/>
-      <rect x="0" y="0" width="300" height="16" fill="#18181f"/>
+    return `<svg viewBox="0 0 300 220"><rect width="300" height="220" fill="#11223a"/>
+      <rect x="0" y="0" width="300" height="16" fill="#1a2e4b"/>
       <circle cx="9" cy="8" r="2.5" fill="#f87171"/><circle cx="18" cy="8" r="2.5" fill="#fbbf24"/><circle cx="27" cy="8" r="2.5" fill="#4ade80"/>
-      <rect x="0" y="16" width="44" height="204" fill="#15151c"/><rect x="256" y="16" width="44" height="204" fill="#15151c"/>
-      ${[30, 44, 58, 72].map((y) => `<rect x="6" y="${y}" width="32" height="6" rx="2" fill="#272733"/>`).join("")}
-      ${[30, 44, 58].map((y) => `<rect x="262" y="${y}" width="32" height="6" rx="2" fill="#272733"/>`).join("")}
+      <rect x="0" y="16" width="44" height="204" fill="#152842"/><rect x="256" y="16" width="44" height="204" fill="#152842"/>
+      ${[30, 44, 58, 72].map((y) => `<rect x="6" y="${y}" width="32" height="6" rx="2" fill="#2a4064"/>`).join("")}
+      ${[30, 44, 58].map((y) => `<rect x="262" y="${y}" width="32" height="6" rx="2" fill="#2a4064"/>`).join("")}
       <g transform="translate(52 22) scale(.68)">${boardShapes(kind, "#d4a14f")}</g>
-      <rect x="44" y="16" width="212" height="204" fill="none" stroke="#2a2a35"/></svg>`;
+      <rect x="44" y="16" width="212" height="204" fill="none" stroke="#2d4468"/></svg>`;
   }
   function boards() {
     document.querySelectorAll("[data-board]").forEach((el) => {
@@ -514,7 +506,7 @@
         <input class="docs-search" type="search" placeholder="Search the docs" aria-label="Search the docs">
         <div class="docs-results" hidden aria-live="polite"></div>
         <button type="button" class="btn ghost docs-toggle" aria-expanded="false">All docs pages <span aria-hidden="true">&#9662;</span></button>
-        <a class="video-link" href="docs.html">&#9654;&nbsp; User guide video</a>
+        <a class="video-link" href="docs.html">&#9654;&nbsp; Video walkthrough</a>
         ${DOCS.map(({ section, items }) => `<div class="grp"><h5>${section}</h5><ul>${items.map((it) =>
           `<li><a href="${it.h}"${it.h === current ? ' class="active" aria-current="page"' : ""}>${it.t}</a></li>`).join("")}</ul></div>`).join("")}`;
       const q = side.querySelector(".docs-search");

@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Blog | RayRF</title>
-<meta name="description" content="Notes on RF simulation: tool comparisons, benchmarks, antenna how-tos, and validation.">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<title>Blog | Machshev</title>
+<meta name="description" content="News and notes on computational electromagnetics from Machshev Labs.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body data-page="blog">
@@ -14,59 +14,23 @@
   <section class="page-hero">
     <div class="container narrow">
       <div class="eyebrow">Blog</div>
-      <h1 class="h1" style="margin-top:14px">Notes on RF simulation</h1>
-      <p class="lead">Tool comparisons, a matched-mesh FDTD benchmark, antenna how-tos, and how RayRF is checked against measured hardware. Written for working RF engineers.</p>
+      <h1 class="h1" style="margin-top:14px">News and notes</h1>
+      <p class="lead">Product news, the online tools, and notes on computational electromagnetics from Machshev Labs.</p>
     </div>
   </section>
   <section style="padding-top:10px">
     <div class="container narrow post-list">
-      <a class="post-item reveal" href="blog-pmc-ground-plane-validation.html">
-        <div class="post-meta">June 10, 2026 / 12 min read</div>
-        <h2>I validated RayRF&#x27;s PMC boundary against a 2003 IEEE paper, with openEMS as referee</h2>
-        <p>RayRF&#x27;s new PMC boundary and the mushroom EBG array from a classic IEEE EBG paper, cross-checked against openEMS on identical meshes. The EBG match dip agrees between the two solvers to 0.4 percent. Replication also uncovered and fixed a real via discretization bug. Full setup, mesh ladder, runtimes, and all project files.</p>
-        <div class="tags"><span>validation</span><span>PMC</span><span>openEMS</span><span>boundary conditions</span><span>antennas</span></div>
+      <a class="post-item reveal" href="blog-free-online-rf-tools.html">
+        <div class="post-meta">October 20, 2026 / 3 min read</div>
+        <h2>Free PCB and antenna tools that run in your browser</h2>
+        <p>The PCB Toolkit and Antenna Studio now run in the browser: 50 PCB calculators and a NEC-2 antenna solver, compiled from their original Rust code to WebAssembly. No install, no account, and nothing leaves your machine.</p>
+        <div class="tags"><span>Tools</span><span>PCB</span><span>Antennas</span><span>WebAssembly</span></div>
       </a>
-      <a class="post-item reveal" href="blog-validated-against-vna-measurements.html">
-        <div class="post-meta">May 22, 2026 / 5 min read</div>
-        <h2>RayRF vs a VNA: 43 measured structures on 4 boards</h2>
-        <p>I fabricated 4 RF PCBs on PTFE, measured 43 structures on a calibrated VNA, and simulated the same structures in RayRF. Resonances and poles track the measurements within 1-2% at the higher mesh refinements. Method, results, and what is next.</p>
-        <div class="tags"><span>validation</span><span>measurement</span><span>accuracy</span></div>
-      </a>
-      <a class="post-item reveal" href="blog-cst-alternative.html">
-        <div class="post-meta">May 18, 2026 / 4 min read</div>
-        <h2>A focused CST alternative for planar PCB RF</h2>
-        <p>CST Studio Suite is a broad 3D EM suite leased at roughly 14,500 to 22,000 USD per year. For planar PCB RF, RayRF is a GPU FDTD tool at 1,499 USD per year with live results. What you keep and what you give up.</p>
-        <div class="tags"><span>CST</span><span>comparison</span><span>pricing</span></div>
-      </a>
-      <a class="post-item reveal" href="blog-hfss-alternative-affordable.html">
-        <div class="post-meta">May 12, 2026 / 5 min read</div>
-        <h2>An affordable HFSS alternative for PCB RF design</h2>
-        <p>For planar PCB RF, RayRF is a GPU FDTD tool at 1,499 USD per year with a GUI and fast iteration, against published HFSS figures of 5,000 to 50,000 USD per year. What you gain and what you give up.</p>
-        <div class="tags"><span>HFSS</span><span>comparison</span><span>pricing</span></div>
-      </a>
-      <a class="post-item reveal" href="blog-rayrf-vs-openems-benchmark.html">
-        <div class="post-meta">May 6, 2026 / 4 min read</div>
-        <h2>RayRF vs openEMS: a head-to-head FDTD benchmark</h2>
-        <p>A like-for-like FDTD benchmark: an 82.8M-cell 5.8 GHz patch, 1,000,000 timesteps, one workstation. RayRF GPU ran 173.7x faster than openEMS (39,600 vs 228 MCell/s, 34m51s vs 4d5h). Numbers and method.</p>
-        <div class="tags"><span>openEMS</span><span>benchmark</span><span>FDTD</span><span>GPU</span></div>
-      </a>
-      <a class="post-item reveal" href="blog-patch-antenna-simulation-guide.html">
-        <div class="post-meta">April 28, 2026 / 8 min read</div>
-        <h2>How to simulate a patch antenna, start to finish</h2>
-        <p>A practical walkthrough: estimate patch dimensions, build the stackup and feed, run a full-wave FDTD solve, read S11, and tune the match. Uses free calculators and RayRF.</p>
-        <div class="tags"><span>patch antenna</span><span>tutorial</span><span>antenna design</span></div>
-      </a>
-      <a class="post-item reveal" href="blog-openems-alternative.html">
-        <div class="post-meta">April 21, 2026 / 6 min read</div>
-        <h2>An openEMS alternative with a GUI, a GPU solver, and live results</h2>
-        <p>openEMS is free and capable but needs scripting and runs on CPU. RayRF is a GUI FDTD simulator with a GPU solver that ran a head-to-head patch case 173.7x faster, validated against 43 VNA-measured structures.</p>
-        <div class="tags"><span>openEMS</span><span>FDTD</span><span>comparison</span></div>
-      </a>
-      <a class="post-item reveal" href="blog-what-is-fdtd.html">
-        <div class="post-meta">April 15, 2026 / 6 min read</div>
-        <h2>What is FDTD, and why it suits PCB RF simulation</h2>
-        <p>FDTD, the finite-difference time-domain method, steps the electric and magnetic fields forward in time on a grid. A plain explanation of how it works, its trade-offs, and why GPUs suit it.</p>
-        <div class="tags"><span>FDTD</span><span>explainer</span><span>electromagnetics</span></div>
+      <a class="post-item reveal" href="blog-introducing-machshev.html">
+        <div class="post-meta">October 19, 2026 / 2 min read</div>
+        <h2>Introducing Machshev</h2>
+        <p>Placeholder: an introduction to Machshev, what it does, and who it is for.</p>
+        <div class="tags"><span>Machshev</span><span>Announcements</span></div>
       </a>
     </div>
   </section>

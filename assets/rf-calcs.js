@@ -1,4 +1,4 @@
-/* RayRF site calculators: the closed forms pcb_toolkit (tools/pcb/) does not cover.
+/* Machshev site calculators: the closed forms pcb_toolkit (tools/pcb/) does not cover.
  *
  * A page declares <div data-calc="patch"></div> (or ifa, qwt, smith, wavelength) and loads
  * this file; it renders the inputs, live results and a step-by-step breakdown. Lengths are
@@ -254,13 +254,13 @@
     const mag = Math.hypot(...gamma);
     return `<svg viewBox="-135 -135 270 270" role="img" aria-label="Smith chart with the load plotted">
       <defs><clipPath id="rim"><circle r="${R}"/></clipPath></defs>
-      <circle r="${R}" fill="#0d0d12" stroke="rgba(255,255,255,.35)"/>
+      <circle r="${R}" fill="#0c1a2e" stroke="rgba(255,255,255,.35)"/>
       <g clip-path="url(#rim)" fill="none" stroke="rgba(255,255,255,.12)">${g}<line x1="${-R}" x2="${R}" y1="0" y2="0"/></g>
-      ${mag < 1 ? `<circle r="${mag * R}" fill="none" stroke="rgba(167,139,250,.5)" stroke-dasharray="3 3"/>` : ""}
-      <line x1="0" y1="0" x2="${px}" y2="${py}" stroke="#a78bfa" stroke-width="1.5"/>
+      ${mag < 1 ? `<circle r="${mag * R}" fill="none" stroke="rgba(45, 212, 191,.5)" stroke-dasharray="3 3"/>` : ""}
+      <line x1="0" y1="0" x2="${px}" y2="${py}" stroke="#2dd4bf" stroke-width="1.5"/>
       <circle cx="${px}" cy="${py}" r="4.5" fill="#fbbf24"/>
-      <text x="${-R - 2}" y="12" fill="#7a8597" font-size="9" text-anchor="start">short</text>
-      <text x="${R - 2}" y="12" fill="#7a8597" font-size="9" text-anchor="end">open</text>
+      <text x="${-R - 2}" y="12" fill="#8197b3" font-size="9" text-anchor="start">short</text>
+      <text x="${R - 2}" y="12" fill="#8197b3" font-size="9" text-anchor="end">open</text>
     </svg>`;
   }
 

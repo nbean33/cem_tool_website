@@ -9,12 +9,13 @@ Source format (a small Markdown subset):
   a || b || c   table row; the first row of a block is the header
   !caption ...  caption for the table directly above
   !note ...     callout box
+  !ph ...       placeholder copy still to be written (left out of the search index)
   !fig ...      screenshot placeholder with this caption
   ```           fenced code block
   inline        `code`, **bold**, [text](href)
 
 Outputs docs-<slug>.html, assets/docs-nav.js (sidebar + search index),
-and rayrf-docs.md (every page in one file).
+and machshev-docs.md (every page in one file).
 Run:  python build_docs.py
 """
 import html
@@ -27,53 +28,24 @@ SRC = ROOT / "docs-src"
 
 NAV = [
     ("Getting started", [
-        ("install", "Install and first simulation"),
+        ("install", "Installing Machshev"),
+        ("quick-start", "Your first simulation"),
+    ]),
+    ("Using Machshev", [
         ("interface", "The interface"),
-    ]),
-    ("Editor", [
-        ("stackup-and-layers", "Stackup and materials"),
-        ("geometry", "Drawing geometry"),
-        ("parametric", "Variables, constraints, and generators"),
-        ("import-png", "Importing artwork"),
-        ("import-gerber", "Importing Gerber boards"),
-        ("import-dxf", "Importing DXF drawings"),
-        ("import-kicad", "Importing KiCad boards"),
-        ("import-openems", "Importing openEMS and CSXCAD XML"),
-        ("export-dxf", "Exporting DXF drawings"),
-        ("export-openems", "Exporting openEMS XML"),
+        ("geometry", "Building a model"),
         ("ports-and-excitation", "Ports and excitation"),
+        ("running", "Running a simulation"),
+        ("results", "Viewing results"),
     ]),
-    ("Simulation", [
-        ("auto-mode", "Auto mode and quality"),
-        ("advanced-mode", "Advanced mode"),
-        ("mesh-regions", "Mesh regions"),
-        ("boundaries", "Boundary conditions"),
-        ("running", "Running simulations"),
-        ("benchmarking", "Benchmarking"),
-    ]),
-    ("Results", [
-        ("s-parameters", "S-parameters and Smith chart"),
-        ("radiation-pattern", "Radiation pattern"),
-        ("field-viewer", "Field viewer"),
-        ("run-history", "Run history"),
-        ("sweeps", "Parameter sweeps"),
-    ]),
-    ("Remote running", [
-        ("remote-overview", "Remote running"),
-        ("runner-setup", "Runner setup"),
-    ]),
-    ("CLI and automation", [
-        ("cli-overview", "CLI overview"),
-        ("cli-agent-driving", "Driving RayRF with an agent"),
-        ("cli-reference", "CLI reference"),
-        ("cli-scripting", "Scripting and specs"),
+    ("Online tools", [
+        ("pcb-toolkit", "PCB Toolkit"),
+        ("antenna-studio", "Antenna Studio"),
+        ("calculators", "RF calculators"),
     ]),
     ("Reference", [
-        ("settings", "Settings reference"),
-        ("calculators", "RF calculators"),
+        ("file-formats", "File formats"),
         ("keyboard-shortcuts", "Keyboard shortcuts"),
-        ("file-formats", "File formats and outputs"),
-        ("fdtd-tips", "FDTD tips"),
     ]),
 ]
 
@@ -82,9 +54,9 @@ HEAD = """<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{title} | RayRF Docs</title>
+<title>{title} | Machshev Docs</title>
 <meta name="description" content="{desc}">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body data-page="docs-{slug}">
@@ -174,6 +146,11 @@ def render(body_lines):
             flush_para()
             out.append(f'<p class="note">{inline(line[6:])}</p>')
             text.append(plain(line[6:]))
+            i += 1
+            continue
+        if line.startswith("!ph "):
+            flush_para()
+            out.append(f'<p class="ph">{inline(line[4:])}</p>')
             i += 1
             continue
         if line.startswith("!fig "):
@@ -269,9 +246,9 @@ def build():
         f"window.DOCS_NAV = {json.dumps(nav_js, ensure_ascii=False)};\n"
         f"window.DOCS_INDEX = {json.dumps(index, ensure_ascii=False)};\n",
         encoding="utf-8")
-    (ROOT / "rayrf-docs.md").write_text(
-        "# RayRF documentation\n\n" + "\n\n---\n\n".join(bundle) + "\n", encoding="utf-8")
-    print(f"built {len(flat)} docs pages, assets/docs-nav.js, rayrf-docs.md")
+    (ROOT / "machshev-docs.md").write_text(
+        "# Machshev documentation\n\n" + "\n\n---\n\n".join(bundle) + "\n", encoding="utf-8")
+    print(f"built {len(flat)} docs pages, assets/docs-nav.js, machshev-docs.md")
 
 
 if __name__ == "__main__":

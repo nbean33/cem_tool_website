@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The interface | RayRF Docs</title>
-<meta name="description" content="RayRF Studio is a full-GUI desktop app (with CLI capability too). This section covers all key sections of the main window: the title bar, menus, bottom panel, and 5 tabs (Edit, Simulate, S-Parameters, Radiation Pattern, and Field Viewer).">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<title>The interface | Machshev Docs</title>
+<meta name="description" content="A tour of the main window and where each tool lives.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body data-page="docs-interface">
@@ -13,31 +13,18 @@
 <main id="main" class="container docs">
   <aside class="docs-side" id="docs-side" aria-label="Documentation"></aside>
   <article class="docs-main">
-    <div class="post-meta">Getting started</div>
+    <div class="post-meta">Using Machshev</div>
     <h1 style="margin-top:8px">The interface</h1>
-    <p class="lede">RayRF Studio is a full-GUI desktop app (with CLI capability too). This section covers all key sections of the main window: the title bar, menus, bottom panel, and 5 tabs (Edit, Simulate, S-Parameters, Radiation Pattern, and Field Viewer).</p>
+    <p class="lede">A tour of the main window and where each tool lives.</p>
     <div class="prose">
-<h2 id="title-bar">Title bar</h2>
-<p>The menu bar provides dropdowns for project saving/loading, settings, and help. It also shows account and license information, as well as dynamic simulation run info.</p>
-<ul><li><b>Menus.</b> <code>File</code> (new, open, open recent, welcome panel, save, save as, the <code>Export</code> and <code>Import</code> submenus, and exit), <code>Edit</code> (undo, redo), <code>Window</code> (shown only in Live mode, customize the layout), <code>Help</code> (about), and <code>Settings</code> (usage telemetry, check for updates, project settings, and the <code>Benchmark</code> submenu).</li><li><b>Simulation status.</b> During simulation runs a <code>RUNNING</code> indicator shows on the right-hand side with the elapsed time and throughput in GCell/s. It reads <code>PREPARING RESULTS</code> during postprocessing, then <code>COMPLETE</code> when a converged run's results are ready. The final solve time covers the FDTD loop and not export, launch, or result loading.</li><li><b>Update indicator.</b> When a new release (which has not been skipped) is available, an <code>Update &lt;version&gt; available</code> indication appears at the top, click it to open the update dialog.</li><li><b>Account.</b> Shows your email and plan status when signed in, or <code>Sign in</code> when not. Click to view the options: manage account (go to dashboard), refresh plan status (if you changed plans and don't want to restart to see the change), deactivate machine (remove from used seats), and sign out.</li><li><b>Project name.</b> The file label shows the current <code>.rfsim</code> file name, or <code>Untitled</code> for an unsaved project. The window title carries the same name and a trailing <code>*</code> while there are unsaved changes.</li></ul>
-<h2 id="the-5-tabs">The 5 tabs</h2>
-<p>The tab bar runs left to right in a fixed order. Edit is the workspace. The four to its right hold results.</p>
-<ul><li><b>Edit</b> is the geometry editor: the stackup and layers, shapes, ports, and the 2D canvas. See <a href="docs-stackup-and-layers.html">Stackup and layers</a>.</li><li><b>Simulate</b> holds the mesh, boundary conditions, and run controls, and shows live progress during a run. See <a href="docs-auto-mode.html">Auto mode</a>.</li><li><b>S-Parameters</b> plots S11 and the Smith chart from the last run. See <a href="docs-s-parameters.html">S-parameters</a>.</li><li><b>Radiation Pattern</b> shows the far-field pattern when NF2FF output is enabled. See <a href="docs-radiation-pattern.html">Radiation pattern</a>.</li><li><b>Field Viewer</b> shows the 3D fields and surface currents when those exports are enabled. See <a href="docs-field-viewer.html">Field viewer</a>.</li></ul>
-<p>When a run finishes, a dot prefixes each result tab that received new output, so you can see which views changed without opening them. S-Parameters and Simulate always dot. Radiation Pattern dots only when NF2FF was enabled, Field Viewer only when field or surface-current export was enabled. Opening a dotted tab clears its dot.</p>
-<h2 id="live-mode">Live mode</h2>
-<p>The <code>LIVE</code> button is at the right end of the tab bar. Live mode re-runs the simulation continuously as you edit the geometry: it docks the result views into one surface and updates them in lockstep with each change, so S-parameters and fields track the edit. Two consecutive failed runs turn it off. The <a href="docs-running.html">Running simulations</a> page covers it in full.</p>
-<h2 id="bottom-panel">Bottom panel</h2>
-<p>A two-tab panel is below the tabs, split from the main view by a draggable divider.</p>
-<ul><li><b>Console</b> is the timestamped run log: solver output, status lines, and app messages.</li><li><b>Notices</b> lists what the current project has raised, at three levels. An error blocks a run until it is fixed. A warning asks before the run starts, and can be dismissed from its right-click menu, either the one specific warning or all warnings of that type. Dismissals persist with the project, and a dismissal is keyed to the value that triggered it, so the same warning re-surfaces when that value changes materially. A note is context, never a problem: a reference frequency quoted outside the simulated band reads as one. Clicking Run or Preview Mesh completes the list and brings this tab forward once, so nothing needs a dialog of its own. Dismissed warnings are hidden from the list. Check Show dismissed to list them, and Reset Dismissals clears every dismissal so those warnings show again.</li></ul>
-<p>A seat-decision banner appears above the tabs when your plan allows fewer machines than are activated. Its button opens the account page to choose which machines to keep.</p>
-<h2 id="undo-and-redo">Undo and redo</h2>
-<p>Undo and redo are per tab. The Edit tab keeps up to 50 geometry states. Ctrl+Z and Ctrl+Y apply to whichever tab has focus, and each result tab manages its own history for the edits made in it.</p>
-<h2 id="project-files">Project files</h2>
-<p>A project is one <code>.rfsim</code> JSON file that holds the whole design: stackup, geometry, ports, settings, view state, and the last run's results. There is no autosave. Edits set the dirty marker, the <code>*</code> in the title, and you save explicitly with Ctrl+S. An older release refuses to open a project saved by a newer one. A project can be configured to write its results to a separate <code>.rfsimout</code> sidecar next to the <code>.rfsim</code>, so the project can be committed to version control while the results stay out of it. See <a href="docs-file-formats.html">File formats</a>.</p>
-<h2 id="the-included-examples">The included examples</h2>
-<p>The Welcome Panel that opens on launch offers four included examples alongside a blank project and your recent files: a patch antenna, a Vivaldi antenna, a grounded coplanar line, and a bandpass filter. Each opens with its S-parameter results, and running it fills the radiation and surface-current views. They are the fastest way to open a complete design and see every tab populated. The filter and the coplanar line size their geometry from variables and constraints, and the Vivaldi draws its arms with script shapes.</p>
+<h2 id="main-window">Main window</h2>
+<p class="ph">The panels of the main window and what each one holds.</p>
+<h2 id="projects-and-files">Projects and files</h2>
+<p class="ph">How projects are organised on disk.</p>
+<h2 id="preferences">Preferences</h2>
+<p class="ph">The settings a user can change, and their defaults.</p>
     </div>
-    <nav class="docs-pager" aria-label="Pager"><a class="prev" href="docs-install.html"><span>Previous</span>Install and first simulation</a><a class="next" href="docs-stackup-and-layers.html"><span>Next</span>Stackup and materials</a></nav>
+    <nav class="docs-pager" aria-label="Pager"><a class="prev" href="docs-quick-start.html"><span>Previous</span>Your first simulation</a><a class="next" href="docs-geometry.html"><span>Next</span>Building a model</a></nav>
   </article>
 </main>
 <div id="site-footer"></div>

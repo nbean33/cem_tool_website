@@ -1,54 +1,18 @@
-# Running simulations
-> Run Simulation exports the case and launches the solver. This page covers the run path and its pre-flight gate, choosing the CPU or GPU engine, the live telemetry a run shows, where results land when it finishes, and Live mode.
+# Running a simulation
+> Solver settings, meshing, and what happens during a run.
 
-## Run Simulation and Preview Mesh
+## Solver settings
 
-The two actions are in the left rail under the mode buttons. Both need a saved project, and both save a dirty project before they start. Benchmarks for this computer and configured remote runners are under Settings then Benchmark. They use bundled geometry instead of the open project. See [Benchmarking](docs-benchmarking.html).
+!ph Frequency range, accuracy settings and their defaults.
 
-**Run Simulation** exports the project to a solver case and launches the backend. Before anything launches, the same pre-flight gate the CLI uses (`sim.preflight`) validates the project. A blocking error refuses the run and names the reason: a port too small for the mesh, a port whose vertical span collapses to zero cells, a collapsed shape that would rasterize blank, an unknown boundary type, a negative air margin, a radiation pattern with no open face. Nothing is silently clamped or recomputed. A warning does not block: it is shown before the run so you decide. The gate sizes the run from the exact grid, then models what it will actually allocate (the fields, the absorber, whatever captures you turned on, and headroom), and refuses a GPU run whose modeled VRAM exceeds the detected card, or a CPU run whose modeled footprint exceeds free RAM.
+## Meshing
 
-**Preview Mesh** validates the project and displays the 3D FDTD mesh without running the solver. While the preview is open, the left rail's LAST RUN block reads MESH INFO and shows the preview status and the cell count of the generated mesh. Hover the count to see the grid dimensions and time step. With a convergence study on, a note says the preview shows the first mesh pass, which the run then refines. Back to simulate returns the run controls and the last run's details. Previews of 20 million cells or more require confirmation because they can take minutes to build and render. If the mesh cannot be realized, the preview reports the reason and stops.
+!ph How the mesh is generated, and how to refine it.
 
-The 3D preview uses the same upright navigation as Field Viewer and Radiation. Left drag orbits. Right drag, middle drag or Shift plus left drag pans. The wheel zooms toward the point under the pointer, which stays under it. Each orbit starts around the closest board surface at the center of the view and keeps that pivot for the drag. A miss keeps the last valid pivot, starting at the board or scene center. Orbit sensitivity is 0.25 degrees per logical pixel. The cursor is hidden during a drag and returns to where the drag started. A drag keeps going past the edge of the viewport. Release the button or press Esc to end it.
+## Boundaries
 
-Show meshing controls the cell outlines, and Photorealistic switches between material colors and lit cream dielectric with rough copper. The two checkboxes work independently. New projects start with mesh outlines on and photorealistic shading off, keeping the dielectric translucent. The project saves these choices separately from Field Viewer and Radiation.
+!ph The boundary conditions available.
 
-## GPU and CPU engines
+## Monitoring a run
 
-The CUDA GPU backend is the default. At startup the app probes for a compatible NVIDIA GPU. When one is found, its name and VRAM print to the console. When none is found, the run falls back to the CPU backend (OpenMP): the Use CPU backend checkbox locks on for the session and a banner explains the fallback. The same fp32 solver runs on either engine and produces equivalent results to numerical precision. The CPU is significantly slower.
-
-At CPU startup, short segments of the actual simulation measure candidate schedules. The search has a fixed step budget and locks the selected schedule for the rest of the run. These steps count toward the simulation.
-
-Both engines step in an internal unit scale: lengths in 2^k metres and times in 2^k seconds, with k chosen so the mesh's finest cell lands in the one range the solver is validated at (0.12 to 0.24 mm). Every run takes that path, so a structure a million times smaller or larger than a circuit board runs with the same fp32 magnitudes a board does, through the same code. Because the scale is a power of two it moves float exponents only, and results agree across exponents to fp32 rounding. The run manifest records the exponent as `unit_scale_exp`.
-
-Check Use CPU backend yourself to run on the CPU with a compatible GPU present. If startup has not reached a definitive hardware verdict when Run is clicked, the run gate offers the CPU backend and can remember that choice until the GPU hardware changes. A remembered choice is keyed to the GPU fingerprint, so a driver or card change re-prompts.
-
-Selecting a specific GPU is a remote concern: a run on a runner names one of the devices the runner exposes (see [Remote runners](docs-remote-overview.html)). A local run uses the machine's own GPU, or the CPU when the checkbox says so.
-
-## Live telemetry during a run
-
-While the solver runs, the title bar shows elapsed time and throughput in GCell/s, and the runtime panel updates in place.
-
-- **Energy Ringdown** plots the energy ratio against time step on a log axis, with the stop threshold drawn as a dashed line. The run ends when the ratio crosses it.
-- **S-Parameter Convergence** overlays the S-parameter estimate from recent passes so you can watch it settle.
-- **Runtime Stats** reads out elapsed, time step, GCell/s, cell size, ringdown, cell count, RAM, VRAM, and disk. A VRAM overflow raises a warning here.
-
-Two buttons are below the stats. **Pull Snapshot** exports the results computed so far from a local or remote run without stopping: the solver pauses briefly to write S-parameters and enabled radiation data, then resumes. Remote snapshots are downloaded while the job continues. Field-frame snapshots are not supported. The loaded snapshot is marked partial on the ringdown plot. **Stop Early** ends the run before the energy criterion, and asks what to do with the work so far: Stop and Keep Results flushes a partial run and keeps it, or Discard All Results throws it away. A kept partial run is recorded as stopped, never as a clean completion.
-
-## When a run finishes
-
-After timestepping finishes, the title bar reads PREPARING RESULTS. The Simulate and result tabs show the current stage: extracting S-parameters, exporting fields, computing surface currents or radiation patterns, saving, or loading results. Radiation processing also shows completed and total frequency counts. The status stays visible until the results are ready.
-
-A run ends when the energy ringdown crosses its threshold or hits the configured step and ring-down caps, and a capped run is not converged ([FDTD tips](docs-fdtd-tips.html)). Results land in the project: the S-Parameters and Simulate tabs always update, and the Radiation Pattern and Field Viewer tabs update when their outputs were enabled. Each tab that got new output shows a dot until you open it. When the project has result externalization on, the heavy run output is written to a `.rfsimout` sidecar next to the project instead of inside the `.rfsim`.
-
-The result tabs show a badge only when the data on screen needs a warning: it comes from an earlier run than the latest one, the geometry or the config changed since the run that produced it, or that run stopped before its ring-down target. Switching between auto and advanced mode keeps the existing results, and the badge appears only when the effective settings differ from the run.
-
-## Live mode
-
-Live mode reruns the simulation automatically as you edit, for fast iteration on small designs. Enter it with the LIVE button in the tab row. The tabs reparent from the tab bar into a 2x2 dock grid: Edit above Simulate on the left, S-Parameters above the Field Viewer on the right, with Radiation tabbed onto the Field Viewer. You can rearrange the grid and the layout persists with the project. Markers placed on the S-parameter plot keep tracking across reruns.
-
-Every geometry or settings edit schedules a rerun after a 120 ms debounce, so a burst of edits fires one run, not one per keystroke. An edit that arrives while a run is in flight supersedes it: the running solver is stopped and relaunched on the newer input, and the superseded run is discarded rather than counted. Live mode auto-runs with no Run dialog, so it falls back to the CPU backend when no GPU was found, and it disables itself after two consecutive failed runs. Leave Live mode with the same LIVE button.
-
-## From the command line
-
-`rayrf run` runs the same solver headless, and `rayrf serve` and `rayrf remote` drive runs on another machine. On the Simulate tab, Run remotely shows the Run on runner list and the Backend list under it, and the run goes to that runner. Configure remotes under the lists opens the runner manager. See [Remote overview](docs-remote-overview.html). The full verb and flag list is in the [CLI reference](docs-cli-reference.html).
+!ph Progress, convergence, and stopping a run early.

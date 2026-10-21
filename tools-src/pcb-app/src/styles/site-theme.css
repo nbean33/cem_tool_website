@@ -3,28 +3,28 @@
    outer layout. The site is dark-only, so the light/dark toggle is hidden. */
 
 [data-theme="dark"] {
-  --bg: #0b0b0d;
-  --bg-panel: #14141a;
-  --bg-sidebar: #101015;
-  --bg-input: #0d0d12;
+  --bg: #0f1e34;
+  --bg-panel: #172b47;
+  --bg-sidebar: #13253f;
+  --bg-input: #0c1a2e;
   --bg-hover: rgba(255, 255, 255, 0.04);
-  --bg-active: rgba(167, 139, 250, 0.14);
+  --bg-active: rgba(45, 212, 191, 0.14);
 
-  --fg: #e8ecf2;
-  --fg-muted: #b3bbc9;
-  --fg-faint: #7a8597;
+  --fg: #eaf2fb;
+  --fg-muted: #b6c6db;
+  --fg-faint: #8197b3;
 
-  --border: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.14);
+  --border: rgba(148, 190, 255, 0.12);
+  --border-strong: rgba(148, 190, 255, 0.2);
 
-  --accent: #a78bfa;
-  --accent-fg: #0e0b1a;
-  --accent-soft: rgba(167, 139, 250, 0.14);
+  --accent: #2dd4bf;
+  --accent-fg: #042f2e;
+  --accent-soft: rgba(45, 212, 191, 0.14);
   --danger: #f87171;
   --danger-soft: rgba(248, 113, 113, 0.12);
 
-  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
 }
 
 /* The site header is 60px plus its 1px border. */
@@ -34,7 +34,7 @@ body { overflow: hidden; }
 .app { height: 100%; }
 
 .theme-toggle { display: none; }
-.brand-mark { background: linear-gradient(135deg, #c4b5fd 0%, #7c5cf0 100%); }
+.brand-mark { background: linear-gradient(135deg, #5eead4 0%, #14b8a6 100%); }
 
 /* Phones: one column, the calculator list above the form. */
 @media (max-width: 640px) {

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free PCB and antenna tools that run in your browser | Machshev</title>
+<meta name="description" content="The PCB Toolkit and Antenna Studio now run in the browser: 50 PCB calculators and a NEC-2 antenna solver, compiled from their original Rust code to WebAssembly. No install, no account, and nothing leaves your machine.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="blog">
+<div id="site-header"></div>
+<main id="main">
+  <article class="article">
+    <div class="container narrow">
+      <a class="back" href="blog.html">&larr; All posts</a>
+      <div class="post-meta" style="margin-top:22px">October 20, 2026 / 3 min read</div>
+      <h1>Free PCB and antenna tools that run in your browser</h1>
+      <div class="prose">
+<p>Two free tools are now on this site: the <a href="tools/pcb/">PCB Toolkit</a>, with 50 PCB design calculators, and <a href="tools/antenna/index.html">Antenna Studio</a>, a NEC-2 antenna modeler. Neither needs an install or an account.</p>
+
+<h2>The same code as the desktop apps</h2>
+<p>Both tools began as desktop applications written in Rust. Rather than port their formulas to JavaScript, we compiled the original Rust code to WebAssembly, so the website runs the same calculator library and the same method-of-moments solver as the desktop builds. The interfaces are the desktop apps' own, restyled for the site.</p>
+<p>Because everything runs in your browser, nothing you type is sent to a server. Once a page has loaded, it needs no further connection.</p>
+
+<h2>PCB Toolkit</h2>
+<p>The toolkit covers trace impedance (microstrip, stripline, coplanar and more), differential pairs, current capacity to IPC-2221A and IPC-2152, vias and padstacks, signal integrity, PDN impedance, crosstalk, and the everyday Ohm's-law family. A library of 45 laminates fills in the dielectric constant and loss tangent. Every calculator has its own link, such as <a href="tools/pcb/#impedance.microstrip">tools/pcb/#impedance.microstrip</a>.</p>
+
+<h2>Antenna Studio</h2>
+<p>Start from a template such as a dipole, a Yagi or a loop, change its dimensions, and the model is solved as you edit. The 3D view shows the current on each wire and the radiation pattern; the side panels show impedance, SWR, pattern cuts and a Smith chart. Frequency and parameter sweeps, a matching-network designer and an optimizer run in the background without freezing the page.</p>
+<p>The browser solves on a single thread, so very large models are slower than on the desktop. For typical HF and VHF wire antennas, solves take well under a second.</p>
+
+<h2>Try them</h2>
+<p>Both tools, and closed-form calculators for patch and inverted-F antennas, quarter-wave transformers and the Smith chart, are on the <a href="rf-calculators.html">RF calculators</a> page. The <a href="docs-pcb-toolkit.html">documentation</a> describes each one.</p>
+<div class="post-cta"><h3>Try the online tools</h3><p>Fifty PCB calculators and a NEC-2 antenna solver, free in your browser.</p><a class="btn lg" href="rf-calculators.html">Try the online tools</a></div>
+      </div>
+      <div class="tags"><span>Tools</span><span>PCB</span><span>Antennas</span><span>WebAssembly</span></div>
+    </div>
+  </article>
+</main>
+<div id="site-footer"></div>
+<script src="assets/site.js"></script>
+</body>
+</html>
