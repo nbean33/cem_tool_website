@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Runner setup | Machshev Labs Docs</title>
+<meta name="description" content="To set up a runner, install Machshev Labs on the machine, license it against your account, open the runner&#x27;s TCP port, and start the daemon. See Remote running for submitting jobs from the desktop app.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="docs-runner-setup">
+<div id="site-header"></div>
+<main id="main" class="container docs">
+  <aside class="docs-side" id="docs-side" aria-label="Documentation"></aside>
+  <article class="docs-main">
+    <div class="post-meta">Remote running</div>
+    <h1 style="margin-top:8px">Runner setup</h1>
+    <p class="lede">To set up a runner, install Machshev Labs on the machine, license it against your account, open the runner's TCP port, and start the daemon. See <a href="docs-remote-overview.html">Remote running</a> for submitting jobs from the desktop app.</p>
+    <div class="prose">
+<p>Runner licensing is seatless. A Pro or Founding license key from the dashboard licenses page validates the runner against your account and signs a machine-bound token for every job, without consuming an activation seat.</p>
+<h2 id="linux">Linux</h2>
+<p>Install once, with the license key from the dashboard licenses page:</p>
+<pre><code>./Machshev Labs-Studio-&lt;version&gt;-x86_64.AppImage serve --install --license-key MACHSHEV-XXXX-XXXX-XXXX-XXXX</code></pre>
+<p>Then start serving:</p>
+<pre><code>./Machshev Labs-Studio-&lt;version&gt;-x86_64.AppImage serve</code></pre>
+<p>The runner validates the key, registers this machine's address to your account, and your other machines discover it automatically. The runner exposes every device the box can run on: the CPU when the CPU backend is present and each NVIDIA GPU when the CUDA backend answers. Pass <code>--devices</code> with <code>--install</code> to expose a subset, for example <code>--devices cuda:0,cuda:1</code> on a box whose CPU should stay out of the pool. Later starts are the same plain <code>serve</code>, because the configuration is stored, and the runner window lets you check devices on and off while it serves.</p>
+<p>Open the runner port so clients can reach it. Jobs move over a direct link to port 8787, which a host firewall or cloud security group often blocks by default. On a box running <code>ufw</code> that is <code>sudo ufw allow 8787/tcp</code>. On a cloud VM also open the port in the provider's security group.</p>
+<p>To keep the runner alive across reboots, pass <code>--autostart</code> with <code>--install</code>. It writes a systemd unit into the state dir and prints the install command:</p>
+<pre><code>sudo cp /var/lib/machshev/machshev-runner.service /etc/systemd/system/ &amp;&amp; sudo systemctl enable --now machshev-runner</code></pre>
+<h2 id="windows">Windows</h2>
+<p>The same two steps, from the install folder (<code>%LOCALAPPDATA%\Programs\Machshev Labs</code>). <code>machshev</code> resolves to the console launcher <code>machshev.com</code>, which waits and streams output, and <code>Machshev Labs.exe</code> is the windowed app.</p>
+<pre><code>.\machshev serve --install --license-key MACHSHEV-XXXX-XXXX-XXXX-XXXX</code></pre>
+<pre><code>.\machshev serve</code></pre>
+<p>Open the runner port so clients can reach it, the same as on Linux. Windows Firewall blocks inbound connections by default, so a runner that registers with your account is still unreachable until port 8787 is allowed. From an Administrator PowerShell:</p>
+<pre><code>netsh advfirewall firewall add rule name="Machshev Labs runner 8787" dir=in action=allow protocol=TCP localport=8787</code></pre>
+<p>On a cloud VM also open the port in the provider's security group. If the machine's network is set to Public, allow the rule on the Public profile (the command above covers all profiles).</p>
+<p>To run at startup, register a Scheduled Task (or a service wrapper) that runs <code>Machshev Labs.exe serve --state-dir "C:\ProgramData\Machshev Labs\runner"</code> from the install folder. Passing <code>--autostart</code> with <code>--install</code> prints the serve command with the resolved state dir.</p>
+<h2 id="advertise-a-fixed-address">Advertise a fixed address</h2>
+<p>By default the runner advertises its active LAN addresses and the public IP observed by the website. Clients use an address that passes the verified connection. No files or results pass through the website.</p>
+<p>For a translated port or fixed hostname, set the reachable endpoint with <code>--advertise HOST:PORT</code> at install or serve time: on a NAT or portmapped host (a rented container, a port-forwarded home box) that is the external address and mapped port, which can differ from the listen port. Registration is metadata only. Jobs move over a direct TLS 1.3 link to the advertised address, so the port (default 8787) must be reachable through the firewall or cloud security group.</p>
+<p><code>--advertise off</code> skips account registration entirely. The runner then serves direct connections only, and clients add it by host, port, and fingerprint.</p>
+<h2 id="what-each-piece-does">What each piece does</h2>
+<ul><li><code>--install</code> writes <code>runner.json</code> (name, owner, host, port, slots, devices, advertise, and the license key when one is resolved) and the identity into the state dir. Command-line flags always win over the stored values.</li><li>The <b>state dir</b> holds the identity, the configuration, and the durable job queue. It resolves from <code>--state-dir</code>, then the <code>MACHSHEV_STATE_DIR</code> environment variable, then the machine default (<code>C:\ProgramData\Machshev Labs\runner</code> on Windows, <code>/var/lib/machshev</code> on Linux when writable, else <code>~/.machshev/runner</code>). Keep every invocation on one state dir: a new dir mints a new identity, and clients that pinned the old fingerprint refuse the new one.</li><li><code>--devices</code> names the devices jobs may run on, as a comma-separated list of <code>cpu</code> and <code>cuda:&lt;index&gt;</code>. Omitted, every device the box can run on is exposed. A job names one of them or <code>auto</code>, which takes the first free device with GPUs first. A named device queues the job until it is free. One job runs per device at a time.</li><li>Control belongs to the license key's account: a desktop signed in to the same account proves it with its signed token and gets submit and control, and every other connection is view-only. <code>--owner</code> sets the account the runner displays, and <code>--open-owner</code> grants control to any peer on a trusted LAN. <code>--allow-unlicensed</code> skips the license gate for closed-network development. In that mode <code>--owner</code> is trusted by the email a peer types, and the start banner says so.</li><li><code>--slots</code> caps how many jobs run at once below the one-per-device default.</li></ul>
+<h2 id="verify-and-connect">Verify and connect</h2>
+<p>Account discovery verifies the advertised identity automatically. For a direct connection, compare the fingerprint printed by <code>--install</code> with the client prompt, or supply it explicitly:</p>
+<pre><code>machshev serve --health                                status JSON on the box
+machshev remote info --host HOST --fingerprint FP      from a client</code></pre>
+<p>A client that connects by CLI stores the fingerprint it first trusted in <code>~/.machshev/pins.json</code> (<code>%USERPROFILE%\.machshev\pins.json</code> on Windows). If a runner's key later changes (wiping its state dir mints a new identity), the next connection is refused. After verifying the new fingerprint out of band, reconnect with <code>--fingerprint NEWFP</code>, or remove that runner's <code>host:port</code> entry from the pins file and reconnect to trust it fresh. For a saved direct desktop connection, remove it and add the verified new identity. Account discovery uses the current advertisement automatically.</p>
+<p>The runner also has a windowed form, <code>machshev serve --window</code>, which is what the desktop app's "Use this computer as a runner" button starts: the same daemon with the runner name, discovery status, device switches, and job counts. Address, identity, and logs are under Details.</p>
+<p>Submit work from the desktop app (<a href="docs-remote-overview.html">Remote running</a>) or from the CLI with the <code>machshev remote</code> verbs (<a href="docs-cli-reference.html">CLI reference</a>).</p>
+<h2 id="updating-a-runner">Updating a runner</h2>
+<p>A runner and the desktop app or CLI that connects to it must run the same Machshev Labs release. A mismatch is refused with a message that says which end to update. To update a runner, stop <code>serve</code>, install the new release on the runner machine, and start <code>serve</code> again on the same state dir. The stored configuration and identity carry over, so clients keep their pinned fingerprint.</p>
+    </div>
+    <nav class="docs-pager" aria-label="Pager"><a class="prev" href="docs-remote-overview.html"><span>Previous</span>Remote running</a><a class="next" href="docs-cli-overview.html"><span>Next</span>CLI overview</a></nav>
+  </article>
+</main>
+<div id="site-footer"></div>
+<script src="assets/docs-nav.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

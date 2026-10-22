@@ -1,4 +1,4 @@
-/* Machshev site - shared behavior.
+/* Machshev Labs site - shared behavior.
  * Each page sets <body data-page="..."> and includes empty
  * <div id="site-header"></div> / <div id="site-footer"></div> mount points.
  */
@@ -8,21 +8,20 @@
   // Set to false once the S11 charts are fed real measured / simulated data.
   const SHOW_PLACEHOLDER_NOTE = true;
 
+  // Logo: a trace with two vias, drawn as line art.
   const LOGO = `<svg viewBox="0 0 32 32" aria-hidden="true">
-    <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#5eead4"/><stop offset="1" stop-color="#0ea5e9"/></linearGradient></defs>
-    <rect x="3" y="3" width="26" height="26" rx="7" fill="none" stroke="url(#lg)" stroke-width="2.2"/>
-    <path d="M8 16q2-7 4 0t4 0 4 0 4 0" fill="none" stroke="#eaf2fb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    <circle cx="24" cy="16" r="1.9" fill="#2dd4bf"/></svg>`;
+    <path d="M7.5 23.5H13L19 9.5h5.5" fill="none" stroke="#4d94ff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="5" cy="23.5" r="2.6" fill="none" stroke="#e7eaee" stroke-width="2"/>
+    <circle cx="27" cy="9.5" r="2.6" fill="none" stroke="#e7eaee" stroke-width="2"/></svg>`;
 
   const NAV = [
-    ["index", "Product", "index.html"],
-    ["validation", "Validation", "validation.html"],
-    ["benchmarks", "Benchmarks", "benchmarks.html"],
+    ["how", "How it works", "how-it-works.html"],
+    ["report", "Sample report", "sample-report.html"],
+    ["accuracy", "Accuracy", "accuracy.html"],
     ["pricing", "Pricing", "pricing.html"],
+    ["calculators", "Free tools", "rf-calculators.html"],
     ["docs", "Docs", "docs.html"],
-    ["calculators", "RF Calculators", "rf-calculators.html"],
-    ["antenna", "Antenna Studio", "tools/antenna/index.html"],
+    ["blog", "Blog", "blog.html"],
   ];
 
   // Pages below the site root (the tools in tools/*/) set data-root="../../" so the shared
@@ -30,15 +29,16 @@
   const ROOT = document.body.dataset.root || "";
 
   // Optional cookie tiers, as described in the Cookie Policy. The choice is only
-  // remembered locally; no analytics or advertising scripts are wired up.
+  // remembered locally; no analytics scripts are wired up in this recreation.
   const CONSENT_TIERS = [
-    ["functional", "Functional", "Remembers preferences, such as your last-used settings."],
-    ["analytics", "Analytics", "Anonymous page views and performance measurements."],
-    ["thirdParty", "Third-party", "Analytics and advertising services run by other companies."],
+    ["functional", "Functional", "Remembers preferences such as your last sign-in method."],
+    ["analytics", "Analytics, first-party", "Page views, dwell time, scroll depth, and Web Vitals."],
+    ["behavioral", "Analytics, behavioral", "Per-section engagement and Microsoft Clarity session replay."],
+    ["thirdParty", "Analytics and advertising, third-party", "Vercel Analytics, Speed Insights, and Google Ads conversions."],
   ];
 
   const page = document.body.dataset.page || "";
-  const section = page.split("-")[0];
+  const section = ({ benchmarks: "accuracy" })[page.split("-")[0]] || page.split("-")[0];
 
   function header() {
     const el = document.getElementById("site-header");
@@ -47,12 +47,13 @@
       <a class="skip" href="#main">Skip to content</a>
       <header class="site-header">
         <div class="container">
-          <a class="brand" href="${ROOT}index.html">${LOGO}<span>Machshev</span></a>
+          <a class="brand" href="${ROOT}index.html">${LOGO}<span>Machshev Labs</span></a>
           <nav class="nav" id="nav" aria-label="Primary">
             ${NAV.map(([k, label, href]) => `<a href="${ROOT}${href}"${k === section ? ' class="active" aria-current="page"' : ""}>${label}</a>`).join("")}
           </nav>
           <div class="header-actions">
-            <a class="btn" href="${ROOT}rf-calculators.html">Try the online tools</a>
+            <a class="link" href="${ROOT}app-upload.html">Sign in</a>
+            <a class="btn" href="${ROOT}app-upload.html">Check a board free</a>
             <button class="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav">&#9776;</button>
           </div>
         </div>
@@ -73,22 +74,23 @@
         <div class="container">
           <div class="footer-grid">
             <div>
-              <a class="brand" href="${ROOT}index.html">${LOGO}<span>Machshev</span></a>
-              <p>Computational electromagnetics software from Machshev Labs LLC.</p>
+              <a class="brand" href="${ROOT}index.html">${LOGO}<span>Machshev Labs</span></a>
+              <p>Catch signal problems before you order the board.</p>
             </div>
             <div><h4>Product</h4><ul>
-              <li><a href="${ROOT}index.html">Features</a></li>
-              <li><a href="${ROOT}benchmarks.html">Benchmarks</a></li>
+              <li><a href="${ROOT}how-it-works.html">How it works</a></li>
+              <li><a href="${ROOT}sample-report.html">Sample report</a></li>
+              <li><a href="${ROOT}accuracy.html">Accuracy</a></li>
               <li><a href="${ROOT}pricing.html">Pricing</a></li>
-              <li><a href="${ROOT}rf-calculators.html">Online tools</a></li></ul></div>
-            <div><h4>Docs</h4><ul>
-              <li><a href="${ROOT}docs-install.html">Getting started</a></li>
-              <li><a href="${ROOT}docs-file-formats.html">Reference</a></li>
-              <li><a href="${ROOT}validation.html">Validation suite</a></li>
-              <li><a href="${ROOT}blog.html">Blog</a></li></ul></div>
+              <li><a href="${ROOT}security.html">Security</a></li></ul></div>
+            <div><h4>Resources</h4><ul>
+              <li><a href="${ROOT}rf-calculators.html">Free tools</a></li>
+              <li><a href="${ROOT}docs.html">Docs</a></li>
+              <li><a href="${ROOT}blog.html">Blog</a></li>
+              <li><a href="${ROOT}brand.html">Brand kit</a></li></ul></div>
             <div><h4>Contact</h4><ul>
               <li><a href="mailto:support@machshev.com">Support<small>support@machshev.com</small></a></li>
-              <li><a href="mailto:business@machshev.com">Business inquiries<small>business@machshev.com</small></a></li></ul></div>
+              <li><a href="mailto:business@machshev.com">Review calls and business<small>business@machshev.com</small></a></li></ul></div>
             <div><h4>Legal</h4><ul>
               <li><a href="${ROOT}legal-terms.html">Terms</a></li>
               <li><a href="${ROOT}legal-privacy.html">Privacy</a></li>
@@ -102,13 +104,13 @@
       </footer>
       <div class="cookie" id="cookie" hidden role="dialog" aria-label="Cookie consent">
         <div class="cookie-row">
-          <span>Choose which optional cookies this site may use. <a href="${ROOT}legal-cookies.html">Cookie Policy</a></span>
+          <span>By using this site you agree to our use of cookies for analytics and advertising. <a href="${ROOT}legal-cookies.html">Cookie Policy</a></span>
           <button class="btn" data-consent="accept">Accept</button>
           <button class="btn ghost" data-consent="essential">Essentials only</button>
           <button class="btn ghost" data-consent="customize" aria-expanded="false">Customize</button>
         </div>
         <div class="cookie-prefs" hidden>
-          <label class="tog"><input type="checkbox" checked disabled><span><b>Strictly necessary</b>Remembers your cookie choice. Always on.</span></label>
+          <label class="tog"><input type="checkbox" checked disabled><span><b>Strictly necessary</b>Sign-in, checkout, and your cookie choice. Always on.</span></label>
           ${CONSENT_TIERS.map(([k, name, desc]) => `<label class="tog"><input type="checkbox" data-tier="${k}"><span><b>${name}</b>${desc}</span></label>`).join("")}
           <div class="cookie-actions"><button class="btn" data-consent="save">Save choices</button></div>
         </div>
@@ -201,8 +203,8 @@
   }
 
   const DUTS = {
-    "EX-HOME": { range: [3, 5], ymin: -25, dips: [{ f: 4.02, depth: 21, w: 0.045, df: 0.4, dd: 12 }] },
-    "EX-01": {
+    "PA08-home": { range: [3, 5], ymin: -25, dips: [{ f: 4.02, depth: 21, w: 0.045, df: 0.4, dd: 12 }] },
+    IDF01: {
       range: [2.0, 2.7], ymin: -40, base: -0.3, band: [2.345, 0.16, -9],
       dips: [
         { f: 2.238, depth: 16, w: 0.012, df: 0.66, dd: 6.9 },
@@ -211,7 +213,14 @@
         { f: 2.453, depth: 22, w: 0.012, df: -0.05, dd: 14.8 },
       ],
     },
-    "EX-02": { range: [4, 8], ymin: -35, dips: [{ f: 6.02, depth: 19, w: 0.08, df: 0.4 }] },
+    "PA05-4G": { range: [2, 8], ymin: -35, dips: [{ f: 4.0, depth: 17, w: 0.06, df: 0.5 }, { f: 6.4, depth: 14, w: 0.09, df: -0.6 }] },
+    "PA01-6G": { range: [4, 8], ymin: -35, dips: [{ f: 6.02, depth: 19, w: 0.08, df: 0.4 }] },
+    "PA02-6G": { range: [4, 8], ymin: -35, dips: [{ f: 6.08, depth: 23, w: 0.08, df: -0.3 }] },
+    "PA03-6G": { range: [4, 8], ymin: -35, dips: [{ f: 6.05, depth: 15, w: 0.08, df: 0.7 }] },
+    "PA04-6G": { range: [4, 8], ymin: -35, dips: [{ f: 6.1, depth: 26, w: 0.08, df: -0.5 }] },
+    "PA06-4G": { range: [2, 8], ymin: -35, dips: [{ f: 4.01, depth: 16, w: 0.06, df: 0.3 }, { f: 6.5, depth: 11, w: 0.09, df: -0.4, dd: 80 }] },
+    "PA07-4G": { range: [2, 8], ymin: -35, dips: [{ f: 3.99, depth: 18, w: 0.06, df: 0.6 }, { f: 6.52, depth: 13, w: 0.09, df: -0.7 }] },
+    "PA08-4G": { range: [2, 8], ymin: -35, dips: [{ f: 4.02, depth: 21, w: 0.06, df: 0.4 }, { f: 6.6, depth: 12, w: 0.09, df: 0.2 }] },
   };
 
   const NS = "http://www.w3.org/2000/svg";
@@ -232,7 +241,7 @@
     const svg = document.createElementNS(NS, "svg");
     svg.setAttribute("class", "chart");
     svg.setAttribute("role", "img");
-    svg.setAttribute("aria-label", `S11 magnitude, measured versus Machshev simulation, ${spec.range[0]} to ${spec.range[1]} GHz`);
+    svg.setAttribute("aria-label", `S11 magnitude, measured versus Machshev Labs simulation, ${spec.range[0]} to ${spec.range[1]} GHz`);
     host.replaceWith(svg);
 
     function draw() {
@@ -381,18 +390,18 @@
       let g = "";
       for (let i = 0; i <= 300; i += 6) g += `<line x1="${i}" y1="0" x2="${i}" y2="220"/>`;
       for (let j = 0; j <= 220; j += 6) g += `<line x1="0" y1="${j}" x2="300" y2="${j}"/>`;
-      return `<svg viewBox="0 0 300 220"><rect width="300" height="220" fill="#0c1a2e"/>
-        ${boardShapes(kind, "rgba(45, 212, 191,.55)")}
+      return `<svg viewBox="0 0 300 220"><rect width="300" height="220" fill="#0d0f13"/>
+        ${boardShapes(kind, "rgba(77, 148, 255,.55)")}
         <g stroke="rgba(255,255,255,.09)" stroke-width=".6">${g}</g></svg>`;
     }
-    return `<svg viewBox="0 0 300 220"><rect width="300" height="220" fill="#11223a"/>
-      <rect x="0" y="0" width="300" height="16" fill="#1a2e4b"/>
-      <circle cx="9" cy="8" r="2.5" fill="#f87171"/><circle cx="18" cy="8" r="2.5" fill="#fbbf24"/><circle cx="27" cy="8" r="2.5" fill="#4ade80"/>
-      <rect x="0" y="16" width="44" height="204" fill="#152842"/><rect x="256" y="16" width="44" height="204" fill="#152842"/>
-      ${[30, 44, 58, 72].map((y) => `<rect x="6" y="${y}" width="32" height="6" rx="2" fill="#2a4064"/>`).join("")}
-      ${[30, 44, 58].map((y) => `<rect x="262" y="${y}" width="32" height="6" rx="2" fill="#2a4064"/>`).join("")}
+    return `<svg viewBox="0 0 300 220"><rect width="300" height="220" fill="#101318"/>
+      <rect x="0" y="0" width="300" height="16" fill="#191c22"/>
+      <circle cx="9" cy="8" r="2.5" fill="#3a3f48"/><circle cx="18" cy="8" r="2.5" fill="#3a3f48"/><circle cx="27" cy="8" r="2.5" fill="#3a3f48"/>
+      <rect x="0" y="16" width="44" height="204" fill="#13161b"/><rect x="256" y="16" width="44" height="204" fill="#13161b"/>
+      ${[30, 44, 58, 72].map((y) => `<rect x="6" y="${y}" width="32" height="6" rx="2" fill="#2a2f37"/>`).join("")}
+      ${[30, 44, 58].map((y) => `<rect x="262" y="${y}" width="32" height="6" rx="2" fill="#2a2f37"/>`).join("")}
       <g transform="translate(52 22) scale(.68)">${boardShapes(kind, "#d4a14f")}</g>
-      <rect x="44" y="16" width="212" height="204" fill="none" stroke="#2d4468"/></svg>`;
+      <rect x="44" y="16" width="212" height="204" fill="none" stroke="#2c313a"/></svg>`;
   }
   function boards() {
     document.querySelectorAll("[data-board]").forEach((el) => {
@@ -537,8 +546,24 @@
     }
   }
 
+  /* ---------------- App screen mockups ---------------- */
+  function appPreview() {
+    document.querySelectorAll("[data-logo]").forEach((el) => el.insertAdjacentHTML("afterbegin", LOGO));
+    // Buttons that would act on an account or start a paid run do nothing in the preview.
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest('a[href="#"], a[aria-disabled="true"]');
+      if (!a) return;
+      e.preventDefault();
+      if (a.getAttribute("href") === "#" && !a.dataset.previewNote) {
+        a.dataset.previewNote = "1";
+        a.textContent = "Preview only: not live yet";
+      }
+    });
+  }
+
   header();
   footer();
+  appPreview();
   docsNav();
   boards();
   tabs();

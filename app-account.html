@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Account | Machshev Labs</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="app">
+<div class="app-banner">Preview of the app. It is not live yet. <a href="index.html">Back to the site</a></div>
+<header class="app-bar">
+  <div class="container">
+    <a class="brand" href="index.html" data-logo><span>Machshev Labs</span></a>
+    <nav aria-label="App"><a href="app-upload.html">New check</a><a href="app-results.html">Boards</a><a class="active" href="app-account.html">Account</a></nav>
+    <span class="who">you@company.com</span>
+  </div>
+</header>
+<main class="app-main" id="main">
+  <h1>Account and billing</h1>
+  <div class="grid-2" style="margin-top:26px;align-items:start">
+    <div class="card">
+      <h3 style="margin-top:0">Account</h3>
+      <dl class="kv" style="margin-top:16px">
+        <dt>Email</dt><dd class="mono">you@company.com</dd>
+        <dt>Company</dt><dd>Example Hardware Inc.</dd>
+        <dt>Boards checked</dt><dd class="mono">7</dd>
+        <dt>Stored files</dt><dd>3 boards · deleted automatically after <span class="ph">days</span></dd>
+      </dl>
+      <div class="cta-row"><a class="btn ghost" href="#">Delete all my files now</a></div>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">Billing</h3>
+      <dl class="kv" style="margin-top:16px">
+        <dt>Payment method</dt><dd class="mono">None added</dd>
+        <dt>Full checks this month</dt><dd class="mono">2 · $—</dd>
+      </dl>
+      <div class="cta-row"><a class="btn" href="#">Add a payment method</a></div>
+    </div>
+  </div>
+  <h2 class="h3" style="margin:40px 0 14px">Invoices</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Date</th><th>Board</th><th>Full check</th><th>Amount</th></tr></thead>
+      <tbody>
+        <tr><td class="num">2026-10-14</td><td>sensor-hub rev B</td><td>2 connections</td><td class="num">$—</td></tr>
+        <tr><td class="num">2026-09-30</td><td>motor-ctrl rev A</td><td>4 connections</td><td class="num">$—</td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+<script src="assets/site.js"></script>
+</body>
+</html>

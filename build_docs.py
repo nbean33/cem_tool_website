@@ -28,24 +28,53 @@ SRC = ROOT / "docs-src"
 
 NAV = [
     ("Getting started", [
-        ("install", "Installing Machshev"),
-        ("quick-start", "Your first simulation"),
-    ]),
-    ("Using Machshev", [
+        ("install", "Install and first simulation"),
         ("interface", "The interface"),
-        ("geometry", "Building a model"),
-        ("ports-and-excitation", "Ports and excitation"),
-        ("running", "Running a simulation"),
-        ("results", "Viewing results"),
     ]),
-    ("Online tools", [
-        ("pcb-toolkit", "PCB Toolkit"),
-        ("antenna-studio", "Antenna Studio"),
-        ("calculators", "RF calculators"),
+    ("Editor", [
+        ("stackup-and-layers", "Stackup and materials"),
+        ("geometry", "Drawing geometry"),
+        ("parametric", "Variables, constraints, and generators"),
+        ("import-png", "Importing artwork"),
+        ("import-gerber", "Importing Gerber boards"),
+        ("import-dxf", "Importing DXF drawings"),
+        ("import-kicad", "Importing KiCad boards"),
+        ("import-openems", "Importing openEMS and CSXCAD XML"),
+        ("export-dxf", "Exporting DXF drawings"),
+        ("export-openems", "Exporting openEMS XML"),
+        ("ports-and-excitation", "Ports and excitation"),
+    ]),
+    ("Simulation", [
+        ("auto-mode", "Auto mode and quality"),
+        ("advanced-mode", "Advanced mode"),
+        ("mesh-regions", "Mesh regions"),
+        ("boundaries", "Boundary conditions"),
+        ("running", "Running simulations"),
+        ("benchmarking", "Benchmarking"),
+    ]),
+    ("Results", [
+        ("s-parameters", "S-parameters and Smith chart"),
+        ("radiation-pattern", "Radiation pattern"),
+        ("field-viewer", "Field viewer"),
+        ("run-history", "Run history"),
+        ("sweeps", "Parameter sweeps"),
+    ]),
+    ("Remote running", [
+        ("remote-overview", "Remote running"),
+        ("runner-setup", "Runner setup"),
+    ]),
+    ("CLI and automation", [
+        ("cli-overview", "CLI overview"),
+        ("cli-agent-driving", "Driving Machshev Labs with an agent"),
+        ("cli-reference", "CLI reference"),
+        ("cli-scripting", "Scripting and specs"),
     ]),
     ("Reference", [
-        ("file-formats", "File formats"),
+        ("settings", "Settings reference"),
+        ("calculators", "RF calculators"),
         ("keyboard-shortcuts", "Keyboard shortcuts"),
+        ("file-formats", "File formats and outputs"),
+        ("fdtd-tips", "FDTD tips"),
     ]),
 ]
 
@@ -54,7 +83,7 @@ HEAD = """<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{title} | Machshev Docs</title>
+<title>{title} | Machshev Labs Docs</title>
 <meta name="description" content="{desc}">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/style.css">
@@ -247,7 +276,7 @@ def build():
         f"window.DOCS_INDEX = {json.dumps(index, ensure_ascii=False)};\n",
         encoding="utf-8")
     (ROOT / "machshev-docs.md").write_text(
-        "# Machshev documentation\n\n" + "\n\n---\n\n".join(bundle) + "\n", encoding="utf-8")
+        "# Machshev Labs documentation\n\n" + "\n\n---\n\n".join(bundle) + "\n", encoding="utf-8")
     print(f"built {len(flat)} docs pages, assets/docs-nav.js, machshev-docs.md")
 
 

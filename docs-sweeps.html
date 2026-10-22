@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parameter sweeps | Machshev Labs Docs</title>
+<meta name="description" content="A parameter sweep runs one project across a range of variable values and records every point as its own run in the History rail. Arm it with the Parameter sweep checkbox under the run controls on the Simulate tab.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="docs-sweeps">
+<div id="site-header"></div>
+<main id="main" class="container docs">
+  <aside class="docs-side" id="docs-side" aria-label="Documentation"></aside>
+  <article class="docs-main">
+    <div class="post-meta">Results</div>
+    <h1 style="margin-top:8px">Parameter sweeps</h1>
+    <p class="lede">A parameter sweep runs one project across a range of variable values and records every point as its own run in the History rail. Arm it with the Parameter sweep checkbox under the run controls on the Simulate tab.</p>
+    <div class="prose">
+<p>While the sweep is armed a Sweep Options button appears below the checkbox and opens the definition dialog, and the run button reads Run Simulation Sweep and launches it. An armed sweep with no saved definition blocks the run and outlines the button in red until you configure it, with the reason on hover. A sweep needs a saved project, because its records land beside the project file.</p>
+<p>Sweeps use <a href="docs-run-history.html">Run History</a>, which is always active, because every point is stored as a record. The <code>machshev sweep</code> commands own their own state directory and record into project history only when you ask, as described below.</p>
+<h2 id="defining-the-axes">Defining the axes</h2>
+<p>A sweep spans up to two axes. Each axis binds one project variable (from Variable Studio, see <a href="docs-parametric.html">Variables, constraints, and generators</a>) to the values it takes. Picking a variable prefills the range from the variable's min and max when they are set.</p>
+<p>Each axis has a spacing mode:</p>
+<ul><li><b>List:</b> the values you type, comma or space separated.</li><li><b>Linspace:</b> N points evenly spaced from a start to a stop, both included.</li><li><b>Log:</b> N points spaced logarithmically from a start to a stop, both included and both positive.</li></ul>
+<p>Two axes combine as a grid: every combination of the two value lists (the cartesian product). The <code>machshev sweep</code> commands also accept a zip combine, which pairs the two axes element by element and needs both the same length.</p>
+<p>Drive every port (full S-matrix) sits at the top of the dialog. It is its own kind of sweep: while it is on the variable axes are hidden and do not run, and they keep their values for when it is turned off again. With it on, the sweep runs a single point: the project as authored, one solve per port, assembled into a full S-matrix.</p>
+<p>Sweeps use the Simulate tab's run controls: Use CPU backend selects the local backend, and Run remotely with the Run on and Backend lists selects the runner and its device. These selections apply when you launch the sweep.</p>
+<h2 id="the-cost-estimate">The cost estimate</h2>
+<p>The estimate table refreshes after you stop editing, without running the solver. Estimates for older definitions are discarded. The same memory check runs when you launch the sweep and reports why any points cannot fit.</p>
+<p>The estimate detaches one base snapshot from the open project, applies each point's variable overrides to a copy, derives the mesh the run would build, and sizes memory the way the run gate does. It never launches the solver and never changes the open project. The launch snapshots the project at that moment and stores that exact base with the sweep, so resume and retry cannot drift to later edits. The table reports one row per point:</p>
+<div class="table-wrap"><table><thead><tr><th>Column</th><th>Shows</th></tr></thead><tbody><tr><td>Point</td><td>the point index</td></tr><tr><td>Variables</td><td>the variable assignment for that point</td></tr><tr><td>Cells</td><td>the mesh cell count the run would build</td></tr><tr><td>Est GB</td><td>the estimated run memory on the chosen backend</td></tr><tr><td>Valid</td><td>OK, OOM, or Error, with the full reason on hover</td></tr></tbody></table></div>
+<p>The dialog does not show a runtime estimate. The CLI JSON preview includes one, as described under Limits below.</p>
+<p>Device memory can be unknown, for example when a local GPU probe or a remote runner's cached hardware has no usable capacity. Fit cannot be verified in that state, so every point is refused and the launch refuses with that reason. A remote preview uses only the selected runner's advertised CPU or selected GPU memory. It never substitutes this computer's memory. A remote CUDA run records the selected physical device index with its run provenance.</p>
+<p>Refused points are listed and skipped, and the remaining points still run. When every point is refused, the launch refuses.</p>
+<h2 id="running-a-sweep">Running a sweep</h2>
+<p>Points run one at a time, on every backend and target. As each point starts it appears in the rail as its own record with a running glyph, then fills in when it completes. The next point launches only when the previous one finishes, so records appear point by point, never batched at the end. Even on CPU the points stay sequential: one solve already spreads across the machine's cores, so a second concurrent solve would contend for those cores rather than add throughput.</p>
+<p>A remote sweep sends every point to one runner and runs the points one at a time. Each point exports its own case, submits with a memory estimate so the runner's pre-launch fit check fires, streams telemetry to the rail, and downloads the automatic result tier.</p>
+<h2 id="sweeps-from-the-cli">Sweeps from the CLI</h2>
+<p>The CLI uses the same definition, cost estimator, sequential engine, result records, resume logic, and retry logic as the desktop app. Preview is a separate read-only command, and run prints that same preview before it launches:</p>
+<pre><code>machshev sweep preview --project patch.rfsim --axis patchW=15,16,17
+machshev sweep run --project patch.rfsim --axis patchW=15,16,17</code></pre>
+<p>Use a strict JSON or YAML definition for linear or logarithmic spans, two-axis grid or zip combinations, all-port runs, and remote targets:</p>
+<pre><code>{
+  "axes": [
+    {"name": "patchW", "mode": "linspace", "start": 15, "stop": 17, "n": 5}
+  ],
+  "combine": "grid",
+  "all_ports": false,
+  "backend": "cuda",
+  "target": "remote:runner.example:9443",
+  "device": "cuda:1"
+}</code></pre>
+<p>Pass it with <code>--definition sweep.json</code>. A remote target takes a device the runner exposes: <code>auto</code> lands each point on the first free device with GPUs first, <code>cpu</code> names its CPU, and <code>cuda:INDEX</code> names one card. The preview sizes the points against that device (for <code>auto</code> on a CUDA sweep, the smallest card), and the live hardware report must contain it with usable memory or the preview refuses.</p>
+<p>By default, CLI sweep state is command-owned and lives under <code>_sim_result/&lt;project-stem&gt;_cli_sweeps</code>. It does not populate the desktop History rail. Use <code>--state-dir DIR</code> to choose another durable state directory, or use <code>--record-history</code> to put the group and its point records in the project's History rail. These choices are exclusive. Resume and retry reopen the same store and exact saved base snapshot:</p>
+<pre><code>machshev sweep resume --project patch.rfsim --sweep-id s0001
+machshev sweep retry --project patch.rfsim --sweep-id s0001 --point-index 2</code></pre>
+<p>Add the original <code>--state-dir</code> to either command when the run used one, or add <code>--record-history</code> when the group was written to project History. <code>--json</code> emits one JSON event per preview, progress, point, failure, and completion record.</p>
+<p>The engine handles interruption point by point:</p>
+<ul><li><b>Resume.</b> A sweep left interrupted (cancelled, or the app closed mid-run) resumes from the rail and skips the points already complete.</li><li><b>Retry.</b> Right-click a failed sweep point and choose Retry this point to re-run only that point. The retry updates that point's durable record and increments its attempt count instead of adding a duplicate point.</li><li><b>Cancel.</b> Cancelling stops launching new points and shows Cancelling while the in-flight point settles. The group becomes interrupted only after that point has stopped.</li><li>A failed point records its reason and the sweep moves on to the next point.</li></ul>
+<p>Preparing a resume or retry can derive many meshes, so it runs in the background behind a visible busy overlay. A second resume click is refused while that work is active. If the process ends unexpectedly during a point, reopening the project changes the orphaned running group to interrupted and offers Resume sweep while preserving the point's last attempt.</p>
+<p>While a sweep is preparing, running, or cancelling, Machshev Labs refuses Save, Save As, new project, open project, and application close. Normal Run, mesh preview, Live mode, and a second sweep are also unavailable. These gates keep the active runner and history sink bound to one saved project until they settle.</p>
+<p class="note">A sweep never changes the project you have open. Every point runs from the sweep's saved base snapshot, so later open-project edits do not change a resumed or retried point. A sweep group without a saved base snapshot cannot be resumed.</p>
+<h2 id="multi-port-sweeps-and-the-s-matrix">Multi-port sweeps and the S-matrix</h2>
+<p>With Drive every port per point on, each point runs once per port, driving exactly that port each time, then assembles the full S-matrix from the driven-port columns. The assembled matrix is written as a Touchstone file (<code>.s1p</code>, <code>.s2p</code>, or <code>.sNp</code> by port count) into that point's run directory under <code>_sim_result</code>. The per-port runs are kept under the one point record.</p>
+<h2 id="metrics-and-the-sweep-plots">Metrics and the sweep plots</h2>
+<p>Open a sweep's plot from its group row in the rail. The plot reads one figure of merit across the sweep's points:</p>
+<ul><li>min |S11| and its frequency.</li><li>The -10 dB bandwidth around that minimum. It is blank when there is no threshold dip, there are fewer than two samples, or the minimum is ambiguous or non-unique. A threshold region clipped at a sampled band edge reports a lower-bound width.</li><li>The resonant frequency from a detected |S11| minimum, blank when a resonance cannot be established.</li><li>Re(Z) and Im(Z) at a frequency you pick.</li><li>|S21| at a frequency you pick.</li></ul>
+<p>The two frequency-dependent readouts are computed on demand from each point's stored S-parameters at the frequency you enter. The plot shape follows the definition: a one-axis sweep draws the metric against the swept variable, a two-axis grid draws a heatmap, and a zipped pair or a ports-only sweep draws the metric against point index. A point that failed or has no value for the metric is drawn as a gap, never a fabricated value, and named in a footnote. Clicking a point or a heatmap cell selects that point's record, the same as clicking it in the rail. Drag to pan, scroll to zoom, and Home refits the plot. The metric and the two frequencies persist per sweep.</p>
+<h2 id="limits">Limits</h2>
+<ul><li>The CLI JSON runtime estimate uses the mesh cell count, step cap, saved typical throughput, and port count. Actual runtime depends on throughput and when the run ends.</li><li>Points run one at a time, on every backend and target.</li><li>A remote sweep needs a runner configured in Configure remotes, and all points go to that one runner and the selected backend.</li><li>A sweep never changes the open project.</li></ul>
+    </div>
+    <nav class="docs-pager" aria-label="Pager"><a class="prev" href="docs-run-history.html"><span>Previous</span>Run history</a><a class="next" href="docs-remote-overview.html"><span>Next</span>Remote running</a></nav>
+  </article>
+</main>
+<div id="site-footer"></div>
+<script src="assets/docs-nav.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

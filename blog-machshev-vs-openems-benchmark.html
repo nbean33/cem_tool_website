@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Machshev Labs vs openEMS: a head-to-head FDTD benchmark | Machshev Labs</title>
+<meta name="description" content="A like-for-like FDTD benchmark: an 82.8M-cell 5.8 GHz patch, 1,000,000 timesteps, one workstation. Machshev Labs GPU ran 173.7x faster than openEMS (39,600 vs 228 MCell/s, 34m51s vs 4d5h). Numbers and method.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="blog">
+<div id="site-header"></div>
+<main id="main">
+  <article class="article">
+    <div class="container narrow">
+      <a class="back" href="blog.html">&larr; All posts</a>
+      <div class="post-meta" style="margin-top:22px">May 6, 2026 / 4 min read</div>
+      <h1>Machshev Labs vs openEMS: a head-to-head FDTD benchmark</h1>
+      <div class="prose">
+<div class="short-answer"><h2>Short answer</h2><p>An 82.8 million cell mesh of a 5.8 GHz patch, stepped 1,000,000 times, on one workstation. The Machshev Labs GPU solver ran 173.7x faster than openEMS: 39,600 versus 228 MCell per second, a 34 minute 51 second solve versus 4 days 5 hours, extrapolated from the measured throughput. Machshev Labs on the same CPU as openEMS ran 20.3x faster.</p></div>
+<p>Both tools solve the identical setup on one machine, stepping the same mesh at the same active cell count, so neither is doing less work than the other. These are the same numbers shown on the <a href="benchmarks.html">benchmarks page</a>.</p>
+
+<h2>The numbers</h2>
+<p>The case is a 5.8 GHz rectangular patch on an 82.8 million cell mesh, stepped 1,000,000 times, on an RTX 5090 GPU and a Ryzen 9 9950X CPU. Throughput is FDTD cell updates per second, so higher is faster. The throughput is what was measured; the wall-clock column is that rate carried out to 1,000,000 timesteps.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Engine</th><th>Throughput</th><th>Wall-clock, extrapolated</th><th>Speedup</th></tr></thead>
+<tbody>
+<tr><td>Machshev Labs GPU (RTX 5090)</td><td class="num">39,600 MCell/s</td><td class="num">34 m 51 s</td><td class="num">173.7x</td></tr>
+<tr><td>Machshev Labs CPU (Ryzen 9 9950X)</td><td class="num">4,620 MCell/s</td><td class="num">4 h 59 m</td><td class="num">20.3x</td></tr>
+<tr><td>openEMS (CPU SSE)</td><td class="num">228 MCell/s</td><td class="num">4 d 5 h</td><td class="num">1.0x (baseline)</td></tr>
+</tbody>
+<caption>Same 82.8M-cell setup, 1,000,000 timesteps, one workstation. Machshev Labs v1.1.14, openEMS 0.0.36. Hardware: Ryzen 9 9950X, RTX 5090, 64 GB DDR5-6000, Windows 11.</caption>
+</table></div>
+<p>The benchmark case is a patch antenna, but the throughput holds across problem types: the solver steps cells, and these are the sustained rates it steps them at. Machshev Labs on the same CPU as openEMS is 20.3x, so the gap is not only the GPU. The multiple itself matters less than what it changes: a 35 minute answer supports an edit-and-rerun workflow, and a 4 day answer does not.</p>
+
+<h2>Accuracy on the same footing</h2>
+<p>Speed only counts with the physics right. Machshev Labs is validated against 43 structures measured on a VNA across 4 fabricated boards, with resonances tracking within 1-2% at the higher refinements: the <a href="blog-validated-against-vna-measurements.html">measurement write-up</a> covers the method, and the per-structure overlays are on the <a href="validation.html">validation page</a>. For the workflow side, see <a href="blog-openems-alternative.html">Machshev Labs as an openEMS alternative</a>.</p>
+<div class="post-cta"><h3>Try Machshev Labs on your own design</h3><p>Draw a board, slide the quality preset, and click Run. 30-day free trial, no card required. Windows and Linux.</p><a class="btn lg" href="pricing.html">Start the free trial</a></div>
+      </div>
+      <div class="tags"><span>openEMS</span><span>benchmark</span><span>FDTD</span><span>GPU</span></div>
+    </div>
+  </article>
+</main>
+<div id="site-footer"></div>
+<script src="assets/site.js"></script>
+</body>
+</html>

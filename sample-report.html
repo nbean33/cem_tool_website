@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sample report | Machshev Labs</title>
+<meta name="description" content="An example Machshev Labs report: pass or fail for each high-speed connection, the spot on the board, why, and the impedance along the connection.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="report">
+<div id="site-header"></div>
+<main id="main">
+  <section class="page-hero" style="padding-bottom:32px">
+    <div class="container">
+      <h1 class="h1">Sample report.</h1>
+      <p class="lead">This is what you get back: every high-speed connection on the board, a pass or fail for each, the exact spot on the board, and why. Click a connection to see its details.</p>
+      <p class="dim small" style="margin-top:14px">An example board with illustrative results, not a customer design.</p>
+    </div>
+  </section>
+
+  <section style="padding-top:0">
+    <div class="container">
+      <div data-report="full"></div>
+      <div class="cta-row" style="margin-top:18px">
+        <span class="small dim">Raw data for engineers:</span>
+        <button class="btn ghost" type="button" disabled title="Example only">S-parameters (.s4p)</button>
+        <button class="btn ghost" type="button" disabled title="Example only">Impedance profiles (.csv)</button>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section-head"><h2 class="h2">Reading the report.</h2></div>
+      <div class="grid-3">
+        <div class="card"><span class="pill pass">Pass</span><h3>Works as designed.</h3><p>The connection meets its target along its whole length. Nothing to change.</p></div>
+        <div class="card"><span class="pill warn">Check</span><h3>Outside target, may not matter.</h3><p>Something is outside or close to its limit. Run a full check to find out whether it will actually cause a failure.</p></div>
+        <div class="card"><span class="pill fail">Fail</span><h3>Likely to fail.</h3><p>A clear problem, shown at its exact spot with the reason and a suggested fix. A full check confirms it.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <div class="container">
+      <h2 class="h2">Get this report for your board.</h2>
+      <p>Upload a board file. The free check takes seconds.</p>
+      <div class="cta-row"><a class="btn lg" href="app-upload.html">Check a board free</a><a class="btn lg ghost" href="how-it-works.html">How it works</a></div>
+    </div>
+  </section>
+</main>
+<div id="site-footer"></div>
+<script src="assets/report.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

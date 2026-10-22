@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Upload a board | Machshev Labs</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="app">
+<div class="app-banner">Preview of the app. It is not live yet: files you choose here stay in your browser and nothing is uploaded. <a href="index.html">Back to the site</a></div>
+<header class="app-bar">
+  <div class="container">
+    <a class="brand" href="index.html" data-logo><span>Machshev Labs</span></a>
+    <nav aria-label="App"><a class="active" href="app-upload.html">New check</a><a href="app-results.html">Boards</a><a href="app-account.html">Account</a></nav>
+    <span class="who">you@company.com</span>
+  </div>
+</header>
+<main class="app-main" id="main">
+  <h1>Check a board</h1>
+  <div class="app-sub">Free check · results in seconds</div>
+
+  <label class="drop" id="drop" for="file">
+    <b>Drop your board file here</b>
+    <p>or click to choose a file</p>
+    <div class="types">.kicad_pcb · ODB++ (.tgz, .zip) · IPC-2581 (.xml, .cvg)</div>
+    <div class="file" id="file-name" hidden></div>
+  </label>
+  <input type="file" id="file" accept=".kicad_pcb,.tgz,.zip,.xml,.cvg" hidden>
+
+  <div class="form-row">
+    <label for="stackup">Board manufacturer and stackup</label>
+    <select class="input" id="stackup">
+      <option>JLCPCB · 4 layers, 1.6 mm (JLC04161H-7628)</option>
+      <option>JLCPCB · 2 layers, 1.6 mm</option>
+      <option>PCBWay · 4 layers, 1.6 mm standard</option>
+      <option>OSH Park · 4 layers, 1.6 mm</option>
+      <option>Eurocircuits · 4 layers, 1.55 mm</option>
+      <option>Use the stackup in my file</option>
+      <option>Enter a custom stackup…</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <span></span>
+    <div class="cta-row" style="margin-top:6px">
+      <a class="btn lg" id="run" href="app-results.html" aria-disabled="true">Run free check</a>
+      <span class="cta-note">Encrypted, deleted after <span class="ph">days</span>, never reused. <a href="security.html">Security</a></span>
+    </div>
+  </div>
+</main>
+<script>
+  // Mockup only: the chosen file's name is shown; the file is never read or sent.
+  const drop = document.getElementById("drop"), input = document.getElementById("file");
+  const nameEl = document.getElementById("file-name"), run = document.getElementById("run");
+  const show = (f) => { if (!f) return; nameEl.hidden = false; nameEl.textContent = f.name; run.removeAttribute("aria-disabled"); };
+  input.addEventListener("change", () => show(input.files[0]));
+  ["dragenter", "dragover"].forEach((t) => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.add("over"); }));
+  ["dragleave", "drop"].forEach((t) => drop.addEventListener(t, (e) => { e.preventDefault(); drop.classList.remove("over"); }));
+  drop.addEventListener("drop", (e) => show(e.dataTransfer.files[0]));
+</script>
+<script src="assets/site.js"></script>
+</body>
+</html>

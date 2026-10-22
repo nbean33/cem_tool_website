@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Installing Machshev | Machshev Docs</title>
-<meta name="description" content="How to get Machshev onto your machine and confirm it runs.">
+<title>Install and first simulation | Machshev Labs Docs</title>
+<meta name="description" content="Download Machshev Labs, sign in, and run the included 5.8 GHz patch antenna from the Welcome Panel. Follow the video or the written steps below.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/style.css">
 </head>
@@ -14,19 +14,33 @@
   <aside class="docs-side" id="docs-side" aria-label="Documentation"></aside>
   <article class="docs-main">
     <div class="post-meta">Getting started</div>
-    <h1 style="margin-top:8px">Installing Machshev</h1>
-    <p class="lede">How to get Machshev onto your machine and confirm it runs.</p>
+    <h1 style="margin-top:8px">Install and first simulation</h1>
+    <p class="lede">Download Machshev Labs, sign in, and run the included 5.8 GHz patch antenna from the Welcome Panel. Follow the video or the written steps below.</p>
     <div class="prose">
-<h2 id="system-requirements">System requirements</h2>
-<p class="ph">Supported operating systems, CPU and GPU requirements, memory and disk space.</p>
 <h2 id="download-and-install">Download and install</h2>
-<p class="ph">Where to download Machshev, and the installation steps for each platform.</p>
-<h2 id="licence-activation">Licence activation</h2>
-<p class="ph">How a licence is activated, and how to move it to another machine.</p>
-<h2 id="checking-the-installation">Checking the installation</h2>
-<p class="ph">A quick test that confirms the solver runs.</p>
+<p>Machshev Labs runs on Windows and Linux. The 3D field view needs a graphics driver with OpenGL 4.3 and compute shaders that reports free GPU memory. Sign in at <a href="pricing.html">machshev.com/dashboard/downloads</a> and download the build for your platform.</p>
+<ul><li><b>Windows.</b> Run <code>Machshev Labs-Studio-&lt;version&gt;-Setup.exe</code> to install the app and add Machshev Labs to the Start menu.</li><li><b>Linux.</b> Download the <code>.AppImage</code>, make it executable (<code>chmod +x</code>), and run it. It needs no installer.</li></ul>
+<p>The desktop app has an automatic update checker that runs on startup to let you know when a new version is available.</p>
+<h2 id="sign-in">Sign in</h2>
+<p>On the first launch with no license saved, the sign-in dialog presents three options: sign in with browser (recommended, fastest), enter license key manually (get it from your dashboard), or continue as viewer-only. Viewer mode is always free, so you can view projects and results even after your trial or subscription expires.</p>
+<p>Once signed in, the Welcome Panel is shown. You can open this menu at any time using <code>File</code> then <code>Welcome Panel</code>.</p>
+<ul><li><b>Blank Project</b> create an empty project with no layers, no geometry, and default settings.</li><li><b>Examples</b> open one of the included projects: the 5.8 GHz patch antenna, a 2 to 11 GHz Vivaldi antenna, a grounded coplanar line with a via fence, and a 2.4 GHz bandpass filter. Each opens with its S-parameter results, and none of them need more than a Hobby plan.</li><li><b>Recent projects</b> lists your recently opened <code>.rfsim</code> files.</li></ul>
+<p>The Welcome Panel can be closed with the Escape key or <code>x</code> in the top right. If you don't have a project open, a blank one will open, and if you already have a non-blank project open there is no effect.</p>
+<h2 id="activate-a-license">Activate a license</h2>
+<p>Activation assigns a machine to your account.</p>
+<ul><li><b>Sign in through Machshev Labs</b> opens your browser to approve the sign-in. This requires logging into your Machshev Labs account in this browser, which is convenient if it's your primary machine, but if it's a secondary/server machine you may want to use the license key method instead.</li><li><b>Enter license key</b> uses the key from your dashboard, copy it in and click Activate.</li></ul>
+<p>If sign-in or activation can't reach machshev.com, the dialog says why (DNS, a timeout, a proxy, or the certificate, for example). If it keeps happening, click Copy details and send the details to <a href="mailto:support@machshev.com">support@machshev.com</a>. <code>machshev auth --license-key</code> prints the same details.</p>
+<p>The CLI uses the same license as the UI. <code>machshev auth --license-key KEY</code> performs key-based activation, <code>machshev auth --status</code> displays the current license state, and <code>machshev auth --deactivate</code> releases the seat. Browser sign-in cannot be used with the CLI. For related information see the <a href="docs-cli-overview.html">CLI overview</a>.</p>
+<h2 id="patch-antenna-example">Patch antenna example</h2>
+<p>Select Patch Antenna from the Welcome Panel. The example is a 5.8 GHz inset-feed patch antenna on an FR-4 stackup with reasonable sim settings. Use the <code>Edit</code> tab to explore the stackup and the geometry.</p>
+<p>Open the <code>Simulate</code> tab and click Run Simulation. Machshev Labs will ask you to save the project before running.</p>
+<p>When a simulation is running you can use Stop Early to conclude results early or discard the run. The Energy Ringdown plot indicates net energy remaining in the system. Auto mode targets an energy decay between -45 dB at Low quality and -60 dB at Very High, and a smaller target means a longer, more converged run. See <a href="docs-fdtd-tips.html">FDTD tips</a>. When the ringdown target is reached, timestepping stops and the title bar reads PREPARING RESULTS. The Simulate and result tabs show what is being processed until the results are ready. See <a href="docs-running.html">Running simulations</a>.</p>
+<p>Open the <code>S-Parameters</code> tab to inspect return loss (S11 only in this example) with the resonant dip near 5.8 GHz. See <a href="docs-s-parameters.html">S-parameters</a>. Open the <code>Radiation Pattern</code> to inspect directionality in full 3D and 2D polar E/H slices. See <a href="docs-radiation-pattern.html">Radiation pattern</a>.</p>
+<h2 id="telemetry-and-updates">Telemetry and updates</h2>
+<p>Machshev Labs sends anonymous usage telemetry about which features you use. We never send any information about your designs, sim settings, results, or any text you input to the program. For full transparency you can view the exact raw telemetry data by going to <code>Settings</code> then <code>Anonymous Usage Telemetry</code> then <code>View raw events sent in this session</code> to see a json-format breakdown of the information sent. For example, the information includes time spent on each tab (40% on simulate, 30% on settings, 30% inspecting results, for example), simulation size (bucketed) such as &lt;1M cells, 1M-10M cells, 10M-100M cells, &gt;100M cells. It also includes hardware specifications, runtime, and, if the program crashed, the name of the module it crashed in, nothing more. Raw crash logs can carry a lot of identifying information about a user, and depending on the nature of the crash they can leak information about the project, so we never send crash logs, only the section of the program that crashed. For example "frontend_python", or "backend_cpu" or "backend_gpu". Anonymous usage telemetry is on by default everywhere except the EU and UK to comply with local regulations. You can turn it off at any time under <code>Settings</code>, and the setting takes effect immediately for the rest of the session.</p>
+<p>The update checker runs at startup and offers Update now if a newer version is available. Update now does four things: Download the installer for the new version, verify its checksum, launch the new installer (you must click through the typical install steps), and close Machshev Labs for you (if a project is open with unsaved changes or a running sim you will need to cancel or confirm closing). Machshev Labs cannot be updated while it's running, so save your projects and finish simulation runs before updating. If you prefer to not install the update, use Remind me later or Skip this version. <code>Update &lt;version&gt; available</code> is shown in the title bar if the update was deferred, and you can click there to begin the update when convenient. <code>Settings</code> then Check for updates lets you check for a new version manually without restarting Machshev Labs.</p>
     </div>
-    <nav class="docs-pager" aria-label="Pager"><a class="next" href="docs-quick-start.html"><span>Next</span>Your first simulation</a></nav>
+    <nav class="docs-pager" aria-label="Pager"><a class="next" href="docs-interface.html"><span>Next</span>The interface</a></nav>
   </article>
 </main>
 <div id="site-footer"></div>

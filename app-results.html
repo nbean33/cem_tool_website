@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Results | Machshev Labs</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="app">
+<div class="app-banner">Preview of the app with an example board. It is not live yet. <a href="index.html">Back to the site</a></div>
+<header class="app-bar">
+  <div class="container">
+    <a class="brand" href="index.html" data-logo><span>Machshev Labs</span></a>
+    <nav aria-label="App"><a href="app-upload.html">New check</a><a class="active" href="app-results.html">Boards</a><a href="app-account.html">Account</a></nav>
+    <span class="who">you@company.com</span>
+  </div>
+</header>
+<main class="app-main" id="main">
+  <h1>sensor-hub rev B</h1>
+  <div class="app-sub">sensor-hub_revB.kicad_pcb · 4 layers · JLCPCB JLC04161H-7628 · free check finished in 9 s</div>
+
+  <div class="summary-row">
+    <div class="report-counts" style="margin:0" id="counts"></div>
+    <div class="cta-row" style="margin:0">
+      <span class="cta-note">1 connection still flagged</span>
+      <a class="btn" href="app-connection.html#ant">Run full check · 1 connection · about 2 minutes · $—</a>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table class="results-table">
+      <thead><tr><th></th><th>Connection</th><th>Free check</th><th>Full check</th></tr></thead>
+      <tbody data-report-rows></tbody>
+    </table>
+  </div>
+  <p class="small dim">Click a connection for the board view, the explanation and the impedance along it.</p>
+</main>
+<script src="assets/report.js"></script>
+<script>
+  const n = MachshevReport.counts();
+  document.getElementById("counts").innerHTML =
+    `<span class="pill fail">${n.fail} fail</span><span class="pill warn">${n.warn} to check</span><span class="pill pass">${n.pass} pass</span>`;
+</script>
+<script src="assets/site.js"></script>
+</body>
+</html>

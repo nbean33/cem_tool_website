@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Privacy Policy | Machshev</title>
+<title>Privacy Policy | Machshev Labs</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/style.css">
 </head>
@@ -18,33 +18,132 @@
         <a class="on" href="legal-privacy.html" aria-current="page">Privacy Policy</a>
         <a href="legal-cookies.html">Cookie Policy</a>
       </nav>
-      <div class="legal-updated ph">Last updated date</div>
+      <div class="legal-updated">Last updated 2026-09-16</div>
       <h1>Privacy Policy</h1>
       <div class="prose">
-        <p>This Privacy Policy explains what information Machshev Labs LLC ("Machshev Labs", "we", "our", or "us") collects through the Machshev website and software, and how it is used.</p>
-        <p class="ph">This policy is an outline to be completed and reviewed by counsel before publication.</p>
+        <p>This policy explains what Machshev Labs collects and why. It covers the machshev.com website, the Machshev Labs desktop application, and the services connected to them. Machshev Labs is operated by Machshev Labs LLC</p>
 
-        <h2>1. The website and the online tools</h2>
-        <p>The calculators and Antenna Studio on this site run entirely in your browser. The values you enter and the models you build are not sent to us. Files you open in Antenna Studio are read by your browser, and saving a model downloads it to your computer.</p>
-        <p>The site loads its fonts from Google Fonts, so your browser contacts Google's servers when a page loads. The site is hosted on GitHub Pages, which may log basic request information such as IP addresses.</p>
+        <h2>1. Who we are</h2>
+        <p>Machshev Labs LLC, a corporation headquartered in Toronto, Ontario, Canada. Contact us about privacy at <a href="mailto:support@machshev.com">support@machshev.com</a>.</p>
 
-        <h2>2. Information you give us</h2>
-        <p class="ph">Account, billing and support information, if collected, and why.</p>
+        <h2>2. What we collect and why</h2>
+        <h3>2.1 Account</h3>
+        <ul>
+          <li>Email address, and a password hash if you sign up with email and password. Used to create your account, sign you in, and contact you about your subscription.</li>
+          <li>An OAuth identifier when you sign in with Google. Used only to link your Google identity to your Machshev Labs account.</li>
+          <li>An optional display name if you provide one.</li>
+        </ul>
+        <h3>2.2 Billing</h3>
+        <ul>
+          <li>Your Stripe customer ID and invoice history. Used to bill you, show your invoices, and reconcile payments. Card numbers are handled by Stripe and never reach our servers; we may see the card brand and last four digits to display in the dashboard.</li>
+        </ul>
+        <h3>2.3 License activations</h3>
+        <ul>
+          <li>A license key per active plan, plus a hashed machine identifier, an optional machine label, and activation timestamps for each machine you activate. Used to enforce the per-plan activation limit listed in the <a href="legal-terms.html">Terms of Service</a>.</li>
+        </ul>
+        <h3>2.4 Desktop telemetry</h3>
+        <p>After you sign in, the desktop application sends product-usage telemetry so we can see what features get used, what hardware our users run on, and where the app crashes. Telemetry is opt-in by default in the EU, UK, and EEA, and opt-out elsewhere. You can change it any time under Settings, Anonymous Usage Telemetry, and your choice syncs to your account.</p>
+        <p>What the desktop app sends:</p>
+        <ul>
+          <li>Which tabs, panels, dialogs, and calculators you opened, and for how long.</li>
+          <li>The kind and outcome of each simulation run (solver backend, precision, quality preset, boundary type, duration, peak memory, throughput, exit reason), with the size described in coarse buckets (total cells, layer count, port count) so the actual geometry, frequencies, and materials are not exposed.</li>
+          <li>Hardware and platform: CPU model, vendor, core counts, and AVX support; GPU model, vendor, video memory, driver version, CUDA runtime version, and compute capability; installed RAM with type and speed where reported by the OS; operating system family, version, and architecture; primary monitor resolution, display scaling, locale, and timezone offset.</li>
+          <li>Identifiers used to group your events: a per-install random ID, a per-app-session random ID, the app version and release channel, your plan tier, and your account UUID, so we can correlate behavior with plan and honor deletion requests.</li>
+          <li>A truncated network address prefix (the /24 portion of an IPv4 address or the /48 portion of an IPv6 address, never the full IP), and the country and region derived from the request.</li>
+          <li>Exceptions and crashes by exception class, module, top stack-frame function and line, the operation that was running, and a stack-trace hash. Crashes also include the signal name or exit code and the app uptime at the time of the crash. The exception message text is not sent.</li>
+        </ul>
+        <p>The desktop never sends your project files, geometry, materials, port definitions, mesh details, simulation results, file paths, free-text input, or system identifiers beyond the categories above. Our server rejects all data that does not match the anonymized format described in the "what is sent" list above, so even an application-level error would not expose any design or user data.</p>
+        <h3>2.5 Opt-in benchmark sharing</h3>
+        <p>The desktop application offers an optional benchmark share. Nothing is sent unless you review the data and confirm the share.</p>
+        <p>A benchmark share contains:</p>
+        <ul>
+          <li>CPU model, physical core count, total RAM, operating system, and the GPU model and video memory when present.</li>
+          <li>Completed benchmark points with grid cell count, CPU or CUDA backend, throughput, peak system memory, and peak GPU memory when reported.</li>
+          <li>A PNG image of the benchmark curve, the app version, and the measurement time.</li>
+        </ul>
+        <p>A benchmark share does not contain an account ID, project data, file paths, host name, or persistent device identifier. We use the shares to understand performance across hardware. Each accepted share receives a random record ID and submission time.</p>
+        <h3>2.6 Website analytics</h3>
+        <p>We count public page requests by broad source, campaign and asset-group IDs, public page category and device class, including before a cookie choice. We also count cookie-banner displays and choices. Request counts are grouped by hour; reports combine them into daily totals. These counters do not store IP addresses, advertising click IDs, full URLs, or visitor, session or account identifiers. Server-generated delivery receipts prevent retry duplicates and are removed after two days by a daily cleanup. These counters cannot identify unique visitors or follow a person between pages. Hosting providers also process requests to deliver and secure the site.</p>
+        <p>We collect first-party analytics on machshev.com in three tiers. In the United States and Canada outside Quebec they are on from your first page view, and you can turn each off at any time under Cookie preferences in the footer; turning one off stops that collection from then on and keeps what was collected before. Everywhere else they stay off until you opt in through the cookie banner.</p>
+        <p><b>Analytics, first-party</b> (on by default in the United States and Canada outside Quebec, opt-in elsewhere):</p>
+        <ul>
+          <li>Page views and per-view dwell time and scroll depth, with a visitor and session uuid stored in two first-party cookies.</li>
+          <li>Where you arrived from: the referring URL, the host parsed from it, and the UTM source, medium, and campaign query parameters.</li>
+          <li>First observed arrival, subsequent visits and campaign or asset-group IDs. When you sign in, recorded visits can be linked to your account to report aggregate signup, trial and payment conversion paths.</li>
+          <li>Coarse device context: viewport and screen size, device pixel ratio, browser language, device class (desktop, mobile, tablet, bot, other), and country derived from the request (never the full IP).</li>
+          <li>Clicks on elements we tagged for analytics and outbound links (recorded as the destination host). Demo playback and how much distinct video content was played. Web Vitals readings, and uncaught JavaScript errors from the page (a truncated error message, source file, line, and column).</li>
+        </ul>
+        <p><b>Analytics, behavioral</b> (on by default in the United States and Canada outside Quebec, opt-in elsewhere):</p>
+        <ul>
+          <li>Per-section engagement totals: for each named section on the page, how long it was visible, how long the pointer hovered over it, how many times it was clicked, and when it first came into view. Capped at thirty named sections per page view. Raw pointer coordinates are not stored; we do not capture the text inside the section or anything you typed.</li>
+          <li>Microsoft Clarity, a session-replay and heatmap tool we use alongside our first-party analytics. It records interactions (clicks, scrolls, and a reconstruction of the page built from DOM changes) so we can see where the UI is confusing. Data is processed by Microsoft under their privacy policy. We do not pass your email, name, or account id to Clarity, and Clarity masks form input by default.</li>
+        </ul>
+        <p><b>Analytics and advertising, third-party:</b></p>
+        <ul>
+          <li>Vercel Analytics, Vercel Speed Insights and Google Ads. These providers process data under their privacy policies. The <a href="legal-cookies.html">Cookie Policy</a> explains the scripts, Google's regional defaults and how your cookie choice applies.</li>
+        </ul>
+        <h3>2.7 Funnel and conversion</h3>
+        <ul>
+          <li>Independent of cookie consent, we record a small set of account-tied events (signup started, signup completed, checkout started, checkout succeeded or failed, trial started or converted, subscription canceled). Used to operate your account and to measure conversion at an aggregate level.</li>
+        </ul>
+        <h3>2.8 Signup survey</h3>
+        <ul>
+          <li>When you create an account, we ask two short questions: how you found Machshev Labs, and which description best fits you. We store your answers with your account and use them to understand our audience and to focus development and marketing. If you choose Other, you can add a short note in your own words.</li>
+        </ul>
+        <h3>2.9 Support</h3>
+        <ul>
+          <li>If you contact us, we receive your email, the subject and body of your message, any attachment you send, and the conversation history. Used to answer you.</li>
+        </ul>
+        <h3>2.10 Cookies</h3>
+        <p>We use a small set of cookies to keep you signed in, remember your sign-in preference, and (only with consent) measure traffic. The full list is in the <a href="legal-cookies.html">Cookie Policy</a>.</p>
 
-        <h2>3. Information collected by the software</h2>
-        <p class="ph">Anything the Machshev software collects, such as licence activation or crash reports.</p>
+        <h2>3. Lawful basis (EU and UK)</h2>
+        <ul>
+          <li><b>Performance of a contract:</b> account, billing, license issuance and enforcement, support.</li>
+          <li><b>Legitimate interests:</b> fraud prevention, basic site security, desktop telemetry outside the EU and UK. You can object at any time.</li>
+          <li><b>Consent:</b> non-essential cookies, desktop telemetry inside the EU and UK, opt-in benchmark sharing, and the behavioral and third-party analytics tiers. You can withdraw consent at any time.</li>
+          <li><b>Legal obligation:</b> keeping billing records for Canadian tax and accounting law.</li>
+        </ul>
 
-        <h2>4. How information is used and shared</h2>
-        <p class="ph">The purposes for which information is used, and the service providers it is shared with.</p>
+        <h2>4. Service providers</h2>
+        <p>We share personal information with the providers below only to the extent needed to run the service. Each provider has its own privacy policy.</p>
+        <ul>
+          <li>Supabase, for database, authentication, and storage. <a href="https://supabase.com/privacy">supabase.com/privacy</a></li>
+          <li>Stripe, for payments and the customer portal. <a href="https://stripe.com/privacy">stripe.com/privacy</a></li>
+          <li>Resend, for transactional email. <a href="https://resend.com/legal/privacy-policy">resend.com/legal/privacy-policy</a></li>
+          <li>Vercel, for website hosting, Vercel Analytics, and Vercel Speed Insights. <a href="https://vercel.com/legal/privacy-policy">vercel.com/legal/privacy-policy</a></li>
+          <li>Google, for OAuth sign-in, only if you choose to sign in with Google. <a href="https://policies.google.com/privacy">policies.google.com/privacy</a></li>
+          <li>Microsoft, for Clarity session-replay analytics, only if you opt in to the behavioral analytics tier. <a href="https://privacy.microsoft.com/privacystatement">privacy.microsoft.com/privacystatement</a></li>
+        </ul>
+        <p>We do not sell your personal information. We do not share it for cross-context behavioral advertising.</p>
 
-        <h2>5. Retention</h2>
-        <p class="ph">How long each kind of information is kept.</p>
+        <h2>5. Where your data is processed</h2>
+        <p>The service runs on Supabase and Vercel infrastructure, so your data may be processed in Canada, the United States, or other jurisdictions where our providers operate. We use providers that apply standard contractual safeguards for cross-border transfers.</p>
 
-        <h2>6. Your rights</h2>
-        <p class="ph">Access, correction and deletion rights, and how to exercise them.</p>
+        <h2>6. Retention</h2>
+        <ul>
+          <li>Account data is kept while your account is active.</li>
+          <li>Billing records are kept for seven years to comply with Canadian tax law.</li>
+          <li>Raw website and telemetry events are retained for operational analysis, typically no longer than ninety days, after which they are aggregated or deleted. Aggregated data that cannot be linked back to you may be kept indefinitely.</li>
+          <li>Opt-in benchmark shares are not linked to an account. We retain them for performance analysis until they are no longer needed.</li>
+          <li>If you request account deletion, we delete or anonymize your data within thirty days, except where law requires us to keep it.</li>
+        </ul>
 
-        <h2>7. Contact</h2>
-        <p>Privacy questions can be sent to <a href="mailto:support@machshev.com">support@machshev.com</a>.</p>
+        <h2>7. Your rights</h2>
+        <p>Subject to applicable law, you can ask us to show you the data we hold, correct it, delete it, export a copy, restrict or object to certain processing, or withdraw consent. We apply these rights to all users, not only those in the EU or UK. Email <a href="mailto:support@machshev.com">support@machshev.com</a> or use the in-app account-deletion request. We answer within thirty days. If you are not satisfied with our response you can complain to the Office of the Privacy Commissioner of Canada or your local supervisory authority.</p>
+
+        <h2>8. Children</h2>
+        <p>The service is not directed to anyone under eighteen. If you are under eighteen, please do not provide personal information through the service. If you believe a child has, email <a href="mailto:support@machshev.com">support@machshev.com</a> and we will delete it.</p>
+
+        <h2>9. Security</h2>
+        <p>We use TLS in transit and rely on encryption at rest provided by Supabase, Stripe, and Vercel for their stores. No system is perfectly secure. If a breach affects your personal information we will notify you and the relevant authorities as required by law.</p>
+
+        <h2>10. Changes to this Policy</h2>
+        <p>If we make material changes, we will give you at least thirty days notice by email or in-app banner. The date at the top of the page is always the current version.</p>
+
+        <h2>11. Contact</h2>
+        <p>Questions or requests: <a href="mailto:support@machshev.com">support@machshev.com</a>.</p>
+        <p>Machshev Labs LLC, Toronto, Ontario, Canada.</p>
       </div>
     </div>
   </article>

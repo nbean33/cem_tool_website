@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scripting and specs | Machshev Labs Docs</title>
+<meta name="description" content="A project spec describes authored geometry. A board-import spec describes how Gerber, Excellon, DXF, KiCad, or openEMS and CSXCAD sources enter a project. machshev project build and machshev project import produce .rfsim files, machshev project export-spec turns authored geometry back into a project spec, and one JobSpec can drive a whole run. The loop these specs sit inside is Driving Machshev Labs with an agent.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="docs-cli-scripting">
+<div id="site-header"></div>
+<main id="main" class="container docs">
+  <aside class="docs-side" id="docs-side" aria-label="Documentation"></aside>
+  <article class="docs-main">
+    <div class="post-meta">CLI and automation</div>
+    <h1 style="margin-top:8px">Scripting and specs</h1>
+    <p class="lede">A project spec describes authored geometry. A board-import spec describes how Gerber, Excellon, DXF, KiCad, or openEMS and CSXCAD sources enter a project. <code>machshev project build</code> and <code>machshev project import</code> produce <code>.rfsim</code> files, <code>machshev project export-spec</code> turns authored geometry back into a project spec, and one JobSpec can drive a whole run. The loop these specs sit inside is <a href="docs-cli-agent-driving.html">Driving Machshev Labs with an agent</a>.</p>
+    <div class="prose">
+<h2 id="the-project-as-spec-model">The project-as-spec model</h2>
+<p><code>machshev schema --what spec</code> prints the JSON Schema for project specs. The spec has these top-level keys:</p>
+<ul><li><b>domain</b>: the editor rectangle, in one of two modes. With <code>auto_fit</code> true (the default) the rectangle is derived from the geometry plus the padding keys <code>pad_mode</code> (percent or mm), <code>pad_percent</code>, and <code>pad_mm</code>, both when the spec is built and again at run time. A rectangle key (<code>x_mm</code>, <code>y_mm</code>, <code>w_mm</code>, <code>h_mm</code>) beside <code>auto_fit</code> true is refused, since it could never reach the run. With <code>auto_fit</code> false the rectangle keys size the box verbatim, <code>w_mm</code> and <code>h_mm</code> are required, and a padding key beside them is refused. <code>export-spec</code> writes whichever set the project uses, so build reproduces the same box. Unknown domain keys are rejected.</li><li><b>layers</b>: the stackup, each conductor, dielectric, or air, top to bottom. An air layer is a free-space spacer that sets the gap between conductors through its <code>thickness_mm</code> and emits no material entry, so it renders as air. <code>z_mm</code> is recomputed from stack order, so omit it. Unknown layer keys are rejected, so <code>eps_r</code> in place of <code>epsilon_r</code> is a clear error. A conductor with <code>conductivity_S_m</code> 0 is PEC. A positive conductivity activates finite sheet loss and requires a positive <code>conductor_thickness_um</code>. That thickness affects electrical loss but does not change stackup Z.</li><li><b>shapes</b>: geometry, each with a <code>kind</code> and a <code>layer</code>. A hole or cutout takes its span from <code>start_layer</code> and <code>end_layer</code>, so its layer can be left out, and a layer given with one must name the first layer it cuts. See <a href="docs-cli-reference.html">CLI reference</a> and <code>machshev schema --what shapes|ports</code> for the per-kind parameters.</li><li><b>variables, bindings, constraints, generators</b>: the parametric model. A <code>bindings</code> entry maps a param path to an expression over variables. Path prefixes are <code>primitive:ID:param</code> (a poly vertex is <code>primitive:ID:points.INDEX.x</code>), <code>layer:NAME:field</code>, <code>domain:field</code>, <code>fdtd:field</code>, and <code>generator:ID:param</code>. A <code>domain:w_mm</code> or <code>domain:h_mm</code> binding belongs to an explicit box and is refused with <code>auto_fit</code> true, the same as the rectangle keys. Auto-fit padding accepts <code>domain:padding_percent</code> and <code>domain:padding_mm</code> bindings with values of zero or greater. Polygon vertex bindings use local coordinates relative to the shape origin.</li><li><b>settings</b>: any FDTDSettings field, set verbatim. <code>machshev schema --what settings</code> lists every field with its type, default, units, and description. A spec that sets <code>export_vdb</code> or <code>adv_export_vdb</code> builds with the value read as <code>field_format</code> or <code>adv_field_format</code> (true is vdb, false is vtk), and a warning on stderr names the change.</li></ul>
+<p>Only <code>layers</code> and <code>shapes</code> are required. Any setting not present takes the project default.</p>
+<p class="note">Mesh realization resolves the air margin from <code>air_mode</code> on every path, so a headless run of a spec-built project realizes the same margins the GUI shows. The modes are <code>cells</code>, <code>mm</code>, and <code>auto</code>. Every mode is resolved at export on every path: cells from <code>air_cells</code> x the face's own cell size, auto from <code>auto_air_*_factor</code> x the wavelength at f_min. In those two modes the <code>air_*_mm</code> fields are display state. Only <code>air_mode=mm</code> reads them. <code>mesh explain</code> reports the realized value.</p>
+<p><code>machshev project build --spec FILE --out p.rfsim</code> writes the project. On a spec error or a failed resolve (an undefined variable, an unknown layer) it prints one line to stderr and exits 2.</p>
+<p><code>machshev project export-spec --project FILE --out FILE</code> writes the spec for an authored project, emitting the verbatim params form so a rebuild reproduces it. Projects containing bitmap, DXF, or imported board artwork shapes refuse because a project spec cannot preserve their embedded payload. Keep the original board-import spec as the reproducible source for an imported board.</p>
+<h2 id="exporting-dxf-drawings">Exporting DXF drawings</h2>
+<p>The DXF exporter reads one saved project and writes its current resolved 2D geometry:</p>
+<pre><code>machshev project export-dxf --project FILE --out FILE [--replace] [--json]</code></pre>
+<p>The output is an R2013 DXF with $INSUNITS set to millimeters. Every project layer is represented, including empty layers, and hidden layers are off. The built-in layer 0 keeps its name. Defpoints, invalid names, and collisions receive legal unique names listed in approximated. The rectangular simulation domain is written on Board Outline because the project does not retain a separate shaped fabrication outline. Cutouts are written on Board Outline too, and a cutout that reaches the domain edge notches it.</p>
+<p>Variables, bindings, constraints, script shapes, and generator instances are resolved on a project copy before export. The drawing contains the resolved primitive and generator geometry, not the parametric definitions. Bitmap and imported DXF shapes are vectorized from their stored non-transparent pixels with their position, scale, rotation, and flips applied. Ports become visible footprints on Ports. A via writes a filled pad on each conductor layer it spans and its drill circle on Drill. Holes and slots go on Drill PTH when plated and Drill NPTH otherwise.</p>
+<p>Filled polygons, discs, rings, and arc bands have a solid HATCH plus an ordinary visible tagged boundary. Native wide polylines represent unclipped script paths and line ports. Machshev Labs suppresses a tagged duplicate boundary on re-import only while its geometry still matches the companion HATCH boundary. If another editor removes the HATCH, the boundary remains and imports as geometry. If the boundary is edited independently, Machshev Labs retains both and reports the difference. The simulation-domain Board Outline is boundary-only.</p>
+<p>The command prints three complete report categories: exported, approximated, and omitted. Without <code>--json</code>, approximated and omitted entries go to stderr. JSON output uses <code>machshev-dxf-export-report/v1</code>:</p>
+<pre><code>{
+  "schema": "machshev-dxf-export-report/v1",
+  "project_file": "/work/board.rfsim",
+  "output_path": "/work/board.dxf",
+  "entity_count": 42,
+  "report": {
+    "exported": [],
+    "approximated": [],
+    "omitted": []
+  }
+}</code></pre>
+<p>An existing drawing refuses unless <code>--replace</code> is set. The <code>.dxf</code> suffix is added when absent, and parent directories are created as needed. A completed file passes serialized readback and a structural audit before installation. A destination that appears during a no-replace export is left untouched.</p>
+<p>The drawing does not encode stackup order and Z, layer material properties, simulation and mesh settings, editor state, run data, or parametric definitions. Port and via electrical behavior is also absent, a hole or cutout that does not run through the whole board keeps no layer span, and a plated cutout keeps no plating. Those losses are listed in omitted, never hidden. Naming changes and flattened script curves are listed in approximated with their effective name or tolerance. The exporter refuses corrupt embedded pixels, failed resolution, invalid geometry, a hole or cutout the run would refuse, or a structural DXF error. Unsupported, missing-layer, and degenerate shapes also refuse. They are never successful omissions. With domain auto-fit enabled, the Board Outline rectangle is recomputed from resolved geometry and the stored padding settings.</p>
+<p>The full mapping is in <a href="docs-export-dxf.html">Exporting DXF drawings</a>.</p>
+<h2 id="exporting-openems-xml">Exporting openEMS XML</h2>
+<p>The openEMS exporter resolves one saved project into a standalone FDTD and CSXCAD XML setup:</p>
+<pre><code>machshev project export-openems --project FILE --out FILE [--replace] [--json]</code></pre>
+<p>The XML includes one resolved Gaussian pulse, boundary faces, mesh lines, stackup materials, supported geometry, vias, holes and cutouts, and supported lumped ports. Exactly one port must be active. Each port needs an explicit number, reference impedance, and Boolean active value. Point and rectangular ports need both terminal layers. A planar port needs its one conductor layer, and a present <code>excitation_mode</code> must be <code>planar</code>. Rectangular or planar ports must align with a Cartesian axis. Continuous-wave setup, de-embedding, unsupported electrical geometry, geometry outside the resolved domain, and fuzzy load-time layer remaps refuse the whole export. Variables, bindings, constraints, and generators are resolved on a copy. Uniform grids use the solver's whole-cell board, gap, absorber, and stackup quantization. Any resulting padded edge, expanded gap, or shifted stackup plane is listed as approximated. Graded grids use the solver's nearest explicit Z line for every stackup edge. Every completed report states that the XML is a translated setup and that the target runtime can produce a different mesh and different results. Parametric definitions, editor state, stored results, Run History, and reference traces are listed as omitted.</p>
+<p>An existing output refuses unless <code>--replace</code> is set. The <code>.xml</code> suffix is added when absent. The writer performs XML readback before installing the destination, so a refusal does not replace an existing file. JSON output uses <code>machshev-openems-export-report/v1</code> and carries <code>entity_count</code> and the exported, approximated, and omitted lists. The complete mapping is in <a href="docs-export-openems.html">Exporting openEMS XML</a>.</p>
+<h2 id="board-import-specs">Board import specs</h2>
+<p><code>machshev schema --what board-import</code> prints the authoritative JSON Schema. Board-import source paths are relative to the import spec. Gerber accepts a set of artwork, drill, and job files. DXF, KiCad, and openEMS accept one source file. A Gerber job file must be listed in <code>sources</code> if it should control roles or stackup. An unlisted job file beside the artwork cannot affect a CLI import.</p>
+<p>This Gerber example explicitly accepts detected roles, supplies the one dielectric gap, and adds the settings and port needed for headless validation and simulation:</p>
+<pre><code>{
+  "schema": "machshev-board-import/v1",
+  "format": "gerber",
+  "sources": [
+    "board-F_Cu.gbr",
+    "board-B_Cu.gbr",
+    "board-Edge_Cuts.gbr",
+    "board-PTH.drl"
+  ],
+  "role_source": "detected",
+  "stackup": {
+    "source": "explicit",
+    "gaps": [
+      {"name": "Core", "thickness_mm": 1.6, "epsilon_r": 4.4}
+    ]
+  },
+  "project": {
+    "settings": {"freq_min_hz": 1.0e9, "freq_max_hz": 2.0e9},
+    "shapes": [
+      {"kind": "port", "layer": "Top Copper", "name": "Feed",
+       "port_number": 1, "x_mm": 10.0, "y_mm": 6.0, "active": true}
+    ]
+  }
+}</code></pre>
+<p><code>role_source: detected</code> accepts the effective job-file, X2, filename, DXF layer, KiCad layer, or CSXCAD Z-plane detection that the editor displays before import. An <code>assignments</code> entry can replace any detected row. <code>role_source: explicit</code> instead requires one entry for every parsed file or layer, including rows that are excluded. Gerber rows use <code>source</code>. DXF, KiCad, and openEMS rows use <code>layer</code>. Included copper positions must be exactly 1 through the included copper count, and at most one outline can be included.</p>
+<p>Gerber copper assignments accept <code>"polarity": "auto"</code>, <code>"positive"</code>, or <code>"negative"</code>. <code>auto</code> is the default and reads file and job polarity declarations. An explicit choice overrides them. Negative copper requires an included closed board outline to define the plane boundary. The JSON import report records <code>polarity</code> and <code>effective_polarity</code> for each copper row, and <code>span</code> and <code>drill_counts</code> for each drill row.</p>
+<p>The copper raster samples the artwork's smallest feature at four pixels. The import report names the feature and its source.</p>
+<p>Every drill hit and slot imports as a hole through its span. A non-plated one is cut through the copper and dielectric, and a plated one is a solid conductor through its drill between the copper layers at its ends. A drill file that declares plating per tool (KiCad writes that attribute) keeps each tool's plating unless its assignment sets <code>"plated"</code>, which then applies to every hole in the file and is named in the report. Any other drill uses its X2, job-file, or filename plating declaration, and when none is available its assignment needs <code>"plated": true</code> or <code>"plated": false</code>. A file whose X2 FileFunction contradicts its per-tool plating refuses until <code>"plated"</code> is set. A mixed-plating file without per-tool declarations refuses, since the importer cannot tell the holes apart. Plated holes need at least two included copper layers. A Gerber spec can list at most one <code>.gbrjob</code> file.</p>
+<p>Each included drill row in the JSON import report records <code>span</code>, with <code>start_layer</code>, <code>end_layer</code>, and <code>through</code>, and <code>drill_counts</code>, with <code>plated_holes</code>, <code>plated_slots</code>, <code>non_plated_holes</code>, <code>non_plated_slots</code>, and <code>routed_islands</code> (areas that closed routes cut free). The text report prints the same span on the row, and <code>plated=per_tool</code> for a row that keeps its per-tool plating.</p>
+<p>This unitless DXF example supplies its unit and enumerates every layer:</p>
+<pre><code>{
+  "schema": "machshev-board-import/v1",
+  "format": "dxf",
+  "sources": ["board.dxf"],
+  "drawing_unit": "mm",
+  "role_source": "explicit",
+  "assignments": [
+    {"layer": "TopCopper", "include": true,
+     "role": "copper", "position": 1},
+    {"layer": "BottomCopper", "include": true,
+     "role": "copper", "position": 2},
+    {"layer": "BoardOutline", "include": true, "role": "outline"},
+    {"layer": "Drills", "include": true, "role": "drill",
+     "plated": true},
+    {"layer": "Notes", "include": false, "role": "unknown"}
+  ],
+  "stackup": {
+    "source": "explicit",
+    "gaps": [
+      {"name": "Core", "thickness_mm": 1.6, "epsilon_r": 4.4}
+    ]
+  }
+}</code></pre>
+<p>Omit <code>drawing_unit</code> to use a DXF file's $INSUNITS. A unitless drawing requires <code>mm</code> or <code>inch</code> in the spec. A declared drawing refuses the field, so its authored unit cannot be silently replaced.</p>
+<p>A KiCad import requires an explicit destination. Detected stackup values come from the parsed board:</p>
+<pre><code>{
+  "schema": "machshev-board-import/v1",
+  "format": "kicad",
+  "sources": ["board.kicad_pcb"],
+  "destination": {"mode": "new"},
+  "role_source": "detected",
+  "stackup": {"source": "detected"}
+}</code></pre>
+<p>An openEMS merge names its saved destination project and makes the frequency choice explicit:</p>
+<pre><code>{
+  "schema": "machshev-board-import/v1",
+  "format": "openems",
+  "sources": ["setup.xml"],
+  "destination": {
+    "mode": "current",
+    "project": "current.rfsim",
+    "bring_frequency_settings": false
+  },
+  "role_source": "detected",
+  "stackup": {"source": "detected"}
+}</code></pre>
+<p><code>machshev project import-openems</code> accepts the openEMS spec as a strict alias for <code>machshev project import</code>.</p>
+<p><code>stackup.source</code> has format-specific explicit choices:</p>
+<ul><li><code>explicit</code> requires exactly one gap fewer than the included copper count.</li><li><code>job</code> requires a listed Gerber job file with every gap thickness and permittivity present.</li><li><code>detected</code> requires a complete KiCad or CSXCAD material stack.</li><li><code>defaults</code> selects the editor's nominal 1.6 mm FR-4 gap distribution and 4.4 relative permittivity.</li></ul>
+<p>Thickness must be finite and greater than zero. Relative permittivity must be finite and at least 1. Values outside the usual ranges print a warning and are kept exactly.</p>
+<p>The optional <code>project</code> block applies settings and authored shapes after the board geometry is built and before it is saved. Settings use the same value gate as project specs and the GUI. Shapes use the same syntax and port defaults as <code>project build</code>, but cannot set an <code>id</code>. Imported geometry owns the existing ids. Bitmap and DXF shapes are also refused in this block because <code>sources</code> owns the imported artwork. Omitting <code>project</code> adds no authored ports or setting overrides. An openEMS new-project import still carries its supported source frequency band. Other formats retain project defaults unless the <code>project</code> block supplies settings. Explicit <code>project.settings</code> are applied after the openEMS Auto initialization and define the resulting controls. If the block sets either frequency edge, those explicit settings define the final band.</p>
+<p>DXF always creates a fresh project and rejects <code>destination</code>. Gerber takes an optional <code>destination</code> and creates a fresh project without one. KiCad and openEMS require <code>destination.mode</code> to be <code>new</code> or <code>current</code>. Current mode requires a saved <code>destination.project</code> and merges geometry into it. openEMS current mode also requires <code>bring_frequency_settings</code> to be true or false. Choosing true refuses the import when the XML has no supported positive Gaussian band. The <code>--out</code> path always names the result. Writing back to the destination path also requires <code>--replace</code>.</p>
+<pre><code>machshev project import --spec board.import.json --out board.rfsim
+machshev project import --spec board.import.json --out board.rfsim --json
+machshev validate --project board.rfsim --json
+machshev run --project board.rfsim --dry-run</code></pre>
+<p>The JSON report contains the effective unit, destination, every effective assignment, every gap, applied setting names, authored shape identities, the output path, and the imported, approximated, and skipped report lists. An existing output project or same-stem <code>.rfsimout</code> refuses. <code>--replace</code> explicitly replaces the project and removes the old result sidecar.</p>
+<h2 id="a-worked-example">A worked example</h2>
+<p>A single rectangular patch over a ground plane on FR4, with one vertical feed port and one variable driving the patch width. Built with <code>machshev project build</code> and checked with <code>machshev validate</code>.</p>
+<pre><code>{
+  "schema": "machshev-project-spec/v1",
+  "domain": {"auto_fit": true},
+  "layers": [
+    {"name": "Top", "type": "conductor"},
+    {"name": "Core", "type": "dielectric", "thickness_mm": 1.6, "epsilon_r": 4.3,
+     "loss_tangent": 0.02},
+    {"name": "Bottom", "type": "conductor"}
+  ],
+  "variables": [
+    {"name": "patchW", "value": "16", "min": 12, "max": 20, "group": "Geometry"}
+  ],
+  "shapes": [
+    {"kind": "rect", "layer": "Top", "name": "Patch",
+     "x_mm": 0, "y_mm": 0, "w_mm": "patchW", "h_mm": 12.3},
+    {"kind": "rect", "layer": "Core", "name": "Substrate",
+     "x_mm": 0, "y_mm": 0, "w_mm": 22, "h_mm": 22},
+    {"kind": "rect", "layer": "Bottom", "name": "Ground",
+     "x_mm": 0, "y_mm": 0, "w_mm": 22, "h_mm": 22},
+    {"kind": "port", "layer": "Top", "name": "Feed",
+     "x_mm": 0, "y_mm": -4, "port_number": 1, "impedance_ohm": 50,
+     "active": true, "bottom_layer": "Bottom", "top_layer": "Top"}
+  ],
+  "settings": {"freq_min_hz": 4.5e9, "freq_max_hz": 7.0e9, "bc_all": "PML"}
+}</code></pre>
+<pre><code>machshev project build --spec patch.json --out patch.rfsim
+machshev validate --project patch.rfsim</code></pre>
+<p>A <code>rect</code> on a numeric field takes a plain number (<code>"h_mm": 12.3</code>) or, when the value is a non-numeric string (<code>"w_mm": "patchW"</code>), an expression binding on that field. The feed spans vertically from <code>bottom_layer</code> to <code>top_layer</code>, so the layer order matters: a port whose two conductors land on the same mesh cell injects nothing and validate reports it. The ground and substrate rects paint the Bottom and Core layers so the dielectric is real, not air.</p>
+<h2 id="inspecting-a-project">Inspecting a project</h2>
+<p><code>machshev project query --project FILE --json</code> prints a machine-readable readout: every shape (id, kind, layer, name, params), every variable (source value, resolved value, range, group, where-used count), constraints, generators, bindings, settings, the domain, a geometry readout (per-shape center, bounds, anchors, resolved boundary faces, domain clearance), and a last-results summary. Use it to inspect a project you did not build. A shape that cannot be measured carries its own error in the readout, and the project-wide <code>bounds_xy</code> is null whenever any shape is unreadable, since an extent over the readable rest would be smaller than the project's.</p>
+<p><code>machshev project dump-settings --project FILE</code> prints every setting with its value, default, units, and description, grouped by category. Flags narrow the output:</p>
+<ul><li><code>--changed-only</code> lists only settings that differ from their default.</li><li><code>--category NAME</code> limits to one category (an unknown name exits 2).</li><li><code>--advanced</code> keeps only advanced settings, <code>--no-advanced</code> only the others.</li><li><code>--json</code> emits a machine-readable list instead of the grouped text.</li></ul>
+<h2 id="mutating-a-project">Mutating a project</h2>
+<p><code>machshev project set --project FILE --var name=value [--out FILE]</code> sets one or more variables (repeatable <code>--var</code>), re-resolves bindings and constraints, and saves the project in place or to <code>--out</code>. A value may be a number or an expression over other variables. An unknown reference or a bad expression exits 2 with the field message and leaves the geometry unchanged.</p>
+<p>Two run-time override forms change values for a single run without editing the project:</p>
+<ul><li><code>machshev run --set name=value</code> overrides a variable, resolved before export.</li><li><code>machshev run --setting name=value</code> sets any FDTDSettings field. It goes through the same value gate as the GUI: an unknown name, a bad type or enum, or a hard-bound violation exits 2 before the run starts, a soft-bound value prints one warning and runs with the value exactly as set. Both flags repeat.</li></ul>
+<p class="note">A setting fixed in auto mode is derived and overwritten at run time. The run prints the discarded derived value so an override never loses silently.</p>
+<h2 id="explicit-run-history-operations">Explicit Run History operations</h2>
+<p>Automation stays history-free unless it opts in. A normal run always writes its <code>run_manifest.json</code> but does not add a record to the desktop History rail. Add <code>--record-history</code> when a completed run should be recorded. This does not imply <code>--save-after-run</code> and does not modify the <code>.rfsim</code>.</p>
+<p>Two project commands expose the matching desktop actions without changing the project file:</p>
+<pre><code>machshev project save-point --project patch.rfsim --json
+machshev project import-reference --project patch.rfsim \
+  --file measured.s1p --json</code></pre>
+<p>For CSV data, select the representation and columns explicitly. This example imports frequency in MHz and complex impedance, converting it to S11 at 50 ohm:</p>
+<pre><code>machshev project import-reference --project patch.rfsim --file measured.csv \
+  --format csv --csv-kind impedance --freq-column frequency_mhz \
+  --value-column resistance --second-column reactance --freq-unit mhz \
+  --parameter S11 --z0-ohms 50 --json</code></pre>
+<p><code>db-phase</code> maps magnitude in dB plus optional phase in degrees. <code>real-imag</code> maps real and optional imaginary S values. <code>impedance</code> maps resistance and optional reactance, then applies the selected reference impedance. When Auto must infer a frequency unit from value magnitude, the command refuses until <code>--accept-guessed-unit</code> is explicit. It also refuses a mapping that skips more rows than it imports unless <code>--allow-many-skipped</code> is explicit.</p>
+<h2 id="parameter-sweep-definitions">Parameter sweep definitions</h2>
+<p>The inline form accepts one or two explicit value lists:</p>
+<pre><code>machshev sweep preview --project patch.rfsim --axis patchW=15,16,17
+machshev sweep run --project patch.rfsim --axis patchW=15,16,17</code></pre>
+<p>Use <code>--definition FILE</code> for the full strict JSON or YAML structure. Each axis has <code>name</code>, <code>mode</code>, and either <code>values</code> for list mode or <code>start</code>, <code>stop</code>, and <code>n</code> for linspace or log. A definition contains at most two axes plus <code>combine</code> (grid or zip), <code>all_ports</code>, <code>backend</code> (cpu or cuda), <code>target</code> (local or remote:HOST:PORT), and an optional <code>device</code> for a remote target: auto, cpu, or cuda:INDEX, which the runner must expose. Unknown fields refuse.</p>
+<pre><code>{
+  "axes": [
+    {"name": "patchW", "mode": "linspace", "start": 15, "stop": 17, "n": 5}
+  ],
+  "combine": "grid",
+  "all_ports": false,
+  "backend": "cpu",
+  "target": "local"
+}</code></pre>
+<p>Every run prints the mandatory point-by-point cost preview before launch. The default durable state store is <code>_sim_result/&lt;project-stem&gt;_cli_sweeps</code>. <code>--state-dir</code> selects another. Add <code>--record-history</code> instead when the sweep should populate the desktop rail. Resume and retry need the original store choice and the reported sweep id:</p>
+<pre><code>machshev sweep resume --project patch.rfsim --sweep-id s0001
+machshev sweep retry --project patch.rfsim --sweep-id s0001 --point-index 2</code></pre>
+<h2 id="variables-and-expressions">Variables and expressions</h2>
+<p>A numeric field accepts an expression over the project variables: the operators <code>+ - * / // % **</code>, parentheses, the trig and math functions, and the constants <code>pi</code> and <code>e</code>. Trig is in degrees. The full function list is in <code>machshev schema --what spec</code> and <code>machshev guide geometry</code>.</p>
+<h2 id="jobspec-one-payload-per-run">JobSpec: one payload per run</h2>
+<p><code>machshev run --job FILE</code> reads a YAML or JSON JobSpec that carries the project, the overrides, the save behavior, the output directory, and the artifact selection. The job file owns the run request: combining <code>--job</code> with another run flag is refused rather than silently discarded, except the flags that layer onto a loaded job (<code>--backend</code>, <code>--dry-run</code>, <code>--per-face-bc</code>, <code>--set</code>, <code>--externalize-results</code>). An unknown key in the file is refused, so a typo cannot silently revert to a default. Relative <code>project</code>, <code>save_as</code>, and <code>out_dir</code> paths resolve from the directory that contains the job file.</p>
+<pre><code>project: patch.rfsim
+quality: medium
+out_dir: _job_out
+record_history: true
+settings:
+  freq_max_hz: 6.5e9
+exports:
+  sparams: all
+  sparams_touchstone: true
+  smith: true</code></pre>
+<p>The <code>settings</code> block passes through the same value gate as <code>--setting</code>. The <code>overrides</code> block sets advanced numeric overrides (cell sizes, air margins, the frequency band, and material fields). The dielectric permittivity key is <code>epsilon_r</code>, with <code>eps_r</code> accepted as an alias. Setting both to different values is an error, not a last-wins pick. JobSpec booleans require JSON or YAML booleans, enums require a listed value, and numeric controls refuse non-finite or out-of-range values. <code>quality</code> and <code>quality_frac</code> cannot appear together. <code>record_history</code> defaults to false and is the JobSpec equivalent of <code>run --record-history</code>. <code>machshev validate --job FILE</code> applies the job to a detached project through the same pre-run preparation as run, then reports findings without saving the project. The JobSpec fields:</p>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Default</th></tr></thead><tbody><tr><td><code>project</code></td><td>Path</td><td>required</td></tr><tr><td><code>save_after_run</code></td><td>bool</td><td>false</td></tr><tr><td><code>save_as</code></td><td>Optional[Path]</td><td>none</td></tr><tr><td><code>record_history</code></td><td>bool</td><td>false</td></tr><tr><td><code>quality</code></td><td>Optional[str]</td><td>none</td></tr><tr><td><code>quality_frac</code></td><td>Optional[float]</td><td>none</td></tr><tr><td><code>sim_mode</code></td><td>Optional[str]</td><td>none</td></tr><tr><td><code>mesh_style</code></td><td>Optional[str]</td><td>none</td></tr><tr><td><code>vram_budget_mb</code></td><td>Optional[float]</td><td>none</td></tr><tr><td><code>backend</code></td><td>Optional[str]</td><td>none</td></tr><tr><td><code>overrides</code></td><td>Dict[str, Any]</td><td>factory</td></tr><tr><td><code>settings</code></td><td>Dict[str, Any]</td><td>factory</td></tr><tr><td><code>convergence</code></td><td>Optional[bool]</td><td>none</td></tr><tr><td><code>perf_mode</code></td><td>bool</td><td>false</td></tr><tr><td><code>max_steps</code></td><td>Optional[int]</td><td>none</td></tr><tr><td><code>ringdown_min_steps</code></td><td>Optional[int]</td><td>none</td></tr><tr><td><code>sparam_stop</code></td><td>bool</td><td>false</td></tr><tr><td><code>sparam_stop_db</code></td><td>float</td><td>-50</td></tr><tr><td><code>sparam_stop_periods</code></td><td>float</td><td>2</td></tr><tr><td><code>sparam_stop_min_periods</code></td><td>float</td><td>8</td></tr><tr><td><code>sparam_stop_consec</code></td><td>int</td><td>3</td></tr><tr><td><code>force_disable_surface_currents</code></td><td>bool</td><td>false</td></tr><tr><td><code>force_disable_nf2ff</code></td><td>bool</td><td>false</td></tr><tr><td><code>force_disable_save_vtk</code></td><td>bool</td><td>false</td></tr><tr><td><code>force_skip_geometry_export</code></td><td>bool</td><td>false</td></tr><tr><td><code>export_port_timeseries</code></td><td>bool</td><td>false</td></tr><tr><td><code>out_dir</code></td><td>Optional[Path]</td><td>none</td></tr><tr><td><code>exports</code></td><td>ExportSpec</td><td>factory</td></tr></tbody></table></div>
+<p>The <code>exports</code> block selects what is written after the run:</p>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Type</th><th>Default</th></tr></thead><tbody><tr><td><code>sparams</code></td><td>str</td><td>all</td></tr><tr><td><code>sparams_touchstone</code></td><td>bool</td><td>false</td></tr><tr><td><code>smith</code></td><td>bool</td><td>false</td></tr><tr><td><code>polar</code></td><td>bool</td><td>false</td></tr><tr><td><code>polar_freq_mhz</code></td><td>Optional[float]</td><td>none</td></tr><tr><td><code>rad3d</code></td><td>bool</td><td>false</td></tr><tr><td><code>rad3d_freq_mhz</code></td><td>Optional[float]</td><td>none</td></tr><tr><td><code>rad3d_vtk</code></td><td>bool</td><td>false</td></tr><tr><td><code>rad_pattern_csv</code></td><td>bool</td><td>false</td></tr><tr><td><code>mesh_preview</code></td><td>bool</td><td>false</td></tr><tr><td><code>mesh_preview_vtk</code></td><td>bool</td><td>false</td></tr><tr><td><code>mesh_preview_size</code></td><td>Optional[int]</td><td>none</td></tr><tr><td><code>surface_currents</code></td><td>bool</td><td>false</td></tr><tr><td><code>surface_currents_freq_mhz</code></td><td>Optional[float]</td><td>none</td></tr><tr><td><code>no_3d_renders</code></td><td>bool</td><td>false</td></tr></tbody></table></div>
+<h2 id="the-run-manifest">The run manifest</h2>
+<p>Every run writes <code>run_manifest.json</code> into its output directory. It is the machine-readable record of the run, and a failed write is fatal so a missing manifest is never mistaken for success. <code>status</code> is one of:</p>
+<ul><li><code>ok</code>: the run completed.</li><li><code>preflight_refused</code>: a pre-flight gate refused before launch.</li><li><code>vram_overflow_predicted</code>: the <code>--vram-budget-mb</code> estimate exceeded the budget.</li><li><code>error</code>: a runtime failure.</li></ul>
+<p>The manifest records the realized sim params (cell sizes, runtime and ringdown values, frequency band, boundaries), the auto-derived mesh with its reasoning, performance (duration, steps, cells, GCell/s, VRAM, ringdown, convergence history), and the list of artifacts written. The pml/air mm fields inside <code>sim_params</code> are the authored request, and the per-face realization lives in <code>mesh_realization.faces</code>. <code>overrides_requested</code> and <code>overrides_honored</code> are both present, and <code>overrides_honored</code> reads back the values the exported case actually carried, so a request the run could not realize is visible. The full contract is at <code>machshev schema --what manifest</code>.</p>
+<h2 id="batch-running">Batch running</h2>
+<p><code>machshev run --folder DIR</code> runs every project in a folder in sequence, <code>--recursive</code> to descend into subfolders. One project that fails does not abandon the rest: the batch continues to the next project and exits 1 if any project failed at runtime, 2 if none failed at runtime but at least one was refused, or 0 if all succeeded. Each failure is appended to <code>OUT_DIR/batch_failures.jsonl</code> when <code>--out-dir</code> is set, or <code>DIR/batch_failures.jsonl</code> otherwise. If that log cannot be written, the runner reports the logging error on stderr without changing the project's batch outcome.</p>
+    </div>
+    <nav class="docs-pager" aria-label="Pager"><a class="prev" href="docs-cli-reference.html"><span>Previous</span>CLI reference</a><a class="next" href="docs-settings.html"><span>Next</span>Settings reference</a></nav>
+  </article>
+</main>
+<div id="site-footer"></div>
+<script src="assets/docs-nav.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

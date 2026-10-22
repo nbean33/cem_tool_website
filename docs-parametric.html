@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Variables, constraints, and generators | Machshev Labs Docs</title>
+<meta name="description" content="The parametric system drives geometry by relationships instead of fixed numbers: named variables, a constraint solver on the canvas, and generators that stamp copies of a master shape. One change propagates everywhere it is referenced.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="docs-parametric">
+<div id="site-header"></div>
+<main id="main" class="container docs">
+  <aside class="docs-side" id="docs-side" aria-label="Documentation"></aside>
+  <article class="docs-main">
+    <div class="post-meta">Editor</div>
+    <h1 style="margin-top:8px">Variables, constraints, and generators</h1>
+    <p class="lede">The parametric system drives geometry by relationships instead of fixed numbers: named variables, a constraint solver on the canvas, and generators that stamp copies of a master shape. One change propagates everywhere it is referenced.</p>
+    <div class="prose">
+<h2 id="variables">Variables</h2>
+<p>Variable Studio holds the project's named variables. Each row is a name, a value, and an optional min and max.</p>
+<figure><div class="media ph"><span class="tag">screenshot</span></div><figcaption>Variable Studio panel</figcaption></figure>
+<p>A value is a literal number or an expression over other variables. The Value cell tooltip shows the resolved number, and the Name cell tooltip shows how many fields use the variable and its group. A name is letters, digits, and underscore, does not start with a digit, and is case sensitive. <code>pi</code>, <code>e</code>, and the function names are reserved. Min and Max are an optional allowed range. Once both are filled, the only check is that min does not exceed max. Set a variable's group from the row context menu.</p>
+<p>Any numeric field of a shape can bind to an expression. To bind a field, type a variable name or an expression straight into its box, or right-click the box and pick a variable from the Variable menu. A polygon vertex binds the same way in the Vertices table, and its expression is measured from the shape's origin. A bound field reads its value from the expression each time the project resolves rather than storing a fixed number. Categorical fields (layer names, port subtype, feed direction) never bind. A binding addresses one field: a shape param, a layer property, a domain or FDTD setting, or a generator param.</p>
+<p>The expression grammar: numbers, variable names, <code>+ - * / // % **</code> with unary sign and parentheses, the functions <code>sin cos tan asin acos atan atan2 sqrt abs min max floor ceil round exp log log10</code>, and the constants <code>pi</code> and <code>e</code>. Trig is in degrees, the CAD convention, so sin, cos, and tan take degrees and the inverse functions return degrees. An expression evaluates in the field's own unit with no unit suffix. A dependency cycle, an undefined name, or a result of infinity or NaN is reported with the offending token named, never applied.</p>
+<p>Set values three ways: edit the cell in Variable Studio, or headless with <code>machshev project set --var name=value --project p.rfsim</code>, or per run with <code>machshev run --set name=value</code>. Both CLI paths re-resolve the whole parametric system (variables, bindings, then constraints) before the project is used. <code>--set</code> applies at run start.</p>
+<h2 id="constraints">Constraints</h2>
+<p>The constraint solver holds geometric relationships as you draw and drag. Add a relation and the solver drives it to satisfaction in a least-squares sense, keeping every enabled constraint true. Dimensions and relation glyphs draw on the canvas next to the shapes they bind.</p>
+<p>Each constraint type:</p>
+<div class="table-wrap"><table><thead><tr><th>Constraint</th><th>Meaning</th></tr></thead><tbody><tr><td><code>coincident</code></td><td>Anchor onto an anchor, an edge (point-on-line), or a circle rim.</td></tr><tr><td><code>point_on_line</code></td><td>An anchor lies on an edge segment.</td></tr><tr><td><code>point_on_circle</code></td><td>An anchor lies on a circle or arc rim.</td></tr><tr><td><code>horizontal</code></td><td>Two anchors share a Y coordinate, or an anchor shares Y with a Y-axis mesh pin.</td></tr><tr><td><code>vertical</code></td><td>Two anchors share an X coordinate, or an anchor shares X with an X-axis mesh pin.</td></tr><tr><td><code>distance</code></td><td>Distance between two anchors or an edge length (aligned, horizontal, or vertical). Horizontal mode also spans an anchor or another pin to an X-axis mesh pin, vertical mode to a Y-axis pin. The value is a number or expression.</td></tr><tr><td><code>angle</code></td><td>Angle between two edges, in degrees.</td></tr><tr><td><code>radius</code></td><td>Radius of a circle, arc, or via ring.</td></tr><tr><td><code>diameter</code></td><td>Diameter of a circle, arc, or via ring.</td></tr><tr><td><code>equal</code></td><td>Two refs measure the same: edge lengths, circle/arc radii, or anchor-pair distances (four-point form).</td></tr><tr><td><code>tangent</code></td><td>A rect/poly edge tangent to a circle/arc, or circle tangent to circle.</td></tr><tr><td><code>fix</code></td><td>Pin an anchor, a whole shape, or a mesh pin in place.</td></tr></tbody></table></div>
+<p>A dimensional constraint (distance, angle, radius, diameter) carries a target value that is a number or an expression over variables, so a dimension can be driven by a variable. A redundant but consistent dimension is downgraded to a driven reference dimension: it reports its measured value and is excluded from the solve. An equal constraint ties two edge lengths or two circle radii together.</p>
+<p>Arm a tool from the keyboard, then click the anchors, edges, or rims it relates. Each key toggles its tool, and it stays armed until Escape, another tool, or Select disarms it.</p>
+<div class="table-wrap"><table><thead><tr><th>Key</th><th>Tool</th></tr></thead><tbody><tr><td><code>D</code></td><td>Dimension</td></tr><tr><td><code>I</code></td><td>Coincident</td></tr><tr><td><code>H</code></td><td>Horizontal</td></tr><tr><td><code>V</code></td><td>Vertical</td></tr><tr><td><code>T</code></td><td>Tangent</td></tr><tr><td><code>N</code></td><td>Angle</td></tr><tr><td><code>K</code></td><td>Fix</td></tr><tr><td><code>E</code></td><td>Equal</td></tr></tbody></table></div>
+<p>Dragging is constrained. When you move a shape that carries constraints, the solver runs on release with the dragged shape pinned toward where you dropped it and its constrained partners moved the least amount that keeps the hard constraints satisfied. An infeasible drop lands at the closest feasible pose instead of reverting the whole move. A shape held by fix does not move.</p>
+<h2 id="generators">Generators</h2>
+<p>A generator stamps copies of one or more master shapes. Select the masters, then create an array from the Generators panel.</p>
+<figure><div class="media ph"><span class="tag">screenshot</span></div><figcaption>Generators panel</figcaption></figure>
+<p>The stored state is the master shapes plus the generator parameters. Copies (instances) are never written into the saved shape list. They materialize at render time so the canvas shows them, and again at export time for the solver, always from the current masters. Editing a master updates its copies live: a width change on the source resizes every copy at once, and dragging the source moves the copies with it, holding their relative offsets.</p>
+<p>The two generator types:</p>
+<div class="table-wrap"><table><thead><tr><th>Generator</th><th>Params</th><th>Meaning</th></tr></thead><tbody><tr><td><code>array</code></td><td><code>nx, ny, nx_minus, ny_minus, dx_mm, dy_mm, mode, lock_spacing</code></td><td>Rectangular grid of copies of one or more master shapes. The master sits at index (0, 0) and the grid grows both ways along each axis.</td></tr><tr><td><code>linked_clone</code></td><td><code>dx_mm, dy_mm</code></td><td>A single offset copy of a master shape (the degenerate array case).</td></tr></tbody></table></div>
+<p>There is no instance limit. A grid is bounded by the machine's memory, and a build that runs out says so.</p>
+<p><code>nx</code>, <code>ny</code>, <code>dx_mm</code>, and <code>dy_mm</code> each accept a number or an expression, so a variable can drive the copy count or the pitch.</p>
+<figure><div class="media ph"><span class="tag">screenshot</span></div><figcaption>EBG array on the canvas</figcaption></figure>
+<p>A generator has no limit on its copy count. A large array draws on the canvas behind a loading overlay. Cancel stops the drawing and removes the copies drawn so far, and the Console says so. The run and the exports still build every copy.</p>
+    </div>
+    <nav class="docs-pager" aria-label="Pager"><a class="prev" href="docs-geometry.html"><span>Previous</span>Drawing geometry</a><a class="next" href="docs-import-png.html"><span>Next</span>Importing artwork</a></nav>
+  </article>
+</main>
+<div id="site-footer"></div>
+<script src="assets/docs-nav.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

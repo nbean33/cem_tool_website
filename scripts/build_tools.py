@@ -1,14 +1,14 @@
 """Build the website's WebAssembly tools into tools/ (which is committed and served by Pages).
 
 Usage:
-  python scripts/build_tools.py            # test, build both tools, regenerate the calculator list
+  python scripts/build_tools.py            # test, build the PCB Toolkit, regenerate the calculator list
   python scripts/build_tools.py --skip-tests
   python scripts/build_tools.py --list-only  # only regenerate assets/pcb-calcs.js
 
 Steps:
-  1. cargo test on tools-src/rust (the vendored crates plus pcb-wasm and nec-wasm), natively.
-  2. wasm-pack builds pcb-wasm and nec-wasm into each app's src tree.
-  3. npm install + npm run build for each app; Vite writes tools/pcb and tools/antenna.
+  1. cargo test on tools-src/rust (the vendored crate plus pcb-wasm), natively.
+  2. wasm-pack builds pcb-wasm into the app's src tree.
+  3. npm install + npm run build; Vite writes tools/pcb.
   4. assets/pcb-calcs.js: every pcb_toolkit calculator (id, name, group, blurb) for the
      RF Calculators page, read from the same calculators.ts schema the app uses.
 
@@ -78,13 +78,10 @@ def main():
         run(["cargo", "test", "--workspace", "--quiet"], RUST)
     run(["wasm-pack", "build", "pcb-wasm", "--target", "web", "--release", "--no-pack",
          "--out-dir", "../../pcb-app/src/wasm"], RUST)
-    run(["wasm-pack", "build", "nec-wasm", "--target", "web", "--release", "--no-pack",
-         "--out-dir", "../../nec-app/src/lib/wasm"], RUST)
-    for app in ("pcb-app", "nec-app"):
-        run(["npm", "install", "--no-audit", "--no-fund"], TOOLS / app)
-        run(["npm", "run", "build"], TOOLS / app)
+    run(["npm", "install", "--no-audit", "--no-fund"], TOOLS / "pcb-app")
+    run(["npm", "run", "build"], TOOLS / "pcb-app")
     pcb_calculator_list()
-    print("\nBuilt tools/pcb and tools/antenna. Commit tools/ and assets/pcb-calcs.js.")
+    print("\nBuilt tools/pcb. Commit tools/ and assets/pcb-calcs.js.")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exporting openEMS XML | Machshev Labs Docs</title>
+<meta name="description" content="The openEMS exporter writes the current resolved project as a standalone XML setup containing an openEMS FDTD section and a CSXCAD ContinuousStructure. It is visible under File, Export and as a headless project command.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="docs-export-openems">
+<div id="site-header"></div>
+<main id="main" class="container docs">
+  <aside class="docs-side" id="docs-side" aria-label="Documentation"></aside>
+  <article class="docs-main">
+    <div class="post-meta">Editor</div>
+    <h1 style="margin-top:8px">Exporting openEMS XML</h1>
+    <p class="lede">The openEMS exporter writes the current resolved project as a standalone XML setup containing an openEMS FDTD section and a CSXCAD ContinuousStructure. It is visible under File, Export and as a headless project command.</p>
+    <div class="prose">
+<h2 id="exporting-from-the-editor">Exporting from the editor</h2>
+<p>Select Export openEMS XML under File, Export, then choose an XML file. Preparation and writing run behind a loading overlay, and Cancel stops the export without leaving a partial file. The completed export shows the entity count and any warnings, and the Console prints the outcome. The XML starts with a comment naming the format, the entity count, and the warning count. The CLI's <code>--json</code> output carries the full exported, approximated, and omitted report. Unsupported electrical content refuses before the destination is replaced, with the source project, destination XML, and shape, via, port, or layer named in the error.</p>
+<h2 id="exporting-from-the-cli">Exporting from the CLI</h2>
+<pre><code>machshev project export-openems --project FILE --out FILE [--replace] [--json]</code></pre>
+<p>The <code>.xml</code> suffix is added when absent. An existing output refuses unless <code>--replace</code> is set. Without <code>--json</code>, the outcome line goes to stdout and each warning to stderr. JSON output uses <code>machshev-openems-export-report/v1</code> and contains the output path, <code>entity_count</code>, all three report categories, and the warnings.</p>
+<h2 id="setup-contract">Setup contract</h2>
+<p>The writer resolves project variables, bindings, constraints, and generator instances on a copy. Auto-mode simulation values are derived before export, and the report lists the resolution details that affect the setup. When project domain auto-fit is enabled, export recomputes the domain from the resolved geometry with the saved padding, matching the simulation export path. The XML uses millimeters and includes one resolved Gaussian pulse, boundary faces, mesh lines, stackup materials, supported geometry, vias, holes and cutouts, and lumped ports. When mesh grading is off, the grid uses the same whole-cell board, free-space, and absorber counts as the uniform Machshev Labs solver. Stackup planes use the same uniform-cell quantization. The report lists any padded board edge, expanded free-space gap, or shifted stackup plane. A dielectric that collapses to no solver cells refuses by layer name. When grading is on, each stackup edge uses the same nearest explicit Z line as the Machshev Labs solver, and a shifted edge is listed in the report.</p>
+<p>A standalone export requires exactly one active port. Every port needs an explicit positive number, reference impedance, and Boolean active value. Point and rectangular ports need both terminal layers. A planar line or bar port needs its bottom layer. An omitted top layer means that same conductor, while an explicitly different top layer refuses. A present planar <code>excitation_mode</code> must be <code>planar</code>. Point ports excite Z. Rectangular, line, and bar ports must be unrotated and aligned with a Cartesian axis. Their boxes are aligned to the resolved mesh and the effective coordinates are listed as approximated when that changes the authored box. Line and bar polarity follows their authored director. Passive ports contain their resistance and probes without an excitation property.</p>
+<p>A via is written in the <code>Machshev Labs vias</code> metal as a cylinder of its drill diameter over its conductor span. Its pad is written on each conductor layer it spans as a polygon with a vertex at no more than 5-degree spacing. A via drill Machshev Labs realizes as a post at one mesh node is written as drawn and listed as approximated.</p>
+<p>An unplated hole or a cutout is written as vacuum in the <code>Machshev Labs openings</code> material: a cylinder for a round hole, a rectangle and a disc at each end for a slot, and the outline polygon for a cutout. Over the copper layers it cuts, the vacuum has a priority above copper, so it removes the copper there. Where the opening ends on copper that stays, the vacuum stops at the center of the first mesh cell short of that copper. The dielectric it cuts is vacuum at a priority between the dielectric and copper. A plated cutout also gets its wall in <code>Machshev Labs opening walls</code>: the cell faces Machshev Labs plates on the resolved mesh, written as conductor sheets. Where the drawing keeps a copper plane clear of that wall, the plane edges Machshev Labs clears around it are written as vacuum above copper priority on that plane. The report lists the wall and the cleared planes as approximated.</p>
+<p>A plated hole cuts nothing. It is written in <code>Machshev Labs opening walls</code> as metal from the lowest to the highest copper layer it joins: a cylinder for a round hole, a rectangle and a disc at each end for a slot. A plated hole Machshev Labs realizes as a post at one mesh node is written as drawn and listed as approximated.</p>
+<p>Zero-thickness conductor circles, annuli, and arc bands are written as polygon segments at no more than 5-degree spacing. The report names each segmented shape. Dielectric circles with positive thickness remain cylinders.</p>
+<p>The output is prepared beside the destination and installed only after XML readback and structural checks pass. A failure leaves an existing destination unchanged.</p>
+<p>Every emitted geometry bound must remain inside both the resolved project domain and the resolved mesh. Geometry that would be clipped by either boundary refuses instead of producing a different electrical model. Script clip ranges must increase on both axes. A missing required shape, via, or port coordinate refuses by shape id instead of placing content at the origin.</p>
+<h2 id="report-contract">Report contract</h2>
+<p>Every completed export has three sections:</p>
+<div class="table-wrap"><table><thead><tr><th>Category</th><th>Meaning</th></tr></thead><tbody><tr><td>Exported</td><td>Setup and geometry represented directly in the XML.</td></tr><tr><td>Approximated</td><td>Content represented with the stated flattening, segmentation, or substitution.</td></tr><tr><td>Omitted</td><td>Project content the XML does not carry or a supported export deliberately leaves out.</td></tr></tbody></table></div>
+<p>The target runtime realizes the geometry and materials itself, so its results are not bit-identical to a Machshev Labs run.</p>
+<p>Parametric definitions, editor view state, stored results, Run History, and reference traces are not embedded. The current resolved geometry is embedded. Unsupported or degenerate electrical geometry refuses the whole export instead of producing a partial case. A failed export leaves an existing destination unchanged. Dielectric loss tangent is written as conductivity at the layer's own loss reference frequency and listed as approximated. Enabled NF2FF, surface-current, full-field, field-transform, and early-stop requests are named as omitted when the XML does not include them.</p>
+<p>Machshev Labs re-import preserves the supported planar geometry, stackup, materials, units, and frequency band. A via returns as a via over the same span with its drill and pad at the drill diameter, and its pads return as polygons on the conductor layers. Re-import inventories ports rather than creating Machshev Labs ports, lists holes, cutouts and their plating as not imported, and rebuilds boundary faces, mesh lines, domain spacing, and automatic run controls through the import workflow.</p>
+<h2 id="limits">Limits</h2>
+<ul><li>Resolved maximum steps must be from 1 through 4294967295, the range carried by the target runtime.</li><li>The exporter supports a positive Gaussian band. Continuous-wave run-to-cap stop semantics refuse because a zero ringdown criterion would not retain the same runtime behavior.</li><li>A missing frequency band, invalid mesh, incomplete boundary definition, bad geometry value, unsupported primitive, fuzzy load-time layer remap, or failed project resolve refuses the export.</li><li>Stored raster geometry is written at the image's own resolution, one rectangle per pixel run, and the report counts the rectangles.</li><li>A hole or cutout a Machshev Labs run refuses also refuses the export, by shape: a parameter its kind does not have, a span the stack does not have, a plated opening with no board material around it to plate, or a via that reaches into it.</li><li>Review every approximated and omitted entry before using the XML.</li></ul>
+<p>The writer uses the existing project, mesh, and geometry resolution code. It does not require an openEMS or CSXCAD installation. Its built-in checks parse the XML and re-read the supported structure, but they are not a target-runtime load test. Runtime acceptance requires testing the file with the target version.</p>
+    </div>
+    <nav class="docs-pager" aria-label="Pager"><a class="prev" href="docs-export-dxf.html"><span>Previous</span>Exporting DXF drawings</a><a class="next" href="docs-ports-and-excitation.html"><span>Next</span>Ports and excitation</a></nav>
+  </article>
+</main>
+<div id="site-footer"></div>
+<script src="assets/docs-nav.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

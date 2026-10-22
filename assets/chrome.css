@@ -1,24 +1,24 @@
-/* The site header on full-page tools (tools/pcb/, tools/antenna/).
+/* The site header on full-page tools (tools/pcb/).
    Those pages load this instead of style.css, whose page-level rules (section padding,
    .card, heading sizes) would reshape the apps. Every rule here is scoped to .site-header,
    and the header carries its own copies of the site tokens, so nothing reaches the app below
    and the app's own same-named classes (.brand, .nav) and variables cannot reach the header. */
 
 .site-header {
-  --text: #eaf2fb;
-  --muted: #b6c6db;
-  --accent: #2dd4bf;
-  --accent-2: #5eead4;
-  --accent-ink: #042f2e;
-  --surface-2: #1d3454;
-  --border: rgba(148, 190, 255, 0.12);
-  --border-strong: rgba(148, 190, 255, 0.2);
-  --bg: #0f1e34;
+  --text: #e7eaee;
+  --muted: #a9b1bc;
+  --accent: #4d94ff;
+  --accent-2: #7ab0ff;
+  --accent-ink: #06142e;
+  --surface-2: #1a1e24;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --bg: #0b0d10;
 
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(15, 30, 52, 0.92);
+  background: rgba(11, 13, 16, 0.92);
   backdrop-filter: saturate(140%) blur(12px);
   -webkit-backdrop-filter: saturate(140%) blur(12px);
   border-bottom: 1px solid var(--border);
@@ -68,7 +68,7 @@
 
 .skip { position: absolute; left: -9999px; top: 8px; }
 .skip:focus {
-  left: 16px; z-index: 100; background: #2dd4bf; color: #042f2e;
+  left: 16px; z-index: 100; background: #4d94ff; color: #06142e;
   padding: 6px 12px; border-radius: 6px; font: 600 13px "IBM Plex Sans", system-ui, sans-serif;
 }
 

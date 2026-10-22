@@ -2,92 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Validation | Machshev</title>
-<meta name="description" content="Machshev simulations compared against structures measured on a vector network analyzer.">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="assets/style.css">
+<title>Accuracy | Machshev Labs</title>
+<link rel="canonical" href="accuracy.html">
+<script>location.replace("accuracy.html" + location.hash);</script>
+<meta http-equiv="refresh" content="0; url=accuracy.html">
 </head>
-<body data-page="validation">
-<div id="site-header"></div>
-<main id="main">
-  <section class="page-hero">
-    <div class="container">
-      <h1 class="h1">Measured on real hardware.<br><span class="sub">Compared against the Machshev prediction.</span></h1>
-      <p class="lead ph">What was built and measured, on which instrument, and the headline agreement between measurement and simulation.</p>
-      <div class="grid-2" style="margin-top:40px">
-        <div class="stat"><div class="k">Frequency accuracy</div><div class="v">&mdash;</div><p class="ph">Worst-case frequency error across the structures below, and the solver settings used.</p></div>
-        <div class="stat"><div class="k">Measured</div><div class="v">&mdash; <span class="dim" style="font-size:18px;font-weight:500">structures</span></div><p class="ph">The structures and the substrate they were built on.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section style="padding-top:40px">
-    <div class="container">
-      <h2 class="h3" style="margin-bottom:8px">Per-structure comparison</h2>
-      <div id="duts"></div>
-    </div>
-  </section>
-
-  <section>
-    <div class="container narrow">
-      <h2 class="h2" style="margin-bottom:24px">How the measurements were taken.</h2>
-      <div class="prose">
-        <p class="ph">The instrument, its calibration, the frequency range and point count, averaging, and how the measured data was processed.</p>
-        <p class="ph">How the simulated geometry was matched to the fabricated hardware, and the material properties used.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="final-cta">
-    <div class="container">
-      <h2 class="h2">Start with the free tools.<br><span class="gradient-text">Talk to us about the rest.</span></h2>
-      <p>The calculators and the antenna solver are free to use now. For questions about Machshev, write to <a href="mailto:business@machshev.com">business@machshev.com</a>.</p>
-      <div class="cta-row"><a class="btn lg" href="rf-calculators.html">Try the online tools</a><a class="btn lg ghost" href="docs.html">Read the docs</a></div>
-    </div>
-  </section>
-</main>
-<div id="site-footer"></div>
-<script>
-  // id, title, description, board kind, optional per-dip summary [frequency, df, d|S|].
-  // Placeholder entries: replace them with the real structures, and their curves in assets/site.js (DUTS).
-  const DUT_LIST = [
-    ["EX-01", "Example: bandpass filter", "Description of the structure, and how its measured poles compare with the simulation.", "filter",
-      [["&mdash;", "&mdash;", "&mdash;"], ["&mdash;", "&mdash;", "&mdash;"], ["&mdash;", "&mdash;", "&mdash;"], ["&mdash;", "&mdash;", "&mdash;"]]],
-    ["EX-02", "Example: patch antenna", "Description of the structure, and how its measured resonance compares with the simulation.", "patch"],
-  ];
-  document.getElementById("duts").innerHTML = DUT_LIST.map(([id, title, desc, kind, dips], i) => `
-    <article class="dut" id="${id}">
-      <div class="dut-head"><span class="dut-id">${id}</span><h3>${title}</h3></div>
-      <p class="ph">${desc}</p>
-      <div class="dut-body">
-        <div class="chart-card">
-          <div class="chart-toolbar">
-            <div class="seg" data-scale><button class="on" data-v="db">dB</button><button data-v="lin">Linear</button></div>
-            <div class="legend"><span class="meas"><i></i>Measured (VNA)</span><span class="sim"><i></i>Machshev (sim)</span></div>
-          </div>
-          <div data-dut="${id}" style="height:340px">${i ? '<span class="lazy-note">scroll to load</span>' : ""}</div>
-          <div class="chart-hint">ctrl/shift+scroll: zoom &nbsp;|&nbsp; left or right drag: pan &nbsp;|&nbsp; double-click: reset</div>
-          ${dips ? `<div class="dips">${dips.map(([f, df, dd], k) => `<div class="dip">Dip ${k + 1}<b>${f} GHz</b><span>df ${df}<br>d|S| ${dd}</span></div>`).join("")}</div>` : ""}
-        </div>
-        <div class="chart-card" data-tabs>
-          <div class="tabs" role="tablist">
-            <button class="on" role="tab" aria-selected="true">Machshev</button>
-            <button role="tab" aria-selected="false">Mesh preview</button>
-            <button role="tab" aria-selected="false">Hardware</button>
-          </div>
-          <div class="tab-panel on"><div class="media" data-board="studio" data-kind="${kind}"></div></div>
-          <div class="tab-panel"><div class="media" data-board="mesh" data-kind="${kind}"></div></div>
-          <div class="tab-panel"><div class="media" data-board="hardware" data-kind="${kind}"></div></div>
-        </div>
-      </div>
-    </article>`).join("");
-  // The list is injected after load, so honor a #id anchor manually.
-  if (location.hash) {
-    const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
-    if (target) requestAnimationFrame(() => target.scrollIntoView());
-  }
-</script>
-<script src="assets/site.js"></script>
+<body style="background:#0b0d10;color:#e7eaee;font-family:system-ui,sans-serif">
+<p><a href="accuracy.html" style="color:#4d94ff">This page has moved to Accuracy.</a></p>
 </body>
 </html>

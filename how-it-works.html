@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How it works | Machshev Labs</title>
+<meta name="description" content="Upload a board file, get a free check in seconds, and confirm anything flagged with a full check in minutes.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="how">
+<div id="site-header"></div>
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <h1 class="h1">From board file<br>to answer in minutes.</h1>
+      <p class="lead">One free step and one paid step. The free check flags possible problems in seconds. The full check confirms whether they will actually cause the board to fail.</p>
+    </div>
+  </section>
+
+  <section style="padding-top:10px">
+    <div class="container">
+      <figure class="flow" style="margin:0">
+        <svg viewBox="0 0 760 236" role="img" aria-label="Upload a board file, run the free check; if nothing is flagged, order the board; if issues are flagged, run the paid full check; if it clears them, order the board; if a problem is confirmed, fix the design and upload again.">
+          <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#737c88"/></marker></defs>
+          <g fill="none" stroke="#737c88" stroke-width="1.4" marker-end="url(#ar)">
+            <path d="M172 46H198"/>
+            <path d="M352 46H384"/>
+            <path d="M512 46H566"/>
+            <path d="M448 80V146"/>
+            <path d="M372 176H174"/>
+            <path d="M526 176H652V74"/>
+            <path d="M96 150V74"/>
+          </g>
+          <g font-family="IBM Plex Mono,monospace" font-size="11" fill="#737c88">
+            <text x="530" y="38">no</text>
+            <text x="456" y="118">yes</text>
+            <text x="212" y="168">problem confirmed</text>
+            <text x="660" y="124">clears</text>
+            <text x="104" y="116">re-upload</text>
+          </g>
+          <g fill="#14171c" stroke="#333944" stroke-width="1.2">
+            <rect x="20" y="20" width="152" height="54" rx="8"/>
+            <rect x="200" y="20" width="152" height="54" rx="8"/>
+            <path d="M448 10L512 46L448 82L384 46Z"/>
+            <rect x="568" y="20" width="172" height="54" rx="8" stroke="#4d94ff" stroke-width="1.6"/>
+            <rect x="374" y="150" width="152" height="54" rx="8"/>
+            <rect x="20" y="150" width="152" height="54" rx="8"/>
+          </g>
+          <g font-family="IBM Plex Sans,sans-serif" text-anchor="middle">
+            <text x="96" y="44" fill="#e7eaee" font-size="13.5" font-weight="600">Upload board file</text>
+            <text x="96" y="62" fill="#737c88" font-size="11" font-family="IBM Plex Mono,monospace">KiCad, ODB++, IPC-2581</text>
+            <text x="276" y="44" fill="#e7eaee" font-size="13.5" font-weight="600">Free instant check</text>
+            <text x="276" y="62" fill="#737c88" font-size="11" font-family="IBM Plex Mono,monospace">seconds, no charge</text>
+            <text x="448" y="50" fill="#e7eaee" font-size="12.5" font-weight="600">Issues flagged?</text>
+            <text x="654" y="44" fill="#e7eaee" font-size="13.5" font-weight="600">Order the board</text>
+            <text x="654" y="62" fill="#737c88" font-size="11" font-family="IBM Plex Mono,monospace">no respin</text>
+            <text x="450" y="174" fill="#e7eaee" font-size="13.5" font-weight="600">Paid full check</text>
+            <text x="450" y="192" fill="#737c88" font-size="11" font-family="IBM Plex Mono,monospace">minutes, per board</text>
+            <text x="96" y="174" fill="#e7eaee" font-size="13.5" font-weight="600">Fix the design</text>
+            <text x="96" y="192" fill="#737c88" font-size="11" font-family="IBM Plex Mono,monospace">optional review call</text>
+          </g>
+        </svg>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section-head"><h2 class="h2">Step by step.</h2></div>
+      <ol class="flow-steps">
+        <li><b>Upload</b>Drag in your board design file and pick your board manufacturer's standard layer stackup from a list, or enter your own.<span class="t">.kicad_pcb, ODB++ or IPC-2581</span></li>
+        <li><b>Free check</b>We find the important high-speed connections automatically and check them against their target values. Results show as green, yellow or red.<span class="t">seconds · free</span></li>
+        <li><b>Full check</b>For anything yellow or red, run a detailed physics simulation that confirms whether it will actually fail. The button shows the price and time up front: "3 connections, about 4 minutes, $—".<span class="t">minutes · paid per board</span></li>
+        <li><b>Report</b>A clear page per connection: pass or fail, the exact spot on the board, and why. Engineers who want the raw data can download it.<span class="t"><a href="sample-report.html">See a sample report</a></span></li>
+        <li><b>Optional help</b>If a problem is confirmed, book a review call with an engineer to work out the fix on your layout.<span class="t"><a href="pricing.html#consulting">Review calls</a></span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <h2 class="h2">Free check and full check.</h2>
+        <p>The free check is fast and catches most layout mistakes. The full check is slower and answers the question that matters: will it fail?</p>
+      </div>
+      <div class="compare-2">
+        <div>
+          <div class="eyebrow">Free check</div>
+          <h3>Flags possible problems.</h3>
+          <div class="t">seconds · no charge</div>
+          <ul>
+            <li>Finds the high-speed connections on the board: USB, Ethernet, HDMI, antenna feeds and other controlled-impedance nets.</li>
+            <li>Checks the impedance of every trace segment against the target for that interface, using your manufacturer's stackup.</li>
+            <li>Checks the vias and layer changes along each connection.</li>
+            <li>Checks the length mismatch between the two traces of each differential pair.</li>
+            <li>Marks each connection green, yellow or red, and shows where on the board.</li>
+          </ul>
+          <p class="not"><b>What it does not cover:</b> whether a flagged problem will actually make the connection fail. It checks each feature against a target; it does not simulate the whole path, so losses over frequency, combined reflections, the connector and the chip package are left to the full check.</p>
+        </div>
+        <div>
+          <div class="eyebrow">Full check</div>
+          <h3>Confirms whether it will fail.</h3>
+          <div class="t">minutes · priced per board</div>
+          <ul>
+            <li>A detailed electromagnetic simulation of each flagged connection, from driver to receiver, with its vias and connectors.</li>
+            <li>The result compared with what the interface needs to work, for example the eye opening for USB and HDMI or the match at an antenna.</li>
+            <li>A pass or fail for each connection, with the exact spot on the board and the reason.</li>
+            <li>Raw data to download: S-parameters (Touchstone) and the plots as CSV.</li>
+          </ul>
+          <p class="not"><b>Before you run it:</b> the price and the expected run time are shown for the connections you select.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container narrow">
+      <h2 class="h3" style="margin-bottom:16px">Typical turnaround</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Step</th><th>Typical time</th></tr></thead>
+          <tbody>
+            <tr><td>Upload and stackup choice</td><td class="num">under a minute</td></tr>
+            <tr><td>Free check</td><td class="num">seconds</td></tr>
+            <tr><td>Full check</td><td class="num">about 4 minutes for 3 connections</td></tr>
+            <tr><td>Report</td><td class="num">as soon as each check finishes</td></tr>
+            <tr><td>Review call</td><td class="num ph">booking lead time</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="dim small">Full-check times grow with the number and length of the connections you select. The estimate is shown before you start.</p>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <div class="container">
+      <h2 class="h2">Try it on a real board.</h2>
+      <p>The free check costs nothing and takes seconds.</p>
+      <div class="cta-row"><a class="btn lg" href="app-upload.html">Check a board free</a><a class="btn lg ghost" href="pricing.html">Pricing</a></div>
+    </div>
+  </section>
+</main>
+<div id="site-footer"></div>
+<script src="assets/site.js"></script>
+</body>
+</html>

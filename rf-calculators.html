@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Free RF Calculators (Microstrip, Stripline, Patch, IFA, CPW, Smith) | Machshev</title>
+<title>Free RF Calculators (Microstrip, Stripline, Patch, IFA, CPW, Smith) | Machshev Labs</title>
 <meta name="description" content="Twelve closed-form RF calculators: microstrip, stripline, patch antenna, IFA, CPW, GCPW, differential pair, wavelength, quarter-wave transformer, and Smith chart.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/style.css">
@@ -34,35 +34,35 @@
   <section id="about-tools">
     <div class="container narrow prose">
       <h2 class="h3" style="margin-top:0">About these tools</h2>
-      <p>The <a href="tools/pcb/">PCB Toolkit</a> is the pcb_toolkit calculator library compiled to WebAssembly, so the website runs the same Rust code as its command line and desktop app. <a href="tools/antenna/index.html">Antenna Studio</a> is NEC Studio, a NEC-2 antenna modeling engine written in Rust, running in the same way. Both run entirely in your browser: nothing you type is sent anywhere.</p>
-      <p class="dim small">pcb_toolkit by Alexander Kiselev and contributors, and nec-rs, are each licensed under either of the MIT License or the Apache License 2.0. The patch, inverted-F, quarter-wave, Smith chart and wavelength calculators on this page are closed forms with their references shown.</p>
+      <p>The <a href="tools/pcb/">PCB Toolkit</a> is the pcb_toolkit calculator library compiled to WebAssembly, so the website runs the same Rust code as its command line and desktop app. It runs entirely in your browser: nothing you type is sent anywhere.</p>
+      <p class="dim small">pcb_toolkit by Alexander Kiselev and contributors is licensed under either of the MIT License or the Apache License 2.0. The patch, inverted-F, quarter-wave, Smith chart and wavelength calculators on this page are closed forms with their references shown.</p>
     </div>
   </section>
 
   <section class="final-cta">
     <div class="container">
       <h2 class="h2">Closed-form is just the start.</h2>
-      <p>Calculators give idealized starting points. A full-wave simulation models the whole structure, including the coupling, discontinuities and radiation a closed form leaves out. <span class="ph">How Machshev fits in.</span></p>
-      <div class="cta-row"><a class="btn lg" href="index.html">Learn about Machshev</a><a class="btn lg ghost" href="tools/antenna/index.html">Open Antenna Studio</a></div>
+      <p>A calculator checks one trace in isolation. The board check finds every high-speed connection on your board, checks each one against its target, and shows exactly where the problems are.</p>
+      <div class="cta-row"><a class="btn lg" href="app-upload.html">Check a board free</a><a class="btn lg ghost" href="sample-report.html">See a sample report</a></div>
     </div>
   </section>
 </main>
 <div id="site-footer"></div>
 <script>
-  const CU = "#d4a14f", SUB = "#1f3d5a", GND = "#8b6a33", AIR = "#162a45";
+  const CU = "#d4a14f", SUB = "#262b33", GND = "#8b6a33", AIR = "#15181d";
   const D = {
     microstrip: `<rect x="20" y="70" width="200" height="40" fill="${SUB}"/><rect x="20" y="110" width="200" height="8" fill="${GND}"/><rect x="95" y="62" width="50" height="8" fill="${CU}"/><text x="28" y="94">εr</text><text x="150" y="132">ground plane</text>`,
     stripline: `<rect x="20" y="40" width="200" height="70" fill="${SUB}"/><rect x="20" y="32" width="200" height="8" fill="${GND}"/><rect x="20" y="110" width="200" height="8" fill="${GND}"/><rect x="95" y="71" width="50" height="8" fill="${CU}"/><text x="28" y="80">εr</text><text x="28" y="28">top ground</text><text x="140" y="132">bottom ground</text>`,
     patch: `<rect x="20" y="20" width="90" height="90" fill="${SUB}"/><path d="M38 36h54v46H70v-14h-4v15h-2V68h-4v14H38z" fill="${CU}"/><rect x="62" y="68" width="6" height="42" fill="${CU}"/><text x="40" y="128">top view</text><rect x="130" y="70" width="90" height="26" fill="${SUB}"/><rect x="130" y="96" width="90" height="6" fill="${GND}"/><rect x="150" y="64" width="50" height="6" fill="${CU}"/><text x="140" y="128">side view</text><text x="135" y="88">εr</text>`,
-    ifa: `<rect x="20" y="20" width="200" height="100" fill="${SUB}"/><rect x="20" y="60" width="200" height="60" fill="${GND}" opacity=".9"/><text x="150" y="100">ground plane</text><path d="M60 60V34h130" stroke="${CU}" stroke-width="5" fill="none"/><path d="M90 60V34" stroke="${CU}" stroke-width="5"/><circle cx="60" cy="60" r="3" fill="#f87171"/><circle cx="90" cy="60" r="3" fill="#4ade80"/><text x="150" y="28">open end</text><text x="26" y="52">short</text><text x="96" y="52">feed</text><g fill="#555">${[40, 70, 100, 130, 160, 190].map((x) => `<circle cx="${x}" cy="66" r="2"/>`).join("")}</g><text x="26" y="14">cutout (no copper under antenna)</text>`,
+    ifa: `<rect x="20" y="20" width="200" height="100" fill="${SUB}"/><rect x="20" y="60" width="200" height="60" fill="${GND}" opacity=".9"/><text x="150" y="100">ground plane</text><path d="M60 60V34h130" stroke="${CU}" stroke-width="5" fill="none"/><path d="M90 60V34" stroke="${CU}" stroke-width="5"/><circle cx="60" cy="60" r="3" fill="#e7eaee"/><circle cx="90" cy="60" r="3" fill="#4d94ff"/><text x="150" y="28">open end</text><text x="26" y="52">short</text><text x="96" y="52">feed</text><g fill="#555">${[40, 70, 100, 130, 160, 190].map((x) => `<circle cx="${x}" cy="66" r="2"/>`).join("")}</g><text x="26" y="14">cutout (no copper under antenna)</text>`,
     cpw: `<rect x="20" y="70" width="200" height="45" fill="${SUB}"/><rect x="20" y="62" width="62" height="8" fill="${CU}"/><rect x="98" y="62" width="44" height="8" fill="${CU}"/><rect x="158" y="62" width="62" height="8" fill="${CU}"/><text x="28" y="96">εr</text>`,
     gcpw: `<rect x="20" y="70" width="200" height="40" fill="${SUB}"/><rect x="20" y="110" width="200" height="8" fill="${GND}"/><rect x="20" y="62" width="62" height="8" fill="${CU}"/><rect x="98" y="62" width="44" height="8" fill="${CU}"/><rect x="158" y="62" width="62" height="8" fill="${CU}"/><rect x="46" y="70" width="6" height="40" fill="#777"/><rect x="188" y="70" width="6" height="40" fill="#777"/><text x="60" y="96">εr</text>`,
     diff: `<rect x="20" y="70" width="200" height="40" fill="${SUB}"/><rect x="20" y="110" width="200" height="8" fill="${GND}"/><rect x="70" y="62" width="40" height="8" fill="${CU}"/><rect x="130" y="62" width="40" height="8" fill="${CU}"/><text x="28" y="94">εr</text><text x="150" y="132">ground plane</text><text x="84" y="54">+</text><text x="146" y="54">−</text>`,
-    embedded: `<rect x="20" y="50" width="200" height="20" fill="#2c4a6b"/><rect x="20" y="70" width="200" height="40" fill="${SUB}"/><rect x="20" y="110" width="200" height="8" fill="${GND}"/><rect x="95" y="62" width="50" height="8" fill="${CU}"/><text x="28" y="64">cover | εr</text><text x="28" y="94">εr</text>`,
-    wavelength: `<path d="M20 70 ${Array.from({ length: 41 }, (_, i) => `L${20 + i * 5} ${70 - 30 * Math.sin(i * Math.PI / 10)}`).join(" ")}" stroke="#2dd4bf" stroke-width="2" fill="none"/><line x1="20" y1="110" x2="120" y2="110" stroke="#8197b3"/><text x="50" y="126">λ0</text><text x="130" y="126">v = c (vacuum)</text>`,
-    guided: `<rect x="20" y="40" width="200" height="60" fill="${SUB}"/><path d="M20 70 ${Array.from({ length: 41 }, (_, i) => `L${20 + i * 5} ${70 - 20 * Math.sin(i * Math.PI / 6)}`).join(" ")}" stroke="#2dd4bf" stroke-width="2" fill="none"/><text x="26" y="124">eeff | v = c/sqrt(eeff)</text>`,
-    qwt: `<rect x="20" y="62" width="60" height="16" fill="${CU}"/><rect x="80" y="66" width="80" height="8" fill="${CU}"/><rect x="160" y="58" width="60" height="24" fill="${CU}"/><text x="34" y="100">Z0</text><text x="100" y="100">Z1 = √(Z0·ZL)</text><text x="180" y="100">ZL</text><line x1="80" y1="50" x2="160" y2="50" stroke="#8197b3"/><text x="104" y="44">λg/4</text>`,
-    smith: `<g transform="translate(120 70)" fill="none" stroke="rgba(255,255,255,.25)"><circle r="55"/><circle cx="18" r="37"/><circle cx="36" r="19"/><line x1="-55" x2="55"/><path d="M55 0A55 55 0 0 0 0-55"/><path d="M55 0A55 55 0 0 1 0 55"/><circle cx="22" cy="-18" r="4" fill="#2dd4bf" stroke="none"/></g><text x="150" y="20">inductive (+jX)</text><text x="150" y="134">capacitive (-jX)</text><text x="22" y="74">short</text><text x="180" y="74">open</text><text x="110" y="86">Z₀</text><text x="130" y="48">Γ</text>`,
+    embedded: `<rect x="20" y="50" width="200" height="20" fill="#3a3f48"/><rect x="20" y="70" width="200" height="40" fill="${SUB}"/><rect x="20" y="110" width="200" height="8" fill="${GND}"/><rect x="95" y="62" width="50" height="8" fill="${CU}"/><text x="28" y="64">cover | εr</text><text x="28" y="94">εr</text>`,
+    wavelength: `<path d="M20 70 ${Array.from({ length: 41 }, (_, i) => `L${20 + i * 5} ${70 - 30 * Math.sin(i * Math.PI / 10)}`).join(" ")}" stroke="#4d94ff" stroke-width="2" fill="none"/><line x1="20" y1="110" x2="120" y2="110" stroke="#737c88"/><text x="50" y="126">λ0</text><text x="130" y="126">v = c (vacuum)</text>`,
+    guided: `<rect x="20" y="40" width="200" height="60" fill="${SUB}"/><path d="M20 70 ${Array.from({ length: 41 }, (_, i) => `L${20 + i * 5} ${70 - 20 * Math.sin(i * Math.PI / 6)}`).join(" ")}" stroke="#4d94ff" stroke-width="2" fill="none"/><text x="26" y="124">eeff | v = c/sqrt(eeff)</text>`,
+    qwt: `<rect x="20" y="62" width="60" height="16" fill="${CU}"/><rect x="80" y="66" width="80" height="8" fill="${CU}"/><rect x="160" y="58" width="60" height="24" fill="${CU}"/><text x="34" y="100">Z0</text><text x="100" y="100">Z1 = √(Z0·ZL)</text><text x="180" y="100">ZL</text><line x1="80" y1="50" x2="160" y2="50" stroke="#737c88"/><text x="104" y="44">λg/4</text>`,
+    smith: `<g transform="translate(120 70)" fill="none" stroke="rgba(255,255,255,.25)"><circle r="55"/><circle cx="18" r="37"/><circle cx="36" r="19"/><line x1="-55" x2="55"/><path d="M55 0A55 55 0 0 0 0-55"/><path d="M55 0A55 55 0 0 1 0 55"/><circle cx="22" cy="-18" r="4" fill="#4d94ff" stroke="none"/></g><text x="150" y="20">inductive (+jX)</text><text x="150" y="134">capacitive (-jX)</text><text x="22" y="74">short</text><text x="180" y="74">open</text><text x="110" y="86">Z₀</text><text x="130" y="48">Γ</text>`,
   };
   const CALCS = [
     ["microstrip", "Microstrip", "Trace impedance and width on a top-layer microstrip.", "tools/pcb/#impedance.microstrip"],

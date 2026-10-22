@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Radiation pattern | Machshev Labs Docs</title>
+<meta name="description" content="The Radiation Pattern tab shows the antenna far field as a 2D polar plot and a 3D lobe over the geometry, one pattern per simulated frequency. It fills in when a run finishes with the radiation pattern enabled.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="docs-radiation-pattern">
+<div id="site-header"></div>
+<main id="main" class="container docs">
+  <aside class="docs-side" id="docs-side" aria-label="Documentation"></aside>
+  <article class="docs-main">
+    <div class="post-meta">Results</div>
+    <h1 style="margin-top:8px">Radiation pattern</h1>
+    <p class="lede">The Radiation Pattern tab shows the antenna far field as a 2D polar plot and a 3D lobe over the geometry, one pattern per simulated frequency. It fills in when a run finishes with the radiation pattern enabled.</p>
+    <div class="prose">
+<h2 id="where-the-data-comes-from">Where the data comes from</h2>
+<p>The solver wraps the structure in a Huygens surface and records the near field on it during the run, then transforms that near field to the far field. Turn it on with <code>enable_nf2ff</code> (the Compute Radiation Pattern output toggle). The transform runs at a set of frequencies spread across the band, so every result below is available at each of those points. In auto mode the frequency count comes from the quality preset. In advanced mode <code>nf2ff_num_freqs</code> sets it directly, default 51, up to the backend ceiling of 512 points.</p>
+<p>The far field is defined only when the box radiates into open space, so the run needs at least one PML face. Any mix of PML, PEC, and PMC on the remaining faces works. A PEC face acts as an infinite ground plane by image theory. Two cases are refused before the solve: a box with no PML face (a closed cavity, no radiated power), and a PEC or PMC pair on both faces of one axis (that axis is closed, so the pattern is undefined). See <a href="docs-boundaries.html">Boundaries</a>.</p>
+<h2 id="polar-view">Polar view</h2>
+<p>The polar view draws the two principal cuts, the E-plane and the H-plane. The right panel holds a frequency selector, a metrics block, and toggles for the two traces.</p>
+<p>The frequency slider and the linked GHz spinbox pick which stored pattern to show. Patterns prepare in the background and stay cached while you scrub. If a pattern is still loading, the tab prioritizes the current selection and keeps navigation available. The dB scale is fixed across the slider so the traces stay comparable as you scrub. Clip below sets the floor (default -25 dBi), and a sample below it draws at the center. The ceiling is the peak directivity of the whole band plus 2 dB, rounded up. The legend names each cut and its phi angle.</p>
+<p>The metrics block reports:</p>
+<ul><li><b>Directivity max.</b> Peak directivity at the selected frequency, in dBi.</li><li><b>HPBW theta and HPBW phi.</b> Half-power beamwidth of the E-plane and H-plane cuts, in degrees, measured across the connected -3 dB region around the peak.</li><li><b>Sidelobe.</b> Level of the largest lobe outside the main lobe, in dB relative to the peak, measured on the plane cut that carries the global peak.</li><li><b>F/B ratio.</b> Peak gain minus the gain in the opposite direction on that same cut, in dB.</li></ul>
+<h2 id="3d-view">3D view</h2>
+<p>The 3D view draws the pattern as a color-mapped lobe with the geometry overlaid at scale, so the beam direction reads against the antenna. Radius and color both follow directivity over a 40 dB window below the peak, and the scalar bar is labeled in dBi.</p>
+<p>Two opacity sliders set the alpha blend between the lobe and the geometry, and either can be hidden with its visibility toggle. Show meshing controls the geometry cell outlines independently of Photorealistic, which lights cream dielectric and rough copper. New projects start with mesh outlines on and photorealistic shading off, keeping the dielectric translucent. The project saves this pair separately from Simulate and Field Viewer.</p>
+<p>Position and scale each have an auto mode and a manual mode:</p>
+<ul><li><b>Auto position</b> centers the lobe on the geometry. Turn it off to set the X, Y, and Z origin directly in millimeters.</li><li><b>Auto scale</b> sizes the lobe so its tip-to-tip diameter matches the longest dimension of the geometry. Turn it off to set the scale directly, which holds a fixed lobe size while you step across frequencies.</li></ul>
+<p>Views picks which pattern panels are shown. Check both Polar Pattern and 3D Pattern to get them side by side with a draggable splitter, both driven by the one frequency slider. Check one to give it the whole workspace. At least one view stays checked.</p>
+<p>The 3D view uses the same upright navigation as Simulate and Field Viewer. Left drag orbits. Right drag, middle drag or Shift plus left drag pans. The wheel zooms toward the point under the pointer, which stays under it. Each orbit starts around the closest board surface at the center of the view and keeps that pivot for the drag. Without a board, it uses the pattern surface. A miss keeps the last valid pivot, starting at the board or scene center. Orbit sensitivity is 0.25 degrees per logical pixel. The cursor is hidden during a drag and returns to where the drag started. A drag keeps going past the edge of the viewport. Release the button or press Esc to end it. Home fits the 3D scene and resets polar pan and zoom.</p>
+<h2 id="export-to-csv">Export to CSV</h2>
+<p>Export CSV asks what to write, then a save path. The scope dialog offers two choices:</p>
+<ul><li><b>E-plane and H-plane cuts</b> writes only the two displayed curves. Columns: <code>theta_deg</code>, <code>phi_deg</code>, <code>directivity_dBi</code>, <code>plane</code>.</li><li><b>Full 3D pattern</b> writes every theta/phi sample the run holds for that frequency, with no resampling. Columns: <code>theta_deg</code>, <code>phi_deg</code>, <code>directivity_dBi</code>.</li></ul>
+<p>Both files open with comment lines naming the frequency, the run, and the project. The export covers the frequency selected in the tab.</p>
+<p>The CLI writes a flat table across the whole band instead, straight from the backend columns:</p>
+<pre><code>freq_hz,theta_deg,phi_deg,D_total_dBi,D_theta_dBi,D_phi_dBi</code></pre>
+<p><code>D_total_dBi</code> is the total directivity, <code>D_theta_dBi</code> and <code>D_phi_dBi</code> the two polarization components, all in dBi.</p>
+<h2 id="from-the-cli">From the CLI</h2>
+<p><code>machshev run</code> writes the same patterns headless: <code>--export-polar</code> for the polar PNG, <code>--export-rad3d</code> for the 3D PNG (add <code>--export-rad3d-vtk</code> for the surface as VTP), and <code>--export-rad-pattern</code> for the flat CSV above. <code>--polar-freq-mhz</code> and <code>--rad3d-freq-mhz</code> pick the frequency, defaulting to the band center. Full flag list on the <a href="docs-cli-reference.html">CLI reference</a>.</p>
+    </div>
+    <nav class="docs-pager" aria-label="Pager"><a class="prev" href="docs-s-parameters.html"><span>Previous</span>S-parameters and Smith chart</a><a class="next" href="docs-field-viewer.html"><span>Next</span>Field viewer</a></nav>
+  </article>
+</main>
+<div id="site-footer"></div>
+<script src="assets/docs-nav.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

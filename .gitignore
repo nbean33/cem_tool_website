@@ -2,7 +2,6 @@
 tools-src/rust/target/
 tools-src/*/node_modules/
 tools-src/pcb-app/src/wasm/
-tools-src/nec-app/src/lib/wasm/
 
 # Scratch output from experiments.
 .spike/
@@ -12,3 +11,6 @@ tools-src/nec-app/src/lib/wasm/
 .DS_Store
 Thumbs.db
 __pycache__/
+
+# Internal notes, never published
+content-review.md

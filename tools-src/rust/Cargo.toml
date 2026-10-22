@@ -1,15 +1,15 @@
-# Builds the website's WebAssembly tools from vendored pcb_toolkit and nec-rs crates.
+# Builds the website's PCB Toolkit from the vendored pcb_toolkit crate.
 #
-# vendor/* is copied verbatim by scripts/sync_vendor.py; the keys below are the ones those
-# crates inherit with `workspace = true`, merged from the two source workspaces.
+# vendor/* is copied verbatim by scripts/sync_vendor.py; the keys below are the ones that
+# crate inherits with `workspace = true`, taken from the pcb_toolkit workspace.
 [workspace]
 resolver = "3"
-members = ["vendor/*", "pcb-wasm", "nec-wasm"]
+members = ["vendor/*", "pcb-wasm"]
 
 [workspace.package]
 version = "0.1.5"
 edition = "2024"
-rust-version = "1.88"
+rust-version = "1.85"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/nbean33/cem_tool_website"
 homepage = "https://github.com/nbean33/pcb_toolkit"
@@ -17,48 +17,15 @@ authors = ["Alexander Kiselev <alex@akiselev.com>"]
 
 [workspace.dependencies]
 pcb-toolkit = { path = "vendor/pcb-toolkit" }
-nec-core = { path = "vendor/nec-core" }
-nec-cards = { path = "vendor/nec-cards" }
-nec-geom = { path = "vendor/nec-geom" }
-nec-kernel = { path = "vendor/nec-kernel" }
-nec-solve = { path = "vendor/nec-solve" }
-nec-engine = { path = "vendor/nec-engine" }
 
 serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.140"
 thiserror = "2.0.12"
-anyhow = "1.0.98"
 approx = "0.5"
-num-complex = "0.4.6"
-# No default features: faer's `rayon` feature (its thread pool) does not build for wasm32.
-# vendor/nec-solve turns it back on for native targets only (see PATCHES in sync_vendor.py).
-faer = { version = "0.24.4", default-features = false, features = ["std"] }
-rayon = "1.10.0"
-criterion = { version = "0.5.1", default-features = false, features = ["cargo_bench_support"] }
-toml = "0.8.19"
 wasm-bindgen = "0.2"
-js-sys = "0.3"
-web-time = "1"
-
-# Union of the two source workspaces' lint tables.
-[workspace.lints.rust]
-unsafe_code = "forbid"
-missing_docs = "warn"
 
 [workspace.lints.clippy]
-cast_possible_truncation = "warn"
-cast_precision_loss = "warn"
-float_cmp = "warn"
 disallowed_types = "deny"
-
-# From nec-rs: the matrix fill evaluates the kernel N^2 times and is far too slow unoptimized,
-# even for tests.
-[profile.dev.package.nec-kernel]
-opt-level = 3
-[profile.dev.package.nec-solve]
-opt-level = 3
-[profile.dev.package."*"]
-opt-level = 3
 
 [profile.release]
 lto = "thin"

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>An affordable HFSS alternative for PCB RF design | Machshev Labs</title>
+<meta name="description" content="For planar PCB RF, Machshev Labs is a GPU FDTD tool at 1,499 USD per year with a GUI and fast iteration, against published HFSS figures of 5,000 to 50,000 USD per year. What you gain and what you give up.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="blog">
+<div id="site-header"></div>
+<main id="main">
+  <article class="article">
+    <div class="container narrow">
+      <a class="back" href="blog.html">&larr; All posts</a>
+      <div class="post-meta" style="margin-top:22px">May 12, 2026 / 5 min read</div>
+      <h1>An affordable HFSS alternative for PCB RF design</h1>
+      <div class="prose">
+<div class="short-answer"><h2>Short answer</h2><p>For PCB antennas, filters, and transmission lines, Machshev Labs is a GUI GPU FDTD simulator at 1,499 USD per year for commercial use, against published HFSS figures of 5,000 to 50,000 USD per year. HFSS covers far more ground. Machshev Labs covers the planar PCB slice, fast, and you can run it the same day.</p></div>
+<p>HFSS is priced and scoped for organizations that do RF as a core business. A lot of engineers pay for the full suite and use a slice of it: a patch antenna, a coupled-line filter, a CPW transition. If that is your work, the question is what that slice should cost and how fast it should turn around.</p>
+
+<h2>Scope</h2>
+<p>HFSS is a mature 3D finite-element solver with arbitrary geometry, mode ports, multiphysics coupling, and decades of validation. For complex 3D assemblies, large arrays, or work that has to clear a formal review mandating a specific tool, that depth is the point and Machshev Labs is not a substitute. Machshev Labs is narrow on purpose: planar PCB RF, drawn or imported in a layer editor, meshed automatically from one quality preset, solved on your NVIDIA GPU with S-parameters updating live, and post-processed in the same window.</p>
+<div class="table-wrap compare"><table>
+<thead><tr><th></th><th class="hl">Machshev Labs</th><th>HFSS</th></tr></thead>
+<tbody>
+<tr><td>Method</td><td class="hl">FDTD (time domain)</td><td>FEM (frequency domain)</td></tr>
+<tr><td>Focus</td><td class="hl">Planar PCB RF</td><td>General 3D EM + multiphysics</td></tr>
+<tr><td>Interface</td><td class="hl">Native GUI editor</td><td>Native GUI editor</td></tr>
+<tr><td>Solver hardware</td><td class="hl">NVIDIA GPU + CPU fallback</td><td>CPU + optional GPU</td></tr>
+<tr><td>Commercial price</td><td class="hl">1,499 USD / year</td><td>~5,000 to 50,000 USD / year (published third-party figures)</td></tr>
+<tr><td>Free trial</td><td class="hl">30 days, no card</td><td>Sales process</td></tr>
+</tbody>
+<caption>A scope and cost comparison, not a speed or accuracy benchmark. The HFSS license forbids publishing comparative benchmarks, so none are published here.</caption>
+</table></div>
+<p>The argument is arithmetic, not superiority: if you are paying enterprise prices for 20 percent of an enterprise tool, a focused tool that does that 20 percent quickly costs a tenth as much and iterates faster. If you need the other 80 percent, keep HFSS.</p>
+
+<h2>Who should switch, and who should not</h2>
+<ul>
+<li><b>Use Machshev Labs</b> if your work is mostly planar PCB RF, you have an NVIDIA GPU, and iteration speed matters more than a deep 3D feature set.</li>
+<li><b>Stay on HFSS</b> if you need arbitrary 3D geometry, multiphysics, mode ports, or sign-off that mandates it.</li>
+</ul>
+
+<h2>Accuracy</h2>
+<p>Machshev Labs is validated against hardware: 43 structures across 4 fabricated PTFE boards, measured on a VNA, with resonant and pole frequencies tracking within 1-2% at the higher mesh refinements. The overlaid plots are on the <a href="validation.html">validation page</a> and the method is in the <a href="blog-validated-against-vna-measurements.html">measurement write-up</a>. For speed, the openEMS license permits benchmarking, so that comparison is published in full in the <a href="blog-machshev-vs-openems-benchmark.html">matched-mesh benchmark</a>: 173.7x on the GPU, same mesh, same machine.</p>
+<div class="post-cta"><h3>Try Machshev Labs on your own design</h3><p>Draw a board, slide the quality preset, and click Run. 30-day free trial, no card required. Windows and Linux.</p><a class="btn lg" href="pricing.html">Start the free trial</a></div>
+      </div>
+      <div class="tags"><span>HFSS</span><span>comparison</span><span>pricing</span></div>
+    </div>
+  </article>
+</main>
+<div id="site-footer"></div>
+<script src="assets/site.js"></script>
+</body>
+</html>

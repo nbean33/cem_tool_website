@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to simulate a patch antenna, start to finish | Machshev Labs</title>
+<meta name="description" content="A practical walkthrough: estimate patch dimensions, build the stackup and feed, run a full-wave FDTD solve, read S11, and tune the match. Uses free calculators and Machshev Labs.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="blog">
+<div id="site-header"></div>
+<main id="main">
+  <article class="article">
+    <div class="container narrow">
+      <a class="back" href="blog.html">&larr; All posts</a>
+      <div class="post-meta" style="margin-top:22px">April 28, 2026 / 8 min read</div>
+      <h1>How to simulate a patch antenna, start to finish</h1>
+      <div class="prose">
+<div class="short-answer"><h2>Short answer</h2><p>Estimate the patch dimensions from your substrate and target frequency with a closed-form calculator, draw the patch and ground on the correct stackup, add a feed and a port, run a full-wave solve, and read S11 to find the resonance. Move the feed position to set the match depth, then check the radiation pattern.</p></div>
+<p>A rectangular patch is the antenna most RF engineers simulate first. The math gets you close, but fringing fields, the feed, and a finite ground plane all shift the real resonance, so the reliable path is to start from a calculator and finish with a full-wave solve.</p>
+
+<h2>Step 1: get the starting dimensions</h2>
+<p>Begin with a closed-form patch calculator. You give it the substrate permittivity, the substrate height, and the target frequency, and it returns the patch length and width plus an estimate of the resonant length. Use the free <a href="rf-calculators.html">patch antenna calculator</a> for this. Treat the output as a starting point, not the final answer.</p>
+<h3>Why not stop at the calculator</h3>
+<p>The closed-form equations assume an idealized patch and ignore the feed and finite ground. They typically land within a few percent of the real resonance, which is close enough to start a simulation and far enough to matter for a tuned design.</p>
+
+<h2>Step 2: build the stackup and geometry</h2>
+<ol>
+<li>Set the substrate as a dielectric layer with the permittivity and thickness you used in the calculator.</li>
+<li>Draw the patch on the top conductor at the calculated size.</li>
+<li>Place a full ground plane on the bottom conductor.</li>
+<li>Add the feed. An inset microstrip feed or a probe feed are the common choices. The feed position is what you will tune for the match.</li>
+</ol>
+<p>In Machshev Labs you draw this in the 2D layer editor, or import an outline from a DXF or PNG if you already have the layout. See the <a href="docs-stackup-and-layers.html">stackup and geometry docs</a> for the editor details.</p>
+
+<h2>Step 3: add a port and run</h2>
+<p>Place a lumped port at the feed, set the frequency range to bracket your target, slide the quality preset, and run. The solver sweeps the whole band in one time-domain run, so you get S11 across frequency from a single solve. On a GPU this is seconds.</p>
+
+<h2>Step 4: read S11 and find resonance</h2>
+<p>Open the S-parameter tab. The resonance is the frequency where S11 dips. Two things to check:</p>
+<ul>
+<li>Is the dip at your target frequency? If it is high, the patch is too short. If it is low, the patch is too long.</li>
+<li>How deep is the dip? Depth is the match. A shallow dip means the feed position needs adjusting.</li>
+</ul>
+
+<h2>Step 5: tune the match</h2>
+<p>Resonant frequency is set mostly by the patch length. The match is set mostly by where you feed it. Move the feed inset in toward the center to lower the impedance, out toward the edge to raise it, and re-run. This is where an interactive workflow pays off: in Live Mode you drag the feed inset and watch the S11 dip and the Smith chart move in about a second, so tuning is a gesture instead of an edit-save-wait cycle.</p>
+
+<h2>Step 6: check the pattern</h2>
+<p>Once the match is set, open the radiation tab and confirm the pattern is sane: broadside main lobe, reasonable front-to-back, gain in the range you expect for a single patch. If the pattern looks wrong, the feed or the ground extent is usually the cause.</p>
+
+<h2>A correct example to start from</h2>
+<p>Machshev Labs ships a 5.8 GHz patch example so you can run a known-good design before drawing your own. Open it, run it, and read the S11 dip to see the whole loop end to end. The same design is used across the <a href="validation.html">validation</a> work, so you can compare the simulation against a measured board.</p>
+<div class="post-cta"><h3>Simulate your first patch in minutes</h3><p>Open the bundled 5.8 GHz patch, run it, then draw your own. 30-day free trial, no card required.</p><a class="btn lg" href="pricing.html">Start the free trial</a></div>
+      </div>
+      <div class="tags"><span>patch antenna</span><span>tutorial</span><span>antenna design</span></div>
+    </div>
+  </article>
+</main>
+<div id="site-footer"></div>
+<script src="assets/site.js"></script>
+</body>
+</html>

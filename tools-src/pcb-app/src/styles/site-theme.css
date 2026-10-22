@@ -3,23 +3,23 @@
    outer layout. The site is dark-only, so the light/dark toggle is hidden. */
 
 [data-theme="dark"] {
-  --bg: #0f1e34;
-  --bg-panel: #172b47;
-  --bg-sidebar: #13253f;
-  --bg-input: #0c1a2e;
+  --bg: #0b0d10;
+  --bg-panel: #14171c;
+  --bg-sidebar: #0f1216;
+  --bg-input: #0d0f13;
   --bg-hover: rgba(255, 255, 255, 0.04);
-  --bg-active: rgba(45, 212, 191, 0.14);
+  --bg-active: rgba(77, 148, 255, 0.14);
 
-  --fg: #eaf2fb;
-  --fg-muted: #b6c6db;
-  --fg-faint: #8197b3;
+  --fg: #e7eaee;
+  --fg-muted: #a9b1bc;
+  --fg-faint: #737c88;
 
-  --border: rgba(148, 190, 255, 0.12);
-  --border-strong: rgba(148, 190, 255, 0.2);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
 
-  --accent: #2dd4bf;
-  --accent-fg: #042f2e;
-  --accent-soft: rgba(45, 212, 191, 0.14);
+  --accent: #4d94ff;
+  --accent-fg: #06142e;
+  --accent-soft: rgba(77, 148, 255, 0.14);
   --danger: #f87171;
   --danger-soft: rgba(248, 113, 113, 0.12);
 
@@ -34,7 +34,7 @@ body { overflow: hidden; }
 .app { height: 100%; }
 
 .theme-toggle { display: none; }
-.brand-mark { background: linear-gradient(135deg, #5eead4 0%, #14b8a6 100%); }
+.brand-mark { background: var(--accent); }
 
 /* Phones: one column, the calculator list above the form. */
 @media (max-width: 640px) {

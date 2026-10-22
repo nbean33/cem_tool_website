@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Field viewer | Machshev Labs Docs</title>
+<meta name="description" content="The Field Viewer tab shows what a run wrote inside the domain: surface current on a conductor layer in 2D, and the 3D E, H, and energy volumes. Two mode buttons at the top of the toolbar switch between them.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="docs-field-viewer">
+<div id="site-header"></div>
+<main id="main" class="container docs">
+  <aside class="docs-side" id="docs-side" aria-label="Documentation"></aside>
+  <article class="docs-main">
+    <div class="post-meta">Results</div>
+    <h1 style="margin-top:8px">Field viewer</h1>
+    <p class="lede">The Field Viewer tab shows what a run wrote inside the domain: surface current on a conductor layer in 2D, and the 3D E, H, and energy volumes. Two mode buttons at the top of the toolbar switch between them.</p>
+    <div class="prose">
+<p>Both views share one toolbar. A slider with prev and next buttons scrubs frames, and the colormap and geometry-overlay controls are on the second row. A corner badge warns when the frames come from an earlier run than the latest one, when the project changed since the run that produced them, or when that run stopped before its ring-down target.</p>
+<p>Max FPS beside Play caps playback for E/H fields and time-domain surface currents. It defaults to 30 and accepts any finite positive rate, including fractional values. Loading and rendering can reduce the rate. Each displayed frame starts the next interval, so a slow frame does not cause a burst of skipped or rushed frames. The limit is saved with the project and does not limit camera movement.</p>
+<h2 id="surface-currents">Surface currents</h2>
+<p>Surface Currents is the default mode. It draws the current-density magnitude |J| on one conductor layer as a heatmap, with a colorbar in A/m and the layer name in the status bar. The conductor outline is overlaid as a white contour.</p>
+<figure><div class="media ph"><span class="tag">screenshot</span></div><figcaption>Surface current magnitude on a conductor layer</figcaption></figure>
+<p>Frequency and Time switch the domain. Frequency shows the steady-state current at each DFT point, labeled in GHz, and is the default. Time steps through the recorded time-domain frames, labeled in picoseconds, and Play auto-advances them. Play is hidden in the frequency domain, which is a static sweep. Each domain keeps its own scrub position.</p>
+<p>Range sets how the color scale is chosen: Local rescales to the current frame, Global spans every frame in the domain, and Freq-based or Frame-based pins the scale to one reference frequency or frame that you pick. Color Style selects the colormap. Drag to pan, scroll to zoom. Home fits the whole surface-current plot.</p>
+<p>To record surface currents, turn on <code>enable_surface_currents</code> and name the conductor layer in <code>surface_current_layer</code>. The run refuses if that layer is not a conductor. Time-domain frames are written every <code>surface_current_interval</code> steps, or at an automatic stride of about ten samples per period at f_max when the auto interval is on. The frequency-domain DFT accumulates every step regardless of the frame interval, over <code>surface_current_num_freqs</code> points (default 63).</p>
+<h2 id="e-h-fields">E/H fields</h2>
+<p>E/H Fields renders the 3D field as a volume: a translucent glow over the whole domain with a lit hot core where the field is strongest, drawn over the geometry mesh. It is a time-domain view that plays through the exported frames. It needs a graphics driver with OpenGL 4.3 and compute shaders that reports free GPU memory. Without one, the Field Viewer says what is missing.</p>
+<figure><div class="media ph"><span class="tag">screenshot</span></div><figcaption>Volumetric E-field with the hot core over the geometry</figcaption></figure>
+<p>Each selected quantity writes one file per captured frame:</p>
+<div class="table-wrap"><table><thead><tr><th>Source</th><th>Setting</th><th>Unit</th></tr></thead><tbody><tr><td>E magnitude</td><td><code>export_e_mag</code></td><td>V/m</td></tr><tr><td>H magnitude</td><td><code>export_h_mag</code></td><td>A/m</td></tr><tr><td>Total energy density</td><td><code>export_energy</code></td><td>J/m^3</td></tr><tr><td>Ex, Ey, Ez</td><td><code>export_ex</code>, <code>export_ey</code>, <code>export_ez</code></td><td>V/m</td></tr><tr><td>Hx, Hy, Hz</td><td><code>export_hx</code>, <code>export_hy</code>, <code>export_hz</code></td><td>A/m</td></tr></tbody></table></div>
+<p><code>export_e_mag</code> is the default content. H is time-centered to the E level before the magnitude, and energy density combines the aligned E and H at each cell. The Source selector lists the quantities recorded by the run. Components use a symmetric signed color range.</p>
+<p>Range sets the color scale: Local for the current frame, Global across all frames, or Frame-based pinned to a reference frame you pick. Global uses the recorded frame statistics or scans the files in the background. The requested frame appears once its range is available. Color Style selects the colormap, Geometry toggles the structure overlay, and the opacity slider sets its transparency. Geometry edges always use 4x multisample anti-aliasing in the E/H viewer. Photorealistic lights matte cream dielectric and rough copper with soft studio lights. Copper highlights move as you orbit, and nearby visible fields cast colored light onto the geometry. Subtle contact shading makes the copper relief easier to see. Field illumination follows the displayed frame, color style, range, and field opacity. The preference affects the E/H display only and is saved with the project. The geometry opacity slider also applies in this mode.</p>
+<p>Show meshing draws mesh cell outlines independently of Photorealistic. Enable both for lit materials with mesh outlines, or disable both for material colors without outlines. Material colors keep the dielectric translucent. New projects start with Photorealistic on and Show meshing off in the E/H viewer. Each viewer saves its own pair of choices in the project.</p>
+<p>The geometry display follows the recorded conductor and dielectric footprints on the realized mesh. Copper uses its recorded thickness: outer copper extends outward from the substrate, and buried copper occupies its recorded layer. This display does not change the solver mesh or fields.</p>
+<p>A result that recorded no layer description takes it from a matching saved Run History snapshot. When no recorded layer description can be verified, the viewer uses the recorded solver-material geometry. Isolated PEC edges remain visible as narrow translucent copper.</p>
+<p>The volume uses the recorded grid coordinates, including graded cells. Drag with the left mouse button to orbit with an upright view, with the right or middle button or Shift plus left button to pan, and use the wheel to zoom toward the point under the pointer. Each orbit starts around the closest board surface at the center of the view. That pivot stays fixed throughout the drag. A miss keeps the last valid pivot, starting at the board or field-domain center. Home fits the full scene. The same 3D controls apply in Simulate and Radiation.</p>
+<p>The cursor is hidden during a drag and returns to where the drag started. A drag keeps going past the edge of the viewport. Release the button or press Esc to end it. Orbit sensitivity is 0.25 degrees per logical pixel at every viewport size. Frame reads and compression run in the background. While frames load, a status line under the viewport names the step, and Cancel stops loading and keeps the frame on screen. Playback advances after each frame is presented. CPU and GPU caches retain compressed frames within their memory budgets.</p>
+<h2 id="export-cost-and-cleanup">Export cost and cleanup</h2>
+<p>In Auto mode, Export 3D Fields on the Options card turns field export on and shows the format list beside it. In Advanced mode, Export full fields on the Field Export card turns it on, with the quantities, capture interval, format, and step window under it.</p>
+<p>Field format selects Machshev Labs compressed (<code>rff</code>), VTK (<code>vtk</code>), or OpenVDB (<code>vdb</code>). Machshev Labs compressed is the default. It stores signed logarithmic samples in compressed bricks without threshold pruning. VTK stores fp32 samples. OpenVDB can prune samples below <code>vdb_threshold_frac</code> times the frame's peak magnitude. OpenVDB needs a uniform mesh, and the run refuses it on a graded one. Two settings bound the volume of data:</p>
+<ul><li>The capture interval, dense for smooth playback or sparse to save disk.</li><li>The step-range window (<code>field_export_range_enabled</code> with a start and end step), which drops warm-up frames. The solver still runs every step, only the disk write outside the window is skipped.</li></ul>
+<p><a href="docs-fdtd-tips.html">FDTD tips</a> covers when the fields are worth exporting. The on-disk frame formats are on <a href="docs-file-formats.html">File formats and outputs</a>.</p>
+<p>The viewer reads all three formats. A voxel pruned from an OpenVDB file shows as zero. The archive inspection command reports the error bound and storage size of a Machshev Labs compressed frame.</p>
+<h2 id="standalone-viewer-and-archive-commands">Standalone viewer and archive commands</h2>
+<p>Open a recorded sequence without opening the editor:</p>
+<pre><code>machshev fields view PATH_TO_RESULT_DIRECTORY</code></pre>
+<p>The standalone viewer opens with Photorealistic on. Add <code>--no-photorealistic-geometry</code> for material colors, <code>--show-meshing</code> for mesh cell outlines, or <code>--max-fps</code> to change the playback cap (default 30).</p>
+<p>The directory must contain <code>frames.json</code> and its frame files. Inspect an archive or convert one VTK or OpenVDB quantity to a new archive:</p>
+<pre><code>machshev fields inspect step_0000.rff
+machshev fields convert step_0000.vtk --source E_mag --out converted.rff
+machshev schema --what fields</code></pre>
+<p>Inspection returns JSON under <code>machshev.fields.v1</code>. Conversion retains the input file's coordinates and refuses an existing output file. Errors go to stderr as JSON. The command exits 2 for a refused path or input and 1 for a failed read or write. When moving a result sequence, include <code>files.json</code> to retain its position in the project. <code>machshev guide fields</code> documents these commands.</p>
+<p class="note">When you close a project whose field frames, geometry mesh, and surface-current data together exceed 100 MB on disk, Machshev Labs asks which of those categories to delete. Removed data cannot be viewed again without re-running.</p>
+    </div>
+    <nav class="docs-pager" aria-label="Pager"><a class="prev" href="docs-radiation-pattern.html"><span>Previous</span>Radiation pattern</a><a class="next" href="docs-run-history.html"><span>Next</span>Run history</a></nav>
+  </article>
+</main>
+<div id="site-footer"></div>
+<script src="assets/docs-nav.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

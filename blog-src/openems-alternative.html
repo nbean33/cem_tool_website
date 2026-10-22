@@ -1,0 +1,40 @@
+<!--META|April 21, 2026|6 min read|An openEMS alternative with a GUI, a GPU solver, and live results|openEMS,FDTD,comparison-->
+<div class="short-answer"><h2>Short answer</h2><p>openEMS is a free, open-source FDTD engine with solid physics, no real GUI, MATLAB or Python scripting, and CPU-only runs. Machshev Labs is a commercial FDTD simulator with a native editor, a CUDA GPU solver, and integrated post-processing. On a head-to-head patch run on the same machine, the Machshev Labs GPU solver was 173.7x faster.</p></div>
+<p>If you have used openEMS you know the trade: the physics is solid and the price is zero, and you pay in scripting, manual meshing, CPU run times, and a workflow stitched together from separate tools. Machshev Labs exists because that trade has another side.</p>
+
+<h2>What openEMS gives you</h2>
+<ul>
+<li>Free and open source. No license, no seat count, no renewal.</li>
+<li>An FDTD core that has been used in published work for years.</li>
+<li>Full scriptability, so it drops into automated pipelines and parameter sweeps.</li>
+<li>Windows, Linux, and macOS, on any CPU.</li>
+</ul>
+
+<h2>What the openEMS workflow costs</h2>
+<p>A typical openEMS project is 50 to 200 lines of MATLAB or Python before the first result. Geometry is defined in code, the mesh is built by hand (which is where most accuracy bugs live), the solver runs from a script, and the output loads into another tool for S-parameters or a pattern. Each change is an edit to the script and a CPU-length wait.</p>
+
+<h2>What Machshev Labs changes</h2>
+<p>Machshev Labs puts the whole loop in one window. Draw or import a board in a layer-based 2D editor, set the stackup and ports, slide one quality preset, and click Run. The mesh is derived for you, with a full manual override panel when you want control. The solver runs on your NVIDIA GPU and the S-parameter curves update while it runs. Smith chart, 2D and 3D radiation patterns, volumetric fields, and surface currents are tabs in the same app. Machshev Labs is built for planar PCB RF: microstrip, CPW, patches, filters, couplers. It is not a general 3D multiphysics package, and full speed needs an NVIDIA GPU (a CPU engine is included and is itself 20.3x faster than openEMS on the same chip).</p>
+
+<h2>Speed, on the same problem</h2>
+<p>The case below is a 5.8 GHz patch on an 82.8M-cell mesh, stepped 1,000,000 times, both tools solving the identical setup on the same workstation (RTX 5090 GPU, Ryzen 9 9950X CPU). Throughput is what was measured; the wall-clock column is that rate carried out to 1,000,000 timesteps. Full setup on the <a href="benchmarks.html">benchmarks page</a>.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Engine</th><th>Throughput</th><th>Wall-clock, extrapolated</th><th>Speedup</th></tr></thead>
+<tbody>
+<tr><td>Machshev Labs GPU (RTX 5090)</td><td class="num">39,600 MCell/s</td><td class="num">34 m 51 s</td><td class="num">173.7x</td></tr>
+<tr><td>Machshev Labs CPU (Ryzen 9 9950X)</td><td class="num">4,620 MCell/s</td><td class="num">4 h 59 m</td><td class="num">20.3x</td></tr>
+<tr><td>openEMS (CPU SSE)</td><td class="num">228 MCell/s</td><td class="num">4 d 5 h</td><td class="num">1.0x (baseline)</td></tr>
+</tbody>
+<caption>One head-to-head case: an 82.8M-cell mesh of a 5.8 GHz patch, 1,000,000 timesteps, same workstation, same active cell count.</caption>
+</table></div>
+<p>A 35 minute answer and a 4 day answer are different workflows, not different waits. The first one you iterate on.</p>
+
+<h2>Accuracy against hardware</h2>
+<p>Machshev Labs is validated against 43 structures measured on a VNA across 4 fabricated PTFE boards: patch antennas, a dual-band patch, an interdigital bandpass filter, ring resonators. Resonant and pole frequencies track the measurements within 1-2% at the higher mesh refinements. The per-structure overlays are on the <a href="validation.html">validation page</a>, and the method is in the <a href="blog-validated-against-vna-measurements.html">measurement write-up</a>. Machshev Labs also agrees with openEMS itself when both run the same realized mesh, which took careful case-building to prove, because the two tools discretize edges onto cells differently.</p>
+
+<h2>Which one to use</h2>
+<ul>
+<li><b>Stay on openEMS</b> if free is the requirement, you are comfortable scripting, you need macOS or non-NVIDIA hardware, or your work is outside planar PCB RF.</li>
+<li><b>Use Machshev Labs</b> if you want to draw a board and have S-parameters in minutes, and the scripting and wait times are the reason you skip simulation. It is free to try for 30 days.</li>
+</ul>
+<!--CTA|Try Machshev Labs on your own design|Draw a board, slide the quality preset, and click Run. 30-day free trial, no card required. Windows and Linux.-->

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brand kit | Machshev Labs</title>
+<meta name="description" content="The Machshev Labs logo, colours, type and status palette.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="brand">
+<div id="site-header"></div>
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <h1 class="h1">Brand kit.</h1>
+      <p class="lead">The logo, colours and type, and the rules for using them. The look borrows from lab instruments and layout tools: neutral, high contrast, one accent.</p>
+    </div>
+  </section>
+
+  <section style="padding-top:10px">
+    <div class="container">
+      <h2 class="h3" style="margin-bottom:18px">Logo</h2>
+      <div class="grid-2">
+        <div class="card" style="display:grid;place-items:center;padding:56px 22px">
+          <span class="brand" data-logo style="font-size:30px;gap:14px"><span>Machshev Labs</span></span>
+        </div>
+        <div class="card prose" style="font-size:15px">
+          <p>The mark is a copper trace between two vias: the thing the product checks, drawn as line art. The trace is the accent blue; the vias are the text colour.</p>
+          <p>The wordmark is IBM Plex Sans SemiBold. Keep clear space around the logo of at least the height of a via, and do not recolour the mark with the pass, warn or fail colours.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2 class="h3" style="margin-bottom:18px">Colour</h2>
+      <div class="swatches">
+        <div class="swatch"><i style="background:#0b0d10;border-bottom:1px solid var(--border)"></i><div>Background<br><code>#0b0d10</code></div></div>
+        <div class="swatch"><i style="background:#14171c;border-bottom:1px solid var(--border)"></i><div>Surface<br><code>#14171c</code></div></div>
+        <div class="swatch"><i style="background:#e7eaee"></i><div>Text<br><code>#e7eaee</code></div></div>
+        <div class="swatch"><i style="background:#a9b1bc"></i><div>Muted text<br><code>#a9b1bc</code></div></div>
+        <div class="swatch"><i style="background:#4d94ff"></i><div>Accent<br><code>#4d94ff</code></div></div>
+        <div class="swatch"><i style="background:#c8964b"></i><div>Copper (drawings)<br><code>#c8964b</code></div></div>
+      </div>
+      <h2 class="h3" style="margin:40px 0 8px">Status: pass, warn, fail</h2>
+      <p class="muted" style="margin:0 0 18px;max-width:720px">These three colours mean results and nothing else. Never use them for decoration, links or buttons.</p>
+      <div class="swatches">
+        <div class="swatch"><i style="background:#22c55e"></i><div><span class="pill pass">Pass</span><br><code>#22c55e</code></div></div>
+        <div class="swatch"><i style="background:#eab308"></i><div><span class="pill warn">Check</span><br><code>#eab308</code></div></div>
+        <div class="swatch"><i style="background:#ef4444"></i><div><span class="pill fail">Fail</span><br><code>#ef4444</code></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2 class="h3" style="margin-bottom:18px">Type</h2>
+      <div class="grid-2">
+        <div class="card">
+          <div class="eyebrow">IBM Plex Sans</div>
+          <p style="font-size:34px;font-weight:600;color:var(--text);margin:14px 0 8px;letter-spacing:-.6px">Catch it before you order.</p>
+          <p>Headings and body text. SemiBold for headings, Regular for text.</p>
+        </div>
+        <div class="card">
+          <div class="eyebrow">IBM Plex Mono</div>
+          <p class="mono" style="font-size:24px;color:var(--text);margin:14px 0 8px">90 Ω ±10% · V3 · 4 min</p>
+          <p>Numbers, values, units, net names and file names.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container narrow">
+      <h2 class="h3" style="margin-bottom:12px">Voice</h2>
+      <div class="prose">
+        <ul>
+          <li>Short, concrete sentences with real numbers: "results in about 4 minutes".</li>
+          <li>Plain words. Engineering terms only where the reader expects them.</li>
+          <li>No buzzwords: not "AI-powered", "revolutionary" or "next-gen".</li>
+          <li>Honest about limits. Say what a check does not cover.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+<div id="site-footer"></div>
+<script src="assets/site.js"></script>
+</body>
+</html>

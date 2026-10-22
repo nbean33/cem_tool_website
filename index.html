@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Machshev - computational electromagnetics software</title>
-<meta name="description" content="Machshev is computational electromagnetics software from Machshev Labs LLC, with free in-browser PCB calculators and a NEC-2 antenna solver.">
+<title>Machshev Labs - catch signal problems before you order the board</title>
+<meta name="description" content="Upload your PCB design and get a plain report: which high-speed connections will work, which won't, and exactly where the problem is. The first check is free.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/style.css">
@@ -15,197 +15,79 @@
 
   <!-- Hero -->
   <section class="hero">
-    <div class="container">
-      <h1 class="h1">Electromagnetics,<br><span class="gradient-text">computed.</span></h1>
-      <p class="lead">Machshev is computational electromagnetics software from Machshev Labs LLC. <span class="ph">One or two sentences on what Machshev simulates, which solver it uses, and who it is for.</span></p>
-      <div class="cta-row">
-        <a class="btn lg" href="rf-calculators.html">Try the online tools</a>
-        <a class="btn lg ghost" href="docs.html">Read the docs</a>
-        <span class="cta-note ph">Supported platforms</span>
-      </div>
-
-      <div class="video" data-demo>
-        <canvas aria-label="Machshev product video (placeholder)"></canvas>
-        <span class="label">Product video placeholder</span>
-        <button class="play" aria-label="Play demo"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z" fill="#0f1e34"/></svg></button>
-        <div class="bar"><span data-clock>0:00</span><div class="track"><div data-progress style="height:100%;width:0;background:var(--accent);border-radius:2px"></div></div><span>1:00</span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Key figures -->
-  <section>
-    <div class="container">
-      <div class="section-head">
-        <h2 class="h2">Key figures.</h2>
-        <p class="ph">A headline result: speed, accuracy or problem size, with the method behind it on the <a href="benchmarks.html">Benchmarks</a> page.</p>
-      </div>
-      <div class="stats">
-        <div class="stat reveal"><div class="k">Figure one</div><div class="v">&mdash;</div><p class="ph">What was measured, and on what hardware.</p></div>
-        <div class="stat reveal"><div class="k">Figure two</div><div class="v">&mdash;</div><p class="ph">What was measured, and on what hardware.</p></div>
-        <div class="stat reveal"><div class="k">Figure three</div><div class="v">&mdash;</div><p class="ph">What was measured, and on what hardware.</p></div>
-        <div class="stat reveal"><div class="k">Figure four</div><div class="v">&mdash;</div><p class="ph">What was measured, and on what hardware.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Online tools -->
-  <section>
-    <div class="container">
-      <div class="section-head">
-        <h2 class="h2">Free online tools, <span class="sub">running in your browser.</span></h2>
-        <p>PCB calculators and a NEC-2 antenna solver, compiled from Rust to WebAssembly. No install and no sign-in, and nothing you type leaves your machine.</p>
-      </div>
-      <div class="grid-2">
-        <a class="calc-card reveal" href="tools/pcb/">
-          <div class="body">
-            <div class="eyebrow">50 calculators</div>
-            <h3 style="margin-top:8px">PCB Toolkit</h3>
-            <p>Impedance, differential pairs, current and thermal limits, vias, signal integrity, PDN and crosstalk, with a 45-material substrate library.</p>
-          </div>
-        </a>
-        <a class="calc-card reveal" href="tools/antenna/index.html">
-          <div class="body">
-            <div class="eyebrow">NEC-2 solver</div>
-            <h3 style="margin-top:8px">Antenna Studio</h3>
-            <p>Start from a dipole, Yagi, loop or vertical, see currents and gain in 3D, sweep a band, design a matching network and let the optimizer tune it.</p>
-          </div>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Validation -->
-  <section>
-    <div class="container">
-      <div class="section-head">
-        <h2 class="h2">Checked against measurement.</h2>
-        <p class="ph">How Machshev is validated: which structures were built and measured, on what instrument, and how close the simulation came.</p>
-      </div>
-      <div class="chart-card reveal">
-        <div class="chart-toolbar">
-          <div><b>Example structure</b> <span class="dim small">One example from the validation suite.</span></div>
-          <div class="legend"><span class="meas"><i></i>Measured (VNA)</span><span class="sim"><i></i>Machshev (sim)</span></div>
+    <div class="container hero-split">
+      <div>
+        <h1 class="h1">Catch signal problems before you order the board.</h1>
+        <p class="lead">Upload your board file. Within minutes you get a plain report: which high-speed connections (USB, Ethernet, HDMI, antennas) will work, which won't, and exactly where on the board the problem is.</p>
+        <div class="cta-row">
+          <a class="btn lg" href="app-upload.html">Check a board free</a>
+          <span class="cta-note">No install. The first check costs nothing.</span>
         </div>
-        <div data-dut="EX-HOME"></div>
       </div>
-      <div class="cta-row"><a class="btn ghost" href="validation.html">See the validation suite &rarr;</a></div>
+      <figure class="board-frame" style="margin:0">
+        <div data-report="preview"></div>
+        <figcaption class="caption"><span>Example report · sensor-hub rev B</span><a href="sample-report.html">See the full report &rarr;</a></figcaption>
+      </figure>
     </div>
   </section>
 
-  <!-- Results viewers -->
+  <!-- How it works -->
   <section>
     <div class="container">
       <div class="section-head">
-        <h2 class="h2">See the fields, <span class="sub">near and far.</span></h2>
-        <p class="ph">The result views Machshev provides, and the formats they export to.</p>
+        <h2 class="h2">How it works.</h2>
       </div>
+      <ol class="flow-steps">
+        <li><b>Upload</b>Drag in your board file and pick your manufacturer's standard layer stackup from a list.<span class="t">KiCad, ODB++ or IPC-2581</span></li>
+        <li><b>Free check</b>We find the high-speed connections and check each one against its target. Every connection comes back green, yellow or red.<span class="t">seconds · free</span></li>
+        <li><b>Full check</b>For anything yellow or red, a detailed physics simulation confirms whether it will actually fail. The price and time are shown before you run it.<span class="t">minutes · per board</span></li>
+      </ol>
+      <div class="cta-row"><a class="btn ghost" href="how-it-works.html">More on how it works &rarr;</a></div>
+    </div>
+  </section>
+
+  <!-- Benefits -->
+  <section>
+    <div class="container">
       <div class="grid-3">
-        <div class="card reveal">
-          <div class="media"><svg viewBox="0 0 300 190" aria-hidden="true">
-            <defs><linearGradient id="cur" x1="0" x2="1"><stop offset="0" stop-color="#1e3a8a"/><stop offset=".45" stop-color="#22d3ee"/><stop offset=".7" stop-color="#facc15"/><stop offset="1" stop-color="#ef4444"/></linearGradient></defs>
-            <rect width="300" height="190" fill="#0c1a2e"/>
-            <g fill="url(#cur)"><rect x="60" y="30" width="18" height="120" rx="2"/><rect x="104" y="45" width="18" height="120" rx="2" opacity=".9"/><rect x="148" y="30" width="18" height="120" rx="2" opacity=".75"/><rect x="192" y="45" width="18" height="120" rx="2" opacity=".55"/></g>
-            <rect x="20" y="30" width="40" height="10" fill="#d4a14f"/><rect x="210" y="155" width="70" height="10" fill="#d4a14f"/>
-          </svg></div>
-          <h3>Surface currents.</h3>
-          <p class="ph">What the current view shows.</p>
+        <div class="benefit">
+          <h3>No setup.</h3>
+          <p>Nothing to install, no servers to manage and no simulation expertise needed. Settings are chosen automatically from your board and its stackup.</p>
         </div>
-        <div class="card reveal">
-          <div class="media"><svg viewBox="0 0 300 190" aria-hidden="true">
-            <defs><radialGradient id="lobe" cx=".5" cy=".75" r=".7"><stop offset="0" stop-color="#ef4444"/><stop offset=".4" stop-color="#facc15"/><stop offset=".75" stop-color="#22d3ee"/><stop offset="1" stop-color="#1e3a8a"/></radialGradient></defs>
-            <rect width="300" height="190" fill="#0c1a2e"/>
-            <g stroke="rgba(255,255,255,.1)" fill="none"><circle cx="150" cy="120" r="30"/><circle cx="150" cy="120" r="60"/><circle cx="150" cy="120" r="90"/><line x1="150" y1="20" x2="150" y2="190"/><line x1="40" y1="120" x2="260" y2="120"/></g>
-            <path d="M150 120 C 80 120 70 20 150 22 C 230 20 220 120 150 120Z" fill="url(#lobe)" opacity=".9"/>
-            <path d="M150 120 C 130 135 125 160 150 160 C 175 160 170 135 150 120Z" fill="#1e40af" opacity=".7"/>
-            <rect x="120" y="117" width="60" height="6" fill="#d4a14f"/>
-          </svg></div>
-          <h3>Radiation patterns.</h3>
-          <p class="ph">What the pattern view shows.</p>
+        <div class="benefit">
+          <h3>Answers you can act on.</h3>
+          <p>"Your USB pair drops to 71 Ω at via V3", not pages of raw physics data. Each connection gets a pass or fail, the spot on the board, and why. The raw data is there if you want it.</p>
         </div>
-        <div class="card reveal">
-          <div class="media"><svg viewBox="0 0 300 190" aria-hidden="true">
-            <defs><radialGradient id="fld" cx=".5" cy=".5" r=".6"><stop offset="0" stop-color="#ef4444"/><stop offset=".25" stop-color="#f97316"/><stop offset=".45" stop-color="#facc15"/><stop offset=".65" stop-color="#22d3ee"/><stop offset="1" stop-color="#0b1d4d"/></radialGradient></defs>
-            <rect width="300" height="190" fill="#0b1d4d"/>
-            <g transform="skewX(-18) translate(40 0)"><rect x="40" y="25" width="200" height="140" fill="url(#fld)" opacity=".95"/>
-            <rect x="110" y="70" width="60" height="50" fill="none" stroke="#fde68a" stroke-width="2"/></g>
-          </svg></div>
-          <h3>Field distributions.</h3>
-          <p class="ph">What the field view shows.</p>
+        <div class="benefit">
+          <h3>Checked against measurements.</h3>
+          <p>We build test boards, measure them on a calibrated VNA, and publish the comparison with our simulations. <a href="accuracy.html">See the results</a>.</p>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- Features -->
-  <section>
-    <div class="container">
-      <div class="section-head">
-        <h2 class="h2">Features.</h2>
-        <p class="ph">A sentence introducing the product's main features.</p>
+      <div class="filetypes" style="margin-top:64px">
+        <span class="k">Works with designs from</span>
+        <span>KiCad</span><span>Altium</span><span>Cadence</span>
+        <span class="k">uploaded as</span>
+        <span>.kicad_pcb</span><span>ODB++</span><span>IPC-2581</span>
       </div>
 
-      <div class="feature-split reveal">
-        <div class="media"><svg viewBox="0 0 320 200" aria-hidden="true">
-          <rect width="320" height="200" fill="#11223a"/><rect width="320" height="14" fill="#1a2e4b"/>
-          <rect y="14" width="70" height="186" fill="#152842"/><rect x="250" y="14" width="70" height="186" fill="#152842"/>
-          <g fill="#2a4064"><rect x="8" y="24" width="54" height="10" rx="2"/><rect x="8" y="40" width="54" height="10" rx="2" fill="#134e5e"/><rect x="8" y="56" width="54" height="10" rx="2"/><rect x="8" y="80" width="54" height="6" rx="2"/><rect x="8" y="92" width="44" height="6" rx="2"/><rect x="8" y="104" width="50" height="6" rx="2"/>
-          <rect x="258" y="24" width="54" height="8" rx="2"/><rect x="258" y="38" width="40" height="8" rx="2"/><rect x="258" y="52" width="54" height="8" rx="2"/><rect x="258" y="66" width="30" height="8" rx="2"/></g>
-          <g stroke="rgba(255,255,255,.05)"><line x1="90" y1="14" x2="90" y2="200"/><line x1="130" y1="14" x2="130" y2="200"/><line x1="170" y1="14" x2="170" y2="200"/><line x1="210" y1="14" x2="210" y2="200"/><line x1="70" y1="60" x2="250" y2="60"/><line x1="70" y1="100" x2="250" y2="100"/><line x1="70" y1="140" x2="250" y2="140"/></g>
-          <path d="M115 55h70v60h-29v-18h-5v19h-2v-19h-5v18h-29z" fill="#d4a14f"/><rect x="146" y="97" width="8" height="90" fill="#d4a14f"/>
-          <rect x="114" y="54" width="72" height="62" fill="none" stroke="#2dd4bf" stroke-dasharray="3 2"/>
-        </svg></div>
-        <div><h3>Model editor.</h3><p class="ph">How models are built in Machshev.</p></div>
-      </div>
-
-      <div class="feature-split rev reveal">
-        <div class="media"><svg viewBox="0 0 320 200" aria-hidden="true">
-          <rect width="320" height="200" fill="#11223a"/>
-          <rect x="40" y="24" width="240" height="152" rx="8" fill="#162a45" stroke="#2d4468"/>
-          <text x="58" y="48" fill="#eaf2fb" font-size="11" font-family="IBM Plex Sans,sans-serif" font-weight="600">Microstrip</text>
-          <g font-size="9" font-family="IBM Plex Mono,monospace" fill="#8197b3"><text x="58" y="72">er</text><text x="58" y="92">h (mm)</text><text x="58" y="112">t (um)</text><text x="58" y="132">Z0 target</text></g>
-          <g fill="#0c1a2e" stroke="#33496e"><rect x="120" y="63" width="60" height="13" rx="3"/><rect x="120" y="83" width="60" height="13" rx="3"/><rect x="120" y="103" width="60" height="13" rx="3"/><rect x="120" y="123" width="60" height="13" rx="3"/></g>
-          <g font-size="9" font-family="IBM Plex Mono,monospace" fill="#eaf2fb"><text x="126" y="73">4.30</text><text x="126" y="93">1.60</text><text x="126" y="113">35</text><text x="126" y="133">50.0</text></g>
-          <rect x="196" y="63" width="70" height="73" rx="5" fill="rgba(45,212,191,.12)" stroke="rgba(45,212,191,.4)"/>
-          <text x="204" y="80" fill="#8197b3" font-size="8" font-family="IBM Plex Sans,sans-serif">width</text>
-          <text x="204" y="100" fill="#2dd4bf" font-size="15" font-family="IBM Plex Mono,monospace" font-weight="600">3.06</text>
-          <text x="204" y="118" fill="#8197b3" font-size="8" font-family="IBM Plex Sans,sans-serif">mm</text>
-          <rect x="58" y="150" width="70" height="14" rx="4" fill="#2dd4bf"/><text x="70" y="160" fill="#042f2e" font-size="8" font-family="IBM Plex Sans,sans-serif" font-weight="600">Calculate</text>
-        </svg></div>
-        <div><h3>RF calculators.</h3><p>Microstrip, stripline, coplanar, differential pairs, vias, current capacity, patch and inverted-F antennas, quarter-wave matching and the Smith chart. All of them are <a href="rf-calculators.html">free to use online</a>.</p></div>
-      </div>
-
-      <div class="feature-split reveal">
-        <div class="media"><svg viewBox="0 0 320 200" aria-hidden="true">
-          <rect width="320" height="200" fill="#11223a"/>
-          <g transform="translate(90 100)" fill="none" stroke="rgba(255,255,255,.14)">
-            <circle r="70"/><circle cx="17.5" r="52.5"/><circle cx="35" r="35"/><circle cx="52.5" r="17.5"/>
-            <line x1="-70" x2="70"/>
-            <path d="M70 0 A70 70 0 0 0 0 -70"/><path d="M70 0 A70 70 0 0 1 0 70"/><path d="M70 0 A140 140 0 0 0 -42 -56"/><path d="M70 0 A140 140 0 0 1 -42 56"/>
-            <path d="M-50 -30 C -10 -60 40 -40 10 -5 C -15 20 30 40 55 15" stroke="#2dd4bf" stroke-width="2"/>
-            <circle cx="10" cy="-5" r="3.5" fill="#fbbf24" stroke="none"/>
-          </g>
-          <g transform="translate(180 30)">
-            <rect width="120" height="140" rx="4" fill="#152842"/>
-            <path d="M8 22 L40 24 L60 30 L72 110 L82 34 L100 26 L114 24" fill="none" stroke="#2dd4bf" stroke-width="1.6"/>
-            <line x1="72" y1="16" x2="72" y2="130" stroke="#fbbf24" stroke-dasharray="2 2"/>
-            <text x="76" y="122" fill="#fbbf24" font-size="8" font-family="IBM Plex Mono,monospace">-24.1 dB</text>
-          </g>
-        </svg></div>
-        <div><h3>S-parameters and Smith chart.</h3><p class="ph">How network results are shown and exported.</p></div>
-      </div>
+      <p class="privacy-line">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="4" y="9" width="12" height="9" rx="2" fill="none" stroke="#4d94ff" stroke-width="1.6"/><path d="M7 9V6.5a3 3 0 0 1 6 0V9" fill="none" stroke="#4d94ff" stroke-width="1.6"/></svg>
+        <span>Your design stays private: files are encrypted, deleted after <span class="ph">a set number of days</span>, and never reused. <a href="security.html">How we handle files</a></span>
+      </p>
     </div>
   </section>
 
   <section class="final-cta">
     <div class="container">
-      <h2 class="h2">Start with the free tools.<br><span class="gradient-text">Talk to us about the rest.</span></h2>
-      <p>The calculators and the antenna solver are free to use now. For questions about Machshev, write to <a href="mailto:business@machshev.com">business@machshev.com</a>.</p>
-      <div class="cta-row"><a class="btn lg" href="rf-calculators.html">Try the online tools</a><a class="btn lg ghost" href="mailto:business@machshev.com">Contact us</a></div>
+      <h2 class="h2">Check your next board<br>before you order it.</h2>
+      <p>The first check is free and takes seconds. If something is flagged, you will know before it costs you a respin.</p>
+      <div class="cta-row"><a class="btn lg" href="app-upload.html">Check a board free</a><a class="btn lg ghost" href="sample-report.html">See a sample report</a></div>
     </div>
   </section>
 </main>
 <div id="site-footer"></div>
+<script src="assets/report.js"></script>
 <script src="assets/site.js"></script>
 </body>
 </html>

@@ -3,41 +3,107 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pricing | Machshev</title>
-<meta name="description" content="Machshev plans and pricing.">
+<title>Pricing | Machshev Labs</title>
+<meta name="description" content="The board check is free. Full checks are priced per board, with the price shown before you run one. Review calls for help fixing a confirmed problem.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body data-page="pricing">
 <div id="site-header"></div>
 <main id="main">
-  <section id="pricing" class="page-hero">
+  <section class="page-hero">
     <div class="container">
-      <div class="section-head">
-        <h1 class="h1">Pricing.</h1>
-        <p class="ph">How Machshev is licensed and sold, and who each plan is for.</p>
-      </div>
-      <div class="plans">
-        <div class="plan">
-          <h3>Plan one</h3><div class="for ph">Who this plan is for.</div>
-          <div class="price"><span class="amt">&mdash;</span></div>
-          <div class="billing ph">Billing terms.</div>
+      <h1 class="h1">Pricing.</h1>
+      <p class="lead">Check every board for free. Pay only when you want a flagged problem confirmed, and see the price before you run it. A failed board costs weeks and thousands of dollars; a full check costs <span class="ph">price</span>.</p>
+    </div>
+  </section>
+
+  <section style="padding-top:10px">
+    <div class="container">
+      <div class="tiers four">
+        <div class="tier">
+          <h3>Free check</h3>
+          <div class="for">Every board, every revision.</div>
+          <div class="price">$0</div>
           <ul>
-            <li class="ph">Feature</li><li class="ph">Feature</li><li class="ph">Feature</li><li class="ph">Licence terms</li>
+            <li>Instant board check, in seconds</li>
+            <li>Every high-speed connection found and marked green, yellow or red</li>
+            <li>The exact spot on the board for each flag</li>
+            <li>Unlimited uploads <span class="ph">limits</span></li>
           </ul>
-          <a class="btn lg ghost block" href="mailto:business@machshev.com">Contact us</a>
+          <a class="btn lg ghost block" href="app-upload.html">Check a board free</a>
         </div>
-        <div class="plan pro">
-          <h3>Plan two</h3><div class="for ph">Who this plan is for.</div>
-          <div class="price"><span class="amt">&mdash;</span></div>
-          <div class="billing ph">Billing terms.</div>
+        <div class="tier main">
+          <h3>Full check</h3>
+          <div class="for">When something is flagged.</div>
+          <div class="price">$<span class="ph">—</span> <small>per board</small></div>
           <ul>
-            <li class="ph">Feature</li><li class="ph">Feature</li><li class="ph">Feature</li><li class="ph">Licence terms</li>
+            <li>Detailed physics simulation of each flagged connection</li>
+            <li>A confirmed pass or fail, the spot on the board, and why</li>
+            <li>Raw data to download: S-parameters and CSV</li>
+            <li>Price and run time shown before you start</li>
           </ul>
-          <a class="btn lg block" href="mailto:business@machshev.com">Contact us</a>
+          <a class="btn lg block" href="app-upload.html">Start with a free check</a>
+        </div>
+        <div class="tier">
+          <h3>Enterprise</h3>
+          <div class="for">For teams whose designs cannot leave the building.</div>
+          <div class="price">Custom <small>per year</small></div>
+          <ul>
+            <li><b>Self-hosting:</b> run the free and full checks on your own servers or private cloud, so board files never leave your network</li>
+            <li>Accounts for the whole hardware team</li>
+            <li>Full checks included <span class="ph">volume</span></li>
+            <li>Priority support and review calls <span class="ph">terms</span></li>
+          </ul>
+          <a class="btn lg ghost block" href="mailto:business@machshev.com?subject=Enterprise%20plan">Contact us</a>
+        </div>
+        <div class="tier">
+          <h3>Review call</h3>
+          <div class="for">Need help fixing it?</div>
+          <div class="price">$<span class="ph">—</span> <small>per call</small></div>
+          <ul>
+            <li>A call with a signal integrity engineer</li>
+            <li>We go through the confirmed problems on your layout</li>
+            <li>You leave with the changes to make before ordering</li>
+          </ul>
+          <a class="btn lg ghost block" href="#consulting">Book a review call</a>
         </div>
       </div>
-      <p class="dim" style="margin-top:32px;text-align:center">The <a href="rf-calculators.html">online calculators</a> and <a href="tools/antenna/index.html">Antenna Studio</a> are free to use.</p>
+    </div>
+  </section>
+
+  <section id="consulting">
+    <div class="container">
+      <div class="grid-2" style="align-items:start">
+        <div>
+          <div class="eyebrow">Consulting</div>
+          <h2 class="h2" style="margin-top:12px">Need help fixing it?<br><span class="sub">Book a review call.</span></h2>
+        </div>
+        <div class="prose">
+          <p>If a full check confirms a problem, an engineer can work through it with you: what is causing it, what to change on the layout, and how to check the fix before you order.</p>
+          <p>For harder problems, such as a new high-speed interface, a board that already failed in the lab, or a design review before a big order, we also take on short consulting projects.</p>
+          <p>Write to <a href="mailto:business@machshev.com">business@machshev.com</a> with the board and what is worrying you.</p>
+          <div class="cta-row"><a class="btn" href="mailto:business@machshev.com?subject=Review%20call">Book a review call</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container narrow">
+      <h2 class="h3" style="margin-bottom:18px">Questions</h2>
+      <div class="prose">
+        <h3>Do I need a card for the free check?</h3>
+        <p class="ph">Whether a payment method is needed to sign up.</p>
+        <h3>How is a full check priced?</h3>
+        <p>Per board. Before it runs, the button shows how many connections it covers, about how long it will take, and the price.</p>
+        <h3>Can I check a board again after fixing it?</h3>
+        <p>Yes. Upload the new revision and the free check runs again.</p>
+        <h3>Is my design safe?</h3>
+        <p>Files are encrypted, deleted after a set period, and never reused. See <a href="security.html">Security and privacy</a>.</p>
+        <h3>Can we run it on our own servers?</h3>
+        <p>Yes. Self-hosting is part of the Enterprise plan: the checks run inside your network and no board file is sent to us. <a href="mailto:business@machshev.com?subject=Enterprise%20plan">Contact us</a> to set it up.</p>
+      </div>
     </div>
   </section>
 </main>
